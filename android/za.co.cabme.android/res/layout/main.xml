@@ -1,12 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:orientation="vertical">
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/hello" />
+	<TableLayout android:layout_width="match_parent"
+		android:layout_height="match_parent" android:stretchColumns="0,3">
+
+		<TableRow android:id="@+id/tableRow1" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:layout_gravity="center">
+
+			<TextView android:layout_width="match_parent"
+				android:layout_height="match_parent" />
+			<TableLayout android:layout_gravity="center">
+				<TableRow>
+								<ImageButton android:id="@+id/btnBook"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:src="@drawable/ic_launcher" android:text="Button"
+				android:layout_margin="15dp" android:layout_gravity="center_vertical"
+				android:minWidth="100dip" android:minHeight="100dip"
+				android:background="#000" />
+				</TableRow>
+				<TableRow android:layout_gravity="center">
+
+					<TextView
+					    android:layout_width="match_parent"
+					    android:layout_height="match_parent"
+					    android:layout_gravity="center_vertical"
+					    android:gravity="center"
+					    android:text="@string/newBook" />
+
+				</TableRow>
+			</TableLayout>
+			<TableLayout android:layout_gravity="center">
+				<TableRow>
+					<ImageButton android:id="@+id/btnViewBookings"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:src="@drawable/ic_launcher" android:text="Button"
+				android:layout_margin="15dp" android:layout_gravity="center_vertical"
+				android:minWidth="100dip" android:minHeight="100dip"
+				android:background="#000" />
+				</TableRow>
+				<TableRow>
+
+					<TextView
+					    android:layout_width="match_parent"
+					    android:layout_height="match_parent"
+					    android:layout_gravity="center_vertical"
+					    android:gravity="center"
+					    android:text="@string/viewBookings" />
+
+				</TableRow>
+			</TableLayout>
+			<TextView android:layout_width="match_parent"
+				android:layout_height="match_parent" />
+
+		</TableRow>
+
+		<TableRow android:id="@+id/tableRow2" android:layout_width="wrap_content"
+			android:layout_height="wrap_content">
+
+			<TextView android:layout_width="match_parent"
+				android:layout_height="match_parent" />
+
+			<TableLayout android:layout_gravity="center">
+				<TableRow>
+					<ImageButton android:id="@+id/btnReview"
+						android:layout_width="wrap_content" android:layout_height="wrap_content"
+						android:text="Button" android:src="@drawable/ic_launcher"
+						android:layout_margin="15dp" android:layout_gravity="center_vertical"
+						android:minWidth="100dip" android:minHeight="100dip"
+						android:background="#000" />
+				</TableRow>
+				<TableRow>
+
+					<TextView
+					    android:layout_width="match_parent"
+					    android:layout_height="match_parent"
+					    android:layout_gravity="center_vertical"
+					    android:gravity="center"
+					    android:text="@string/review" />
+
+				</TableRow>
+			</TableLayout>
+			<TableLayout android:layout_gravity="center">
+				<TableRow>
+					<ImageButton android:id="@+id/btnSettings"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:src="@drawable/ic_launcher" android:layout_margin="15dp"
+				android:layout_gravity="center_vertical" android:minWidth="100dip"
+				android:minHeight="100dip" android:background="#000" />
+				</TableRow>
+				<TableRow>
+
+					<TextView
+					    android:layout_width="match_parent"
+					    android:layout_height="match_parent"
+					    android:layout_gravity="center_vertical"
+					    android:gravity="center"
+					    android:text="@string/settings" />
+
+				</TableRow>
+			</TableLayout>
+			
+			<TextView android:layout_width="match_parent"
+				android:layout_height="match_parent" />
+		</TableRow>
+	</TableLayout>
 
 </LinearLayout>

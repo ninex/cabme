@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string name="hello">Hello World, cabmeActivity!</string>
+    <string name="pickup">Pickup time</string>
+    <string name="numPeople">Number of people</string>
     <string name="app_name">Cabme</string>
-
+    <string name="from">from</string>
+    <string name="to">to</string>
+    <string name="book">Book</string>
+    <string name="newBook">New Booking</string>
+    <string name="viewBookings">View Bookings</string>
+    <string name="review">Review</string>
+    <string name="settings">Settings</string>
 </resources>
