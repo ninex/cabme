@@ -20,6 +20,9 @@
         <activity
             android:name=".bookActivity" >            
         </activity>
+        <activity
+            android:name=".bookingListActivity" >            
+        </activity>
     </application>
 
 </manifest>

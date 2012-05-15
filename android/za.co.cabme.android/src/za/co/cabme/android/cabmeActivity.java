@@ -35,11 +35,21 @@ public class cabmeActivity extends Activity {
     private OnClickListener mViewBookingsListener = new OnClickListener(){    
 	    public void onClick(View view){
 	    	Toast.makeText(cabmeActivity.this, "Launching list of bookings Activity", Toast.LENGTH_SHORT).show();
+	    	Intent intent = new Intent(cabmeActivity.this, bookingListActivity.class);
+	    	Bundle b = new Bundle();
+	    	b.putBoolean(bookingListActivity.REVIEW_FLAG, false);
+	    	intent.putExtras(b);
+	    	startActivity(intent);
 	    }
     };
     private OnClickListener mReviewListener = new OnClickListener(){    
 	    public void onClick(View view){
 	    	Toast.makeText(cabmeActivity.this, "Launching booking reviews Activity", Toast.LENGTH_SHORT).show();
+	    	Intent intent = new Intent(cabmeActivity.this, bookingListActivity.class);
+	    	Bundle b = new Bundle();
+	    	b.putBoolean(bookingListActivity.REVIEW_FLAG, true);
+	    	intent.putExtras(b);
+	    	startActivity(intent);
 	    }
     };
     private OnClickListener mSettingsListener = new OnClickListener(){    
