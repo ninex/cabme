@@ -1,5 +1,6 @@
 package za.co.cabme.android;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ public class cabmeActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        getActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
         //click events
         ImageButton btnBook = (ImageButton)findViewById(R.id.btnBook);
         btnBook.setOnClickListener(mBookListener);
@@ -29,6 +31,9 @@ public class cabmeActivity extends Activity {
 	    public void onClick(View view){
 	    	Toast.makeText(cabmeActivity.this, "Launching Book Activity", Toast.LENGTH_SHORT).show();
 	    	Intent intent = new Intent(cabmeActivity.this, bookActivity.class);
+	    	Bundle b = new Bundle();
+	    	b.putBoolean(bookActivity.NEWBOOKING_FLAG, true);
+	    	intent.putExtras(b);
 	    	startActivity(intent);
 	    }
     };

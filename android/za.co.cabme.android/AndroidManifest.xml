@@ -4,11 +4,15 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <uses-sdk android:minSdkVersion="15" />
+    <uses-sdk android:minSdkVersion="15" android:targetSdkVersion="15" />
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    
     <application
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
+        <uses-library android:name="com.google.android.maps" />
         <activity
             android:name=".cabmeActivity"
             android:label="@string/app_name" >
@@ -22,6 +26,10 @@
         </activity>
         <activity
             android:name=".bookingListActivity" >            
+        </activity>
+        <activity
+            android:name="showMapActivity"
+            android:label="@string/app_name" >	
         </activity>
     </application>
 
