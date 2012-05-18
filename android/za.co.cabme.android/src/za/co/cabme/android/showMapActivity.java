@@ -3,26 +3,31 @@ package za.co.cabme.android;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
-import com.google.android.maps.OverlayItem;
 
 public class showMapActivity extends MapActivity {
+
+	public static final String KEY_ADDRESS = "za.co.cabme.android.Address";
 
 	private MapController mapController;
 	private MapView mapView;
 	private LocationManager locationManager;
-	private mapOverlay itemizedoverlay;
+	private mapOverlay selectOverlay;
 	private MyLocationOverlay myLocationOverlay;
 	private GeoUpdateHandler geoListener;
 
@@ -32,48 +37,53 @@ public class showMapActivity extends MapActivity {
 		getActionBar().setDisplayOptions(
 				ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_HOME_AS_UP
 						| ActionBar.DISPLAY_SHOW_TITLE);
-
+		TextView txtAddress = (TextView) findViewById(R.id.txtAddress);
 		// Configure the Map
 		mapView = (MapView) findViewById(R.id.mapview);
 		mapView.setBuiltInZoomControls(true);
 		mapView.setSatellite(false);
+		// configure the controller
 		mapController = mapView.getController();
-		mapController.setZoom(14); // Zoom 1 is world view
-		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		mapController.setZoom(17); // Zoom 1 is world view
+		// Configure location manager
 		geoListener = new GeoUpdateHandler();
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1,
-				0, geoListener);
+		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+				100, 10, geoListener);
 
+		// Point select overlay
+		Bitmap bmp = BitmapFactory.decodeResource(this.getResources(),
+				R.drawable.ic_launcher_point);
+		selectOverlay = new mapOverlay(getBaseContext(), bmp, txtAddress);
+		mapView.getOverlays().add(selectOverlay);
+		// Add my location overlay
 		myLocationOverlay = new MyLocationOverlay(this, mapView);
 		mapView.getOverlays().add(myLocationOverlay);
+	}
 
-		Drawable drawable = this.getResources().getDrawable(
-				R.drawable.ic_launcher_point);
-		itemizedoverlay = new mapOverlay(this, drawable);
-
-		myLocationOverlay.runOnFirstFix(new Runnable() {
-			public void run() {
-				mapView.getController().animateTo(
-						myLocationOverlay.getMyLocation());
-				createMarker();
-			}
-		});
-		createMarker();
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.mapmenu, menu);
+		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent i = new Intent();
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			// app icon in action bar clicked; go home
-			/*
-			 * Intent intent = new Intent(this, cabmeActivity.class);
-			 * intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			 * startActivity(intent);
-			 */
-			if (geoListener != null) {
-				locationManager.removeUpdates(geoListener);
-			}
+			setResult(RESULT_CANCELED, i);
+			finish();
+			return true;
+		case R.id.menu_Save:
+			i.putExtra(KEY_ADDRESS,
+					((TextView) findViewById(R.id.txtAddress)).getText());
+			setResult(RESULT_OK, i);
+			finish();
+			return true;
+		case R.id.menu_Cancel:
+			setResult(RESULT_CANCELED, i);
 			finish();
 			return true;
 		default:
@@ -82,38 +92,20 @@ public class showMapActivity extends MapActivity {
 	}
 
 	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if (myLocationOverlay != null) {
+			myLocationOverlay.disableMyLocation();
+			myLocationOverlay.disableCompass();
+		}
+		if (geoListener != null) {
+			locationManager.removeUpdates(geoListener);
+		}
+	}
+
+	@Override
 	protected boolean isRouteDisplayed() {
 		return false;
-	}
-
-	public class GeoUpdateHandler implements LocationListener {
-
-		public void onLocationChanged(Location location) {
-			int lat = (int) (location.getLatitude() * 1E6);
-			int lng = (int) (location.getLongitude() * 1E6);
-			GeoPoint point = new GeoPoint(lat, lng);
-			createMarker();
-			mapController.animateTo(point); // mapController.setCenter(point);
-
-		}
-
-		public void onProviderDisabled(String provider) {
-		}
-
-		public void onProviderEnabled(String provider) {
-		}
-
-		public void onStatusChanged(String provider, int status, Bundle extras) {
-		}
-	}
-
-	private void createMarker() {
-		GeoPoint p = mapView.getMapCenter();
-		OverlayItem overlayitem = new OverlayItem(p, "", "");
-		itemizedoverlay.addOverlay(overlayitem);
-		if (itemizedoverlay.size() > 0) {
-			mapView.getOverlays().add(itemizedoverlay);
-		}
 	}
 
 	@Override
@@ -128,5 +120,25 @@ public class showMapActivity extends MapActivity {
 		super.onPause();
 		myLocationOverlay.disableMyLocation();
 		myLocationOverlay.disableCompass();
+	}
+
+	public class GeoUpdateHandler implements LocationListener {
+
+		public void onLocationChanged(Location location) {
+			int lat = (int) (location.getLatitude() * 1E6);
+			int lng = (int) (location.getLongitude() * 1E6);
+			GeoPoint point = new GeoPoint(lat, lng);
+			mapController.animateTo(point);
+
+		}
+
+		public void onProviderDisabled(String provider) {
+		}
+
+		public void onProviderEnabled(String provider) {
+		}
+
+		public void onStatusChanged(String provider, int status, Bundle extras) {
+		}
 	}
 }

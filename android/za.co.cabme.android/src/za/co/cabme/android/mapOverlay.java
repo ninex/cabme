@@ -1,82 +1,79 @@
 package za.co.cabme.android;
 
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
+import com.google.android.maps.GeoPoint;
+import com.google.android.maps.MapView;
+import com.google.android.maps.Overlay;
+
 import android.content.Context;
-import android.content.DialogInterface;
-import android.graphics.drawable.Drawable;
-import android.widget.Toast;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Point;
+import android.location.Address;
+import android.location.Geocoder;
+import android.view.MotionEvent;
+import android.widget.TextView;
 
-import com.google.android.maps.ItemizedOverlay;
-import com.google.android.maps.OverlayItem;
+public class mapOverlay extends Overlay {
+	Bitmap drawable;
+	GeoPoint p;
+	Context context;
+	TextView txtAddress;
 
-public class mapOverlay extends ItemizedOverlay<OverlayItem> {
-
-	private static int maxNum = 5;
-	private OverlayItem overlays[] = new OverlayItem[maxNum];
-	private int index = 0;
-	private boolean full = false;
-	private Context context;
-	private OverlayItem previousoverlay;
-
-	public mapOverlay(Context context, Drawable defaultMarker) {
-		super(boundCenterBottom(defaultMarker));
+	public mapOverlay(Context context, Bitmap drawable, TextView txtAddress) {
+		this.drawable = drawable;
 		this.context = context;
+		this.txtAddress = txtAddress;
 	}
-
-	@Override
-	protected OverlayItem createItem(int i) {
-		return overlays[i];
+	public GeoPoint getPoint(){
+		return p;
 	}
-
 	@Override
-	public int size() {
-		if (full) {
-			return overlays.length;
-		} else {
-			return index;
+	public boolean draw(Canvas canvas, MapView mapView, boolean shadow,
+			long when) {
+		super.draw(canvas, mapView, shadow);
+
+		if (p != null) {
+			// ---translate the GeoPoint to screen pixels---
+			Point screenPts = new Point();
+			mapView.getProjection().toPixels(p, screenPts);
+
+			canvas.drawBitmap(drawable, screenPts.x, screenPts.y - 50, null);
 		}
-
-	}
-
-	public void addOverlay(OverlayItem overlay) {
-		if (previousoverlay != null) {
-			if (index < maxNum) {
-				overlays[index] = previousoverlay;
-			} else {
-				index = 0;
-				full = true;
-				overlays[index] = previousoverlay;
-			}
-			index++;
-			populate();
-		}
-		this.previousoverlay = overlay;
-	}
-	@Override
-	protected boolean onTap(int index) {
-		Builder builder = new AlertDialog.Builder(context);
-		builder.setMessage("This will end the activity");
-		builder.setCancelable(true);
-		builder.setPositiveButton("I agree", new OkOnClickListener());
-		builder.setNegativeButton("No, no", new CancelOnClickListener());
-		AlertDialog dialog = builder.create();
-		dialog.show();
 		return true;
-	};
-
-	private final class CancelOnClickListener implements
-			DialogInterface.OnClickListener {
-		public void onClick(DialogInterface dialog, int which) {
-			Toast.makeText(context, "You clicked yes", Toast.LENGTH_LONG)
-					.show();
-		}
 	}
 
-	private final class OkOnClickListener implements
-			DialogInterface.OnClickListener {
-		public void onClick(DialogInterface dialog, int which) {
-			Toast.makeText(context, "You clicked no", Toast.LENGTH_LONG).show();
+	@Override
+	public boolean onTap(GeoPoint p, MapView mapView) {
+		this.p = p;
+		Geocoder geoCoder = new Geocoder(context, Locale.getDefault());
+		try {
+			List<Address> addresses = geoCoder.getFromLocation(
+					p.getLatitudeE6() / 1E6, p.getLongitudeE6() / 1E6, 1);
+
+			String add = "";
+			if (addresses.size() > 0) {
+				for (int i = 0; i < addresses.get(0).getMaxAddressLineIndex(); i++)
+					add += addresses.get(0).getAddressLine(i) + ",\n";
+			}
+			if (txtAddress != null) {
+				if (add.endsWith(",\n")){
+					add = add.substring(0, add.length()-2);
+				}
+				txtAddress.setText(add);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+		return true;
+	}
+
+	@Override
+	public boolean onTouchEvent(MotionEvent event, MapView mapView) {
+		mapView.invalidate();
+		return false;
 	}
 }
