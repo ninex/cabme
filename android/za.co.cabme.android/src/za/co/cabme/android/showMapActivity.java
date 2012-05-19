@@ -9,9 +9,11 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.maps.GeoPoint;
@@ -30,6 +32,7 @@ public class showMapActivity extends MapActivity {
 	private mapOverlay selectOverlay;
 	private MyLocationOverlay myLocationOverlay;
 	private GeoUpdateHandler geoListener;
+	private balloonLayout noteBalloon;
 
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
@@ -37,7 +40,6 @@ public class showMapActivity extends MapActivity {
 		getActionBar().setDisplayOptions(
 				ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_HOME_AS_UP
 						| ActionBar.DISPLAY_SHOW_TITLE);
-		TextView txtAddress = (TextView) findViewById(R.id.txtAddress);
 		// Configure the Map
 		mapView = (MapView) findViewById(R.id.mapview);
 		mapView.setBuiltInZoomControls(true);
@@ -50,15 +52,43 @@ public class showMapActivity extends MapActivity {
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
 				100, 10, geoListener);
+		locationManager.requestLocationUpdates(
+				LocationManager.NETWORK_PROVIDER, 100, 10, geoListener);
+		// point to last GPS location
+		Location l = locationManager
+				.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+		int lat = (int) (l.getLatitude() * 1E6);
+		int lng = (int) (l.getLongitude() * 1E6);
+		mapController.animateTo(new GeoPoint(lat, lng));
+
+		// Balloon
+		loadNoteBalloon();
 
 		// Point select overlay
 		Bitmap bmp = BitmapFactory.decodeResource(this.getResources(),
 				R.drawable.ic_launcher_point);
-		selectOverlay = new mapOverlay(getBaseContext(), bmp, txtAddress);
+		selectOverlay = new mapOverlay(getBaseContext(), bmp, noteBalloon);
 		mapView.getOverlays().add(selectOverlay);
 		// Add my location overlay
 		myLocationOverlay = new MyLocationOverlay(this, mapView);
 		mapView.getOverlays().add(myLocationOverlay);
+		myLocationOverlay.runOnFirstFix(new Runnable() {
+			public void run() {
+				mapController.animateTo(myLocationOverlay.getMyLocation());
+			}
+		});
+	}
+	
+	private void loadNoteBalloon(){
+		LayoutInflater layoutInflater = (LayoutInflater) this
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		noteBalloon = (balloonLayout) layoutInflater.inflate(
+				R.layout.balloonlayout, null);
+		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+				200, 100);
+		layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
+		layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+		noteBalloon.setLayoutParams(layoutParams);
 	}
 
 	@Override
@@ -77,8 +107,8 @@ public class showMapActivity extends MapActivity {
 			finish();
 			return true;
 		case R.id.menu_Save:
-			i.putExtra(KEY_ADDRESS,
-					((TextView) findViewById(R.id.txtAddress)).getText());
+			i.putExtra(KEY_ADDRESS, ((TextView) noteBalloon
+					.findViewById(R.id.note_text)).getText());
 			setResult(RESULT_OK, i);
 			finish();
 			return true;
