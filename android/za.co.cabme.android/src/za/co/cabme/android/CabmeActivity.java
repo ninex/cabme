@@ -29,7 +29,6 @@ public class CabmeActivity extends Activity {
     
     private OnClickListener mBookListener = new OnClickListener(){    
 	    public void onClick(View view){
-	    	Toast.makeText(CabmeActivity.this, "Launching Book Activity", Toast.LENGTH_SHORT).show();
 	    	Intent intent = new Intent(CabmeActivity.this, BookActivity.class);
 	    	Bundle b = new Bundle();
 	    	b.putBoolean(BookActivity.NEWBOOKING_FLAG, true);
@@ -39,7 +38,6 @@ public class CabmeActivity extends Activity {
     };
     private OnClickListener mViewBookingsListener = new OnClickListener(){    
 	    public void onClick(View view){
-	    	Toast.makeText(CabmeActivity.this, "Launching list of bookings Activity", Toast.LENGTH_SHORT).show();
 	    	Intent intent = new Intent(CabmeActivity.this, BookingListActivity.class);
 	    	Bundle b = new Bundle();
 	    	b.putBoolean(BookingListActivity.REVIEW_FLAG, false);
@@ -49,7 +47,6 @@ public class CabmeActivity extends Activity {
     };
     private OnClickListener mReviewListener = new OnClickListener(){    
 	    public void onClick(View view){
-	    	Toast.makeText(CabmeActivity.this, "Launching booking reviews Activity", Toast.LENGTH_SHORT).show();
 	    	Intent intent = new Intent(CabmeActivity.this, BookingListActivity.class);
 	    	Bundle b = new Bundle();
 	    	b.putBoolean(BookingListActivity.REVIEW_FLAG, true);
