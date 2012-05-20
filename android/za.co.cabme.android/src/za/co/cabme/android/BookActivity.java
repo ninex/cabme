@@ -13,7 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class bookActivity extends Activity {
+public class BookActivity extends Activity {
 	public static final String NEWBOOKING_FLAG = "NEWBOOKING_FLAG";
 	public static final int PICK_ADDRESS_FROM = 11;
 	public static final int PICK_ADDRESS_TO = 12;
@@ -52,7 +52,7 @@ public class bookActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			Intent intent = new Intent(this, cabmeActivity.class);
+			Intent intent = new Intent(this, CabmeActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			return true;
@@ -74,25 +74,25 @@ public class bookActivity extends Activity {
 	}
 
 	private void makeBooking() {
-		Toast.makeText(bookActivity.this, "Booking created", Toast.LENGTH_SHORT)
+		Toast.makeText(BookActivity.this, "Booking created", Toast.LENGTH_SHORT)
 				.show();
 	}
 
 	private void cancelBooking() {
-		Toast.makeText(bookActivity.this, "Booking cancelled",
+		Toast.makeText(BookActivity.this, "Booking cancelled",
 				Toast.LENGTH_SHORT).show();
 	}
 
 	private OnClickListener mMapFromListener = new OnClickListener() {
 		public void onClick(View view) {
-			Intent intent = new Intent(bookActivity.this, showMapActivity.class);
+			Intent intent = new Intent(BookActivity.this, ShowMapActivity.class);
 			startActivityForResult(intent, PICK_ADDRESS_FROM);
 		}
 	};
 
 	private OnClickListener mMapToListener = new OnClickListener() {
 		public void onClick(View view) {
-			Intent intent = new Intent(bookActivity.this, showMapActivity.class);
+			Intent intent = new Intent(BookActivity.this, ShowMapActivity.class);
 			startActivityForResult(intent, PICK_ADDRESS_TO);
 		}
 	};
@@ -103,14 +103,14 @@ public class bookActivity extends Activity {
 				if (resultCode == RESULT_OK) {
 					EditText txtFrom = (EditText) findViewById(R.id.txtAddressFrom);
 					txtFrom.setText(data
-							.getCharSequenceExtra(showMapActivity.KEY_ADDRESS));
+							.getCharSequenceExtra(ShowMapActivity.KEY_ADDRESS));
 				}
 			}
 			if (requestCode == PICK_ADDRESS_TO) {
 				if (resultCode == RESULT_OK) {
 					EditText txtTo = (EditText) findViewById(R.id.txtAddressTo);
 					txtTo.setText(data
-							.getCharSequenceExtra(showMapActivity.KEY_ADDRESS));
+							.getCharSequenceExtra(ShowMapActivity.KEY_ADDRESS));
 				}
 			}
 		}

@@ -17,13 +17,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
-public class mapOverlay extends Overlay {
+public class MapOverlay extends Overlay {
 	Bitmap marker;
 	GeoPoint p;
 	Context context;
-	balloonLayout noteBalloon;
+	BalloonLayout noteBalloon;
 
-	public mapOverlay(Context context, Bitmap marker, balloonLayout noteBalloon) {
+	public MapOverlay(Context context, Bitmap marker, BalloonLayout noteBalloon) {
 		this.marker = marker;
 		this.context = context;
 		this.noteBalloon = noteBalloon;

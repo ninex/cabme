@@ -14,7 +14,7 @@
         android:label="@string/app_name" >
         <uses-library android:name="com.google.android.maps" />
         <activity
-            android:name=".cabmeActivity"
+            android:name=".CabmeActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,13 +22,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".bookActivity" >            
+            android:name=".BookActivity" >            
         </activity>
         <activity
-            android:name=".bookingListActivity" >            
+            android:name=".BookingListActivity" >            
         </activity>
         <activity
-            android:name="showMapActivity"
+            android:name=".ShowMapActivity"
             android:label="@string/app_name" >	
         </activity>
     </application>

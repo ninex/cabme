@@ -4,11 +4,11 @@ import android.content.Context;
 import android.view.*;
 import android.widget.*;
 
-public class bookingAdapter extends ArrayAdapter<String> {
+public class BookingAdapter extends ArrayAdapter<String> {
 	private final Context context;
 	private final String[] values;
 
-	public bookingAdapter(Context context, String[] values) {
+	public BookingAdapter(Context context, String[] values) {
 		super(context, R.layout.rowlayout, values);
 		this.context = context;
 		this.values = values;

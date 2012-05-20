@@ -22,17 +22,17 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 
-public class showMapActivity extends MapActivity {
+public class ShowMapActivity extends MapActivity {
 
 	public static final String KEY_ADDRESS = "za.co.cabme.android.Address";
 
 	private MapController mapController;
 	private MapView mapView;
 	private LocationManager locationManager;
-	private mapOverlay selectOverlay;
+	private MapOverlay selectOverlay;
 	private MyLocationOverlay myLocationOverlay;
 	private GeoUpdateHandler geoListener;
-	private balloonLayout noteBalloon;
+	private BalloonLayout noteBalloon;
 
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
@@ -63,26 +63,25 @@ public class showMapActivity extends MapActivity {
 
 		// Balloon
 		loadNoteBalloon();
-
+		// Add my location overlay
+				myLocationOverlay = new MyLocationOverlay(this, mapView);
+				mapView.getOverlays().add(myLocationOverlay);
+				myLocationOverlay.runOnFirstFix(new Runnable() {
+					public void run() {
+						mapController.animateTo(myLocationOverlay.getMyLocation());
+					}
+				});
 		// Point select overlay
 		Bitmap bmp = BitmapFactory.decodeResource(this.getResources(),
 				R.drawable.ic_launcher_point);
-		selectOverlay = new mapOverlay(getBaseContext(), bmp, noteBalloon);
-		mapView.getOverlays().add(selectOverlay);
-		// Add my location overlay
-		myLocationOverlay = new MyLocationOverlay(this, mapView);
-		mapView.getOverlays().add(myLocationOverlay);
-		myLocationOverlay.runOnFirstFix(new Runnable() {
-			public void run() {
-				mapController.animateTo(myLocationOverlay.getMyLocation());
-			}
-		});
+		selectOverlay = new MapOverlay(getBaseContext(), bmp, noteBalloon);
+		mapView.getOverlays().add(selectOverlay);		
 	}
 	
 	private void loadNoteBalloon(){
 		LayoutInflater layoutInflater = (LayoutInflater) this
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		noteBalloon = (balloonLayout) layoutInflater.inflate(
+		noteBalloon = (BalloonLayout) layoutInflater.inflate(
 				R.layout.balloonlayout, null);
 		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
 				200, 100);

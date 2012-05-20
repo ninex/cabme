@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<za.co.cabme.android.balloonLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<za.co.cabme.android.BalloonLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/transparent_panel"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
@@ -17,6 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:text="@string/map_select_addr"
+            android:textColor="@android:color/black"
         />
         <!--ImageView
             android:id="@+id/close_button"
@@ -39,7 +40,8 @@
             android:minLines="4"
             android:maxLines="4"
             android:maxLength="160"    
-            android:textSize="5pt"    
+            android:textSize="5pt"  
+            android:textColor="@android:color/darker_gray"  
         />
     </RelativeLayout>
-</za.co.cabme.android.balloonLayout>
+</za.co.cabme.android.BalloonLayout>

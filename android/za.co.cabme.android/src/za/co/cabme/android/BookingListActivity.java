@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.*;
 import android.widget.*;
 
-public class bookingListActivity extends ListActivity {
+public class BookingListActivity extends ListActivity {
 	public static final String REVIEW_FLAG = "REVIEWFLAG";
 	boolean review = false;
 
@@ -28,7 +28,7 @@ public class bookingListActivity extends ListActivity {
 		String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
 				"Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
 				"Linux", "OS/2" };
-		bookingAdapter adapter = new bookingAdapter(this, values);
+		BookingAdapter adapter = new BookingAdapter(this, values);
 		setListAdapter(adapter);
 
 	}
@@ -38,7 +38,7 @@ public class bookingListActivity extends ListActivity {
 	    switch (item.getItemId()) {
 	        case android.R.id.home:
 	            // app icon in action bar clicked; go home
-	            Intent intent = new Intent(this, cabmeActivity.class);
+	            Intent intent = new Intent(this, CabmeActivity.class);
 	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 	            startActivity(intent);
 	            return true;
@@ -54,9 +54,9 @@ public class bookingListActivity extends ListActivity {
 					.show();
 		} else {
 			Toast.makeText(this, item + " selected", Toast.LENGTH_LONG).show();
-			Intent intent = new Intent(bookingListActivity.this, bookActivity.class);
+			Intent intent = new Intent(BookingListActivity.this, BookActivity.class);
 	    	Bundle b = new Bundle();
-	    	b.putBoolean(bookActivity.NEWBOOKING_FLAG, false);
+	    	b.putBoolean(BookActivity.NEWBOOKING_FLAG, false);
 	    	intent.putExtras(b);
 	    	startActivity(intent);
 		}

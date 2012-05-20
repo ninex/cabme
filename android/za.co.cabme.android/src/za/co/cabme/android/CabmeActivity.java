@@ -9,7 +9,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-public class cabmeActivity extends Activity {
+public class CabmeActivity extends Activity {
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,37 +29,37 @@ public class cabmeActivity extends Activity {
     
     private OnClickListener mBookListener = new OnClickListener(){    
 	    public void onClick(View view){
-	    	Toast.makeText(cabmeActivity.this, "Launching Book Activity", Toast.LENGTH_SHORT).show();
-	    	Intent intent = new Intent(cabmeActivity.this, bookActivity.class);
+	    	Toast.makeText(CabmeActivity.this, "Launching Book Activity", Toast.LENGTH_SHORT).show();
+	    	Intent intent = new Intent(CabmeActivity.this, BookActivity.class);
 	    	Bundle b = new Bundle();
-	    	b.putBoolean(bookActivity.NEWBOOKING_FLAG, true);
+	    	b.putBoolean(BookActivity.NEWBOOKING_FLAG, true);
 	    	intent.putExtras(b);
 	    	startActivity(intent);
 	    }
     };
     private OnClickListener mViewBookingsListener = new OnClickListener(){    
 	    public void onClick(View view){
-	    	Toast.makeText(cabmeActivity.this, "Launching list of bookings Activity", Toast.LENGTH_SHORT).show();
-	    	Intent intent = new Intent(cabmeActivity.this, bookingListActivity.class);
+	    	Toast.makeText(CabmeActivity.this, "Launching list of bookings Activity", Toast.LENGTH_SHORT).show();
+	    	Intent intent = new Intent(CabmeActivity.this, BookingListActivity.class);
 	    	Bundle b = new Bundle();
-	    	b.putBoolean(bookingListActivity.REVIEW_FLAG, false);
+	    	b.putBoolean(BookingListActivity.REVIEW_FLAG, false);
 	    	intent.putExtras(b);
 	    	startActivity(intent);
 	    }
     };
     private OnClickListener mReviewListener = new OnClickListener(){    
 	    public void onClick(View view){
-	    	Toast.makeText(cabmeActivity.this, "Launching booking reviews Activity", Toast.LENGTH_SHORT).show();
-	    	Intent intent = new Intent(cabmeActivity.this, bookingListActivity.class);
+	    	Toast.makeText(CabmeActivity.this, "Launching booking reviews Activity", Toast.LENGTH_SHORT).show();
+	    	Intent intent = new Intent(CabmeActivity.this, BookingListActivity.class);
 	    	Bundle b = new Bundle();
-	    	b.putBoolean(bookingListActivity.REVIEW_FLAG, true);
+	    	b.putBoolean(BookingListActivity.REVIEW_FLAG, true);
 	    	intent.putExtras(b);
 	    	startActivity(intent);
 	    }
     };
     private OnClickListener mSettingsListener = new OnClickListener(){    
 	    public void onClick(View view){
-	    	Toast.makeText(cabmeActivity.this, "Launching settings Activity", Toast.LENGTH_SHORT).show();
+	    	Toast.makeText(CabmeActivity.this, "Launching settings Activity", Toast.LENGTH_SHORT).show();
 	    }
     };
 }

@@ -5,8 +5,8 @@ import android.graphics.*;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
-public class balloonLayout extends LinearLayout {
-	public balloonLayout(Context context, AttributeSet attrs) {
+public class BalloonLayout extends LinearLayout {
+	public BalloonLayout(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
 
