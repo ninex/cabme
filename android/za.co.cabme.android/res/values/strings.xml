@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="pickup">Pickup time</string>
+    <string name="pickup_time">Pickup time</string>
+    <string name="pickup_date">Pickup date</string>
     <string name="numPeople">Number of people</string>
     <string name="app_name">Cabme</string>
-    <string name="from">from</string>
-    <string name="to">to</string>
+    <string name="from">Address from</string>
+    <string name="to">Address to</string>
     <string name="book">Book</string>
     <string name="newBook">New Booking</string>
     <string name="viewBookings">View Bookings</string>
@@ -12,6 +13,8 @@
     <string name="settings">Settings</string>
     <string name="menu_select">OK</string>
     <string name="menu_cancel">Cancel</string>
-    <string name="map_loading_addr">Loading Address...</string>
+    <string name="map_loading_addr">Loading Address...</string>    
+    <string name="map_calculating_dist">Calculating distance...</string>
     <string name="map_select_addr">Address:</string>
+    <string name="distance">Distance</string>
 </resources>
