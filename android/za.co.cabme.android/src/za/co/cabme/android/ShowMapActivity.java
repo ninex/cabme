@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -36,6 +37,7 @@ public class ShowMapActivity extends MapActivity {
 	private MapView mapView;
 	private LocationManager locationManager;
 	private MyLocationOverlay myLocationOverlay;
+	private MapOverlay overlayFrom, overlayTo;
 	private GeoUpdateHandler geoListener;
 	private BalloonLayout noteBalloonFrom, noteBalloonTo;
 	private RouteOverlay routeOverlay;
@@ -48,15 +50,23 @@ public class ShowMapActivity extends MapActivity {
 		getActionBar().setDisplayOptions(
 				ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_HOME_AS_UP
 						| ActionBar.DISPLAY_SHOW_TITLE);
-		//Map view and GPS
+		// Map view and GPS
 		loadMapViewandGPS();
-		//Routing
+		// Routing
 		loadRouting();
 		// Balloon
 		loadNoteBalloon();
 		// Point bitmap
 		Bitmap bmp = BitmapFactory.decodeResource(this.getResources(),
 				R.drawable.ic_launcher_point);
+		// Delegate
+		Method delegate = null;
+		try {
+			delegate = ShowMapActivity.class.getMethod("updateBalloons",
+					new Class[0]);
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		}
 		routeOverlay = new RouteOverlay(getBaseContext(), null);
 		mapView.getOverlays().add(routeOverlay);
 		Bundle b = getIntent().getExtras();
@@ -68,24 +78,26 @@ public class ShowMapActivity extends MapActivity {
 				// Add my location overlay
 				loadMyLocation();
 				// Point select overlay
-				mapView.getOverlays().add(
-						new MapOverlay(getBaseContext(), bmp, noteBalloonFrom));
+				overlayFrom = new MapOverlay(getBaseContext(), this, delegate,
+						bmp, noteBalloonFrom);
+				mapView.getOverlays().add(overlayFrom);
 			} else {
 				// Point select overlay
-				mapView.getOverlays().add(
-						new MapOverlay(getBaseContext(), bmp, noteBalloonFrom,
-								fromAddr, mapView, locked));
+				overlayFrom = new MapOverlay(getBaseContext(), this, delegate,
+						bmp, noteBalloonFrom, fromAddr, mapView, locked);
+				mapView.getOverlays().add(overlayFrom);
 				if (toAddr != null && !toAddr.equals("")) {
 					// Point select overlay
-					mapView.getOverlays().add(
-							new MapOverlay(getBaseContext(), bmp,
-									noteBalloonTo, toAddr, mapView, locked));
-					route(fromAddr, toAddr);
+					overlayTo = new MapOverlay(getBaseContext(), this,
+							delegate, bmp, noteBalloonTo, toAddr, mapView,
+							locked);
+					mapView.getOverlays().add(overlayTo);
+					//route(fromAddr, toAddr);
 				} else {
 					// Point select overlay
-					mapView.getOverlays()
-							.add(new MapOverlay(getBaseContext(), bmp,
-									noteBalloonTo));
+					overlayTo = new MapOverlay(getBaseContext(), this,
+							delegate, bmp, noteBalloonTo);
+					mapView.getOverlays().add(overlayTo);
 				}
 			}
 		}
@@ -124,13 +136,14 @@ public class ShowMapActivity extends MapActivity {
 			}
 		});
 	}
-	
-	private void loadRouting(){
+
+	private void loadRouting() {
 		Method delegate;
 		try {
-			delegate = ShowMapActivity.class.getMethod("updateRoute", new Class[0]);
-			mapRoute = new MapRoute(getBaseContext(),this, delegate);
-		} catch (NoSuchMethodException e) {			
+			delegate = ShowMapActivity.class.getMethod("updateRoute",
+					new Class[0]);
+			mapRoute = new MapRoute(getBaseContext(), this, delegate);
+		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
 		}
 	}
@@ -150,11 +163,35 @@ public class ShowMapActivity extends MapActivity {
 		noteBalloonTo.setLayoutParams(layoutParams);
 	}
 
+	public void updateBalloons() {
+		if (overlayFrom != null && overlayTo != null) {
+			Address addrFrom = overlayFrom.getAddress();
+			Address addrTo = overlayTo.getAddress();
+			if (addrFrom != null && addrTo != null) {
+				String from = "";
+				for (int i = 0; i < addrFrom.getMaxAddressLineIndex(); i++) {
+					from += addrFrom.getAddressLine(i) + ",\n";
+				}
+				if (from.endsWith(",\n")) {
+					from = from.substring(0, from.length() - 2);
+				}
+				String to = "";
+				for (int i = 0; i < addrTo.getMaxAddressLineIndex(); i++) {
+					to += addrTo.getAddressLine(i) + ",\n";
+				}
+				if (to.endsWith(",\n")) {
+					to = to.substring(0, to.length() - 2);
+				}
+				route(from, to);
+			}
+		}
+	}
+
 	private void route(String from, String to) {
 		mapRoute.calculateRoute(from, to);
 	}
 
-	public void updateRoute(){
+	public void updateRoute() {
 		routeOverlay.SetPoints(mapRoute.getPoints());
 	}
 

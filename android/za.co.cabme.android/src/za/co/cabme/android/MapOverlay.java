@@ -1,6 +1,8 @@
 package za.co.cabme.android;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Locale;
 
@@ -24,21 +26,30 @@ public class MapOverlay extends Overlay {
 	BalloonLayout noteBalloon;
 	boolean locked;
 	MapView mapView;
+	Method delegate;
+	Object obj;
+	Address addr;
 
-	public MapOverlay(Context context, Bitmap marker, BalloonLayout noteBalloon) {
+	public MapOverlay(Context context, Object obj, Method delegate,
+			Bitmap marker, BalloonLayout noteBalloon) {
 		this.marker = marker;
 		this.context = context;
 		this.noteBalloon = noteBalloon;
 		this.locked = false;
+		this.delegate = delegate;
+		this.obj = obj;
 	}
 
-	public MapOverlay(Context pcontext, Bitmap marker,
-			BalloonLayout noteBalloon, String lockedAddress, MapView pmapView, boolean locked) {
+	public MapOverlay(Context pcontext, Object obj, Method delegate,
+			Bitmap marker, BalloonLayout noteBalloon, String lockedAddress,
+			MapView pmapView, boolean locked) {
 		this.marker = marker;
 		this.context = pcontext;
 		this.noteBalloon = noteBalloon;
 		this.locked = locked;
 		this.mapView = pmapView;
+		this.delegate = delegate;
+		this.obj = obj;
 
 		new AsyncTask<String, Void, GeoPoint>() {
 			@Override
@@ -66,6 +77,9 @@ public class MapOverlay extends Overlay {
 
 	public GeoPoint getPoint() {
 		return p;
+	}
+	public Address getAddress(){
+		return addr;
 	}
 
 	@Override
@@ -97,6 +111,7 @@ public class MapOverlay extends Overlay {
 			@Override
 			protected Address doInBackground(GeoPoint... geoPoints) {
 				try {
+					addr = null;
 					Geocoder geoCoder = new Geocoder(context,
 							Locale.getDefault());
 					double latitude = geoPoints[0].getLatitudeE6() / 1E6;
@@ -113,6 +128,7 @@ public class MapOverlay extends Overlay {
 
 			@Override
 			protected void onPostExecute(Address address) {
+				addr = address;
 				if (address != null) {
 					String add = "";
 					for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
@@ -124,6 +140,17 @@ public class MapOverlay extends Overlay {
 					if (noteBalloon != null) {
 						((TextView) noteBalloon.findViewById(R.id.note_text))
 								.setText(add);
+					}
+					if (delegate != null) {
+						try {
+							delegate.invoke(obj, new Object[0]);
+						} catch (IllegalArgumentException e) {
+							e.printStackTrace();
+						} catch (IllegalAccessException e) {
+							e.printStackTrace();
+						} catch (InvocationTargetException e) {
+							e.printStackTrace();
+						}
 					}
 				}
 			}
