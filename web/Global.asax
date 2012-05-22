@@ -1,1 +1,0 @@
-<%@ Application Inherits="cabme.MvcApplication" %>
