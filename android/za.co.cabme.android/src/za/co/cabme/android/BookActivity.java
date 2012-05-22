@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 import java.util.Calendar;
 
 import com.google.android.maps.GeoPoint;
-
+import com.google.gson.Gson;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -13,8 +13,10 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -204,6 +206,20 @@ public class BookActivity extends Activity {
 			txtDistance.setText(new StringBuilder().append(
 					Math.ceil(distance) / 1000).append(" km"));
 		}
+		new AsyncTask<Void, Void, Void>() {
+			@Override
+			protected Void doInBackground(Void... arg0) {
+				String json = Common
+						.queryRESTurl(getString(R.string.baseWebUrl) + "taxis");
+				Log.i(BookActivity.class.getName(), json);
+				Gson gson = new Gson();
+				Entities.Taxi[] taxis = gson.fromJson(json, Entities.Taxi[].class);
+				for (int i=0;i<taxis.length;i++){
+					Log.i(BookActivity.class.getName(), "Entry "+i+" name:"+taxis[i].Name);
+				}
+				return null;
+			}
+		}.execute();
 	}
 
 	private void updateFromAddress(String address) {
