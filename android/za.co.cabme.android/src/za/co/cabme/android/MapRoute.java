@@ -1,29 +1,17 @@
 package za.co.cabme.android;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
 
@@ -58,7 +46,7 @@ public class MapRoute {
 					Address toAddr = geoCoder.getFromLocationName(
 							addresses[0][1], 1).get(0);
 
-					String encoded = queryRESTurl(getUrl(
+					String encoded = Common.queryRESTurl(getUrl(
 							fromAddr.getLatitude(), fromAddr.getLongitude(),
 							toAddr.getLatitude(), toAddr.getLongitude()));
 					// get only the encoded GeoPoints
@@ -130,7 +118,7 @@ public class MapRoute {
 		if (points != null && points.size() > 0) {
 			float[] results = new float[1];
 			/*
-			 * Log.i(BookActivity.class.getName(), "Amount of points = " +
+			 * Log.i(MapRoute.class.getName(), "Amount of points = " +
 			 * poly.size());
 			 */
 			for (int i = 0; i <= points.size() - 2; i++) {
@@ -141,7 +129,7 @@ public class MapRoute {
 				if (results != null && results.length >= 0) {
 					distance += results[results.length - 1];
 					/*
-					 * Log.i(BookActivity.class.getName(), "Distance between " +
+					 * Log.i(MapRoute.class.getName(), "Distance between " +
 					 * poly.get(i).getLatitudeE6()/ 1E6 + "," +
 					 * poly.get(i).getLongitudeE6()/ 1E6 + " and " + poly.get(i
 					 * + 1).getLatitudeE6()/ 1E6+ "," + poly.get(i +
@@ -176,33 +164,5 @@ public class MapRoute {
 		urlString.append("&ie=UTF8&0&om=0&output=dragdir");
 
 		return urlString.toString();
-	}
-
-	private String queryRESTurl(String url) {
-		StringBuilder builder = new StringBuilder();
-		HttpClient client = new DefaultHttpClient();
-		HttpGet httpGet = new HttpGet(url);
-		try {
-			HttpResponse response = client.execute(httpGet);
-			StatusLine statusLine = response.getStatusLine();
-			int statusCode = statusLine.getStatusCode();
-			if (statusCode == 200) {
-				HttpEntity entity = response.getEntity();
-				InputStream content = entity.getContent();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(content));
-				String line;
-				while ((line = reader.readLine()) != null) {
-					builder.append(line);
-				}
-			} else {
-				Log.e(BookActivity.class.toString(), "Failed to download file");
-			}
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return builder.toString();
-	}
+	}	
 }
