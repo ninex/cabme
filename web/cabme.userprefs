@@ -1,0 +1,24 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="cabme.web/About.aspx">
+    <Files>
+      <File FileName="cabme.web/Site.Master" Line="10" Column="8" />
+      <File FileName="cabme.web/Default.aspx" Line="1" Column="66" />
+      <File FileName="cabme.web/About.aspx" Line="14" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="cabme.web" expanded="True">
+            <Node name="Service" expanded="True" />
+            <Node name="Site.Master" selected="True" />
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
