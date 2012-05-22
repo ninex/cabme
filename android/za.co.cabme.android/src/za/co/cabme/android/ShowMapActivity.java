@@ -5,19 +5,14 @@ import java.lang.reflect.Method;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -27,11 +22,13 @@ import com.google.android.maps.MyLocationOverlay;
 
 public class ShowMapActivity extends MapActivity {
 
-	public static final String KEY_ADDRESS_FROM = "za.co.cabme.android.AddressFrom";
-	public static final String KEY_ADDRESS_TO = "za.co.cabme.android.AddressTo";
-	public static final String KEY_ADDRESS_LOCKED = "za.co.cabme.android.AddressLocked";
+	public static final String ADDRESS_LOCKED_FLAG = "za.co.cabme.android.AddressLockedFlag";
 	public static final String FROMADDR_FLAG = "za.co.cabme.android.FromAddressFlag";
 	public static final String TOADDR_FLAG = "za.co.cabme.android.ToAddressFlag";
+	public static final String FROMLAT_FLAG = "za.co.cabme.android.FromLatFlag";
+	public static final String FROMLONG_FLAG = "za.co.cabme.android.FromLongFlag";
+	public static final String TOLAT_FLAG = "za.co.cabme.android.ToLatFlag";
+	public static final String TOLONG_FLAG = "za.co.cabme.android.ToLongFlag";
 
 	private MapController mapController;
 	private MapView mapView;
@@ -39,7 +36,6 @@ public class ShowMapActivity extends MapActivity {
 	private MyLocationOverlay myLocationOverlay;
 	private MapOverlay overlayFrom, overlayTo;
 	private GeoUpdateHandler geoListener;
-	private BalloonLayout noteBalloonFrom, noteBalloonTo;
 	private RouteOverlay routeOverlay;
 	private MapRoute mapRoute;
 	private boolean locked = false;
@@ -54,15 +50,10 @@ public class ShowMapActivity extends MapActivity {
 		loadMapViewandGPS();
 		// Routing
 		loadRouting();
-		// Balloon
-		loadNoteBalloon();
-		// Point bitmap
-		Bitmap bmp = BitmapFactory.decodeResource(this.getResources(),
-				R.drawable.ic_launcher_point);
 		// Delegate
 		Method delegate = null;
 		try {
-			delegate = ShowMapActivity.class.getMethod("updateBalloons",
+			delegate = ShowMapActivity.class.getMethod("updateRoute",
 					new Class[0]);
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
@@ -73,30 +64,38 @@ public class ShowMapActivity extends MapActivity {
 		if (b != null) {
 			String fromAddr = b.getString(FROMADDR_FLAG);
 			String toAddr = b.getString(TOADDR_FLAG);
-			locked = b.getBoolean(KEY_ADDRESS_LOCKED, false);
+
+			int fromLat = b.getInt(FROMLAT_FLAG, 0);
+			int fromLong = b.getInt(FROMLONG_FLAG, 0);
+			int toLat = b.getInt(TOLAT_FLAG, 0);
+			int toLong = b.getInt(TOLONG_FLAG, 0);
+			GeoPoint from = null, to = null;
+			if (fromLat != 0 && fromLong != 0) {
+				from = new GeoPoint(fromLat, fromLong);
+			}
+			if (toLat != 0 && toLong != 0) {
+				to = new GeoPoint(toLat, toLong);
+			}
+			locked = b.getBoolean(ADDRESS_LOCKED_FLAG, false);
 			if (fromAddr == null || fromAddr.equals("")) {
 				// Add my location overlay
 				loadMyLocation();
 				// Point select overlay
-				overlayFrom = new MapOverlay(getBaseContext(), this, delegate,
-						bmp, noteBalloonFrom);
+				overlayFrom = new MapOverlay(getBaseContext(), this, delegate);
 				mapView.getOverlays().add(overlayFrom);
 			} else {
 				// Point select overlay
 				overlayFrom = new MapOverlay(getBaseContext(), this, delegate,
-						bmp, noteBalloonFrom, fromAddr, mapView, locked);
+						mapView, fromAddr, locked, from);
 				mapView.getOverlays().add(overlayFrom);
 				if (toAddr != null && !toAddr.equals("")) {
 					// Point select overlay
 					overlayTo = new MapOverlay(getBaseContext(), this,
-							delegate, bmp, noteBalloonTo, toAddr, mapView,
-							locked);
+							delegate, mapView, toAddr, locked, to);
 					mapView.getOverlays().add(overlayTo);
-					//route(fromAddr, toAddr);
 				} else {
 					// Point select overlay
-					overlayTo = new MapOverlay(getBaseContext(), this,
-							delegate, bmp, noteBalloonTo);
+					overlayTo = new MapOverlay(getBaseContext(), this, delegate);
 					mapView.getOverlays().add(overlayTo);
 				}
 			}
@@ -140,7 +139,7 @@ public class ShowMapActivity extends MapActivity {
 	private void loadRouting() {
 		Method delegate;
 		try {
-			delegate = ShowMapActivity.class.getMethod("updateRoute",
+			delegate = ShowMapActivity.class.getMethod("redrawRoute",
 					new Class[0]);
 			mapRoute = new MapRoute(getBaseContext(), this, delegate);
 		} catch (NoSuchMethodException e) {
@@ -148,50 +147,21 @@ public class ShowMapActivity extends MapActivity {
 		}
 	}
 
-	private void loadNoteBalloon() {
-		LayoutInflater layoutInflater = (LayoutInflater) this
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		noteBalloonFrom = (BalloonLayout) layoutInflater.inflate(
-				R.layout.balloonlayout, null);
-		noteBalloonTo = (BalloonLayout) layoutInflater.inflate(
-				R.layout.balloonlayout, null);
-		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-				200, 100);
-		layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
-		layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-		noteBalloonFrom.setLayoutParams(layoutParams);
-		noteBalloonTo.setLayoutParams(layoutParams);
-	}
-
-	public void updateBalloons() {
+	public void updateRoute() {
 		if (overlayFrom != null && overlayTo != null) {
 			Address addrFrom = overlayFrom.getAddress();
 			Address addrTo = overlayTo.getAddress();
 			if (addrFrom != null && addrTo != null) {
-				String from = "";
-				for (int i = 0; i < addrFrom.getMaxAddressLineIndex(); i++) {
-					from += addrFrom.getAddressLine(i) + ",\n";
-				}
-				if (from.endsWith(",\n")) {
-					from = from.substring(0, from.length() - 2);
-				}
-				String to = "";
-				for (int i = 0; i < addrTo.getMaxAddressLineIndex(); i++) {
-					to += addrTo.getAddressLine(i) + ",\n";
-				}
-				if (to.endsWith(",\n")) {
-					to = to.substring(0, to.length() - 2);
-				}
-				route(from, to);
+				route(addrFrom, addrTo);
 			}
 		}
 	}
 
-	private void route(String from, String to) {
+	private void route(Address from, Address to) {
 		mapRoute.calculateRoute(from, to);
 	}
 
-	public void updateRoute() {
+	public void redrawRoute() {
 		routeOverlay.SetPoints(mapRoute.getPoints());
 	}
 
@@ -212,10 +182,22 @@ public class ShowMapActivity extends MapActivity {
 			return true;
 		case R.id.menu_Save:
 			if (!locked) {
-				i.putExtra(KEY_ADDRESS_FROM, ((TextView) noteBalloonFrom
-						.findViewById(R.id.note_text)).getText());
-				i.putExtra(KEY_ADDRESS_TO, ((TextView) noteBalloonTo
-						.findViewById(R.id.note_text)).getText());
+				if (overlayFrom != null) {
+					i.putExtra(FROMADDR_FLAG, overlayFrom.getAddressString());
+					GeoPoint p1 = overlayFrom.getPoint();
+					if (p1 != null) {
+						i.putExtra(FROMLAT_FLAG, p1.getLatitudeE6());
+						i.putExtra(FROMLONG_FLAG, p1.getLongitudeE6());
+					}
+				}
+				if (overlayTo != null) {
+					i.putExtra(TOADDR_FLAG, overlayTo.getAddressString());
+					GeoPoint p2 = overlayTo.getPoint();
+					if (p2 != null) {
+						i.putExtra(TOLAT_FLAG, p2.getLatitudeE6());
+						i.putExtra(TOLONG_FLAG, p2.getLongitudeE6());
+					}
+				}
 			}
 			setResult(RESULT_OK, i);
 			finish();

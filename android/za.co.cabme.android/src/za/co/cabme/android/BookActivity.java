@@ -3,6 +3,8 @@ package za.co.cabme.android;
 import java.lang.reflect.Method;
 import java.util.Calendar;
 
+import com.google.android.maps.GeoPoint;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -38,6 +40,7 @@ public class BookActivity extends Activity {
 
 	private TextView mTimeDisplay, mDateDisplay, txtNumPeople, txtDistance;
 	private int mHour, mMinute, mDay, mMonth, mYear, mNumPeople;
+	private GeoPoint pointFrom, pointTo;
 	private MapRoute mapRoute;
 
 	@Override
@@ -103,7 +106,7 @@ public class BookActivity extends Activity {
 				b.putString(ShowMapActivity.FROMADDR_FLAG,
 						((TextView) findViewById(R.id.txtAddressFrom))
 								.getText().toString());
-				b.putBoolean(ShowMapActivity.KEY_ADDRESS_LOCKED, true);
+				b.putBoolean(ShowMapActivity.ADDRESS_LOCKED_FLAG, true);
 				intent.putExtras(b);
 				startActivity(intent);
 			}
@@ -120,7 +123,7 @@ public class BookActivity extends Activity {
 
 		// display the current date
 		updateDisplay();
-		//Routing
+		// Routing
 		setupMapRoute();
 	}
 
@@ -179,10 +182,16 @@ public class BookActivity extends Activity {
 			txtTo.setText(to);
 		}
 		// We have a route!
-		if (txtFrom.getText().length() > 0 && txtTo.getText().length() > 0) {
+		if (from != null && to != null) {
 			txtDistance.setText(this.getString(R.string.map_calculating_dist));
-			mapRoute.calculateRoute(txtFrom.getText().toString(), txtTo
-					.getText().toString());
+			mapRoute.calculateRoute(pointFrom, pointTo);
+		} else {
+			if (txtFrom.getText().length() > 0 && txtTo.getText().length() > 0) {
+				txtDistance.setText(this
+						.getString(R.string.map_calculating_dist));
+				mapRoute.calculateRoute(txtFrom.getText().toString(), txtTo
+						.getText().toString());
+			}
 		}
 	}
 
@@ -308,6 +317,7 @@ public class BookActivity extends Activity {
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int whichButton) {
+									pointFrom = null;
 									updateFromAddress(inputFrom.getText()
 											.toString());
 								}
@@ -354,6 +364,7 @@ public class BookActivity extends Activity {
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int whichButton) {
+									pointTo = null;
 									updateToAddress(inputTo.getText()
 											.toString());
 								}
@@ -375,17 +386,32 @@ public class BookActivity extends Activity {
 	};
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		int lat, lon;
 		if (newBooking) {
 			if (requestCode == PICK_ADDRESS_FROM) {
 				if (resultCode == RESULT_OK) {
 					updateFromAddress(data.getCharSequenceExtra(
-							ShowMapActivity.KEY_ADDRESS_FROM).toString());
+							ShowMapActivity.FROMADDR_FLAG).toString());
+					lat = data.getIntExtra(ShowMapActivity.FROMLAT_FLAG, 0);
+					lon = data.getIntExtra(ShowMapActivity.FROMLONG_FLAG, 0);
+					if (lat != 0 && lon != 0) {
+						pointFrom = new GeoPoint(lat, lon);
+					} else {
+						pointFrom = null;
+					}
 				}
 			}
 			if (requestCode == PICK_ADDRESS_TO) {
 				if (resultCode == RESULT_OK) {
 					updateToAddress(data.getCharSequenceExtra(
-							ShowMapActivity.KEY_ADDRESS_TO).toString());
+							ShowMapActivity.TOADDR_FLAG).toString());
+					lat = data.getIntExtra(ShowMapActivity.TOLAT_FLAG, 0);
+					lon = data.getIntExtra(ShowMapActivity.TOLONG_FLAG, 0);
+					if (lat != 0 && lon != 0) {
+						pointTo = new GeoPoint(lat, lon);
+					} else {
+						pointTo = null;
+					}
 				}
 			}
 		}

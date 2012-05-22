@@ -15,8 +15,10 @@ import android.graphics.*;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class MapOverlay extends Overlay {
@@ -29,28 +31,50 @@ public class MapOverlay extends Overlay {
 	Method delegate;
 	Object obj;
 	Address addr;
+	String firstAddr;
 
-	public MapOverlay(Context context, Object obj, Method delegate,
-			Bitmap marker, BalloonLayout noteBalloon) {
-		this.marker = marker;
+	public MapOverlay(Context context, Object obj, Method delegate) {
 		this.context = context;
-		this.noteBalloon = noteBalloon;
 		this.locked = false;
 		this.delegate = delegate;
 		this.obj = obj;
+		setupBalloon();
 	}
 
-	public MapOverlay(Context pcontext, Object obj, Method delegate,
-			Bitmap marker, BalloonLayout noteBalloon, String lockedAddress,
-			MapView pmapView, boolean locked) {
-		this.marker = marker;
-		this.context = pcontext;
-		this.noteBalloon = noteBalloon;
-		this.locked = locked;
-		this.mapView = pmapView;
+	public MapOverlay(Context context, Object obj, Method delegate,
+			MapView mapView, String lockedAddress, boolean locked,
+			GeoPoint firstPoint) {
+		this.context = context;
 		this.delegate = delegate;
 		this.obj = obj;
+		this.locked = locked;
+		this.mapView = mapView;
+		firstAddr = lockedAddress;
+		setupBalloon();
+		if (firstPoint != null) {
+			p = firstPoint;
+			drawBalloon(mapView, lockedAddress);
+		} else {
+			getFirstPoint();
+		}
+	}
 
+	private void setupBalloon() {
+		marker = BitmapFactory.decodeResource(context.getResources(),
+				R.drawable.ic_launcher_point);
+
+		LayoutInflater layoutInflater = (LayoutInflater) context
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		noteBalloon = (BalloonLayout) layoutInflater.inflate(
+				R.layout.balloonlayout, null);
+		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+				200, 100);
+		layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
+		layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+		noteBalloon.setLayoutParams(layoutParams);
+	}
+
+	private void getFirstPoint() {
 		new AsyncTask<String, Void, GeoPoint>() {
 			@Override
 			protected GeoPoint doInBackground(String... address) {
@@ -70,16 +94,30 @@ public class MapOverlay extends Overlay {
 			@Override
 			protected void onPostExecute(GeoPoint point) {
 				p = point;
-				drawBalloon(mapView);
+				drawBalloon(mapView, firstAddr);
 			}
-		}.execute(lockedAddress);
+		}.execute(firstAddr);
 	}
 
 	public GeoPoint getPoint() {
 		return p;
 	}
-	public Address getAddress(){
+
+	public Address getAddress() {
 		return addr;
+	}
+
+	public String getAddressString() {
+		String add = "";
+		if (addr != null) {
+			for (int i = 0; i < addr.getMaxAddressLineIndex(); i++) {
+				add += addr.getAddressLine(i) + ",\n";
+			}
+			if (add.endsWith(",\n")) {
+				add = add.substring(0, add.length() - 2);
+			}
+		}
+		return add;
 	}
 
 	@Override
@@ -97,12 +135,12 @@ public class MapOverlay extends Overlay {
 		return true;
 	}
 
-	private void drawBalloon(MapView mapView) {
+	private void drawBalloon(MapView mapView, String loadText) {
 		if (noteBalloon != null) {
 			mapView.removeView(noteBalloon);
 			noteBalloon.setVisibility(View.VISIBLE);
 			((TextView) noteBalloon.findViewById(R.id.note_text))
-					.setText(R.string.map_loading_addr);
+					.setText(loadText);
 			mapView.addView(noteBalloon, new MapView.LayoutParams(200, 200, p,
 					MapView.LayoutParams.BOTTOM_CENTER));
 		}
@@ -130,16 +168,9 @@ public class MapOverlay extends Overlay {
 			protected void onPostExecute(Address address) {
 				addr = address;
 				if (address != null) {
-					String add = "";
-					for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
-						add += address.getAddressLine(i) + ",\n";
-					}
-					if (add.endsWith(",\n")) {
-						add = add.substring(0, add.length() - 2);
-					}
 					if (noteBalloon != null) {
 						((TextView) noteBalloon.findViewById(R.id.note_text))
-								.setText(add);
+								.setText(getAddressString());
 					}
 					if (delegate != null) {
 						try {
@@ -161,7 +192,10 @@ public class MapOverlay extends Overlay {
 	public boolean onTap(GeoPoint p, MapView mapView) {
 		if (!locked) {
 			this.p = p;
-			drawBalloon(mapView);
+			if (noteBalloon != null) {
+				drawBalloon(mapView,
+						context.getString(R.string.map_loading_addr));
+			}
 		}
 		return true;
 	}

@@ -40,69 +40,62 @@ public class MapRoute {
 		this.obj = obj;
 	}
 
-	public void calculateRoute(String from, String to) {
-		String[] list = new String[2];
+	public void calculateRoute(GeoPoint from, GeoPoint to) {
+		GeoPoint[] list = new GeoPoint[2];
 		list[0] = from;
 		list[1] = to;
 		// clear the current list of points
 		points = null;
-		new AsyncTask<String[], Void, List<GeoPoint>>() {
+		new AsyncTask<GeoPoint[], Void, List<GeoPoint>>() {
 			@Override
-			protected List<GeoPoint> doInBackground(String[]... addresses) {
+			protected List<GeoPoint> doInBackground(GeoPoint[]... addresses) {
 				List<GeoPoint> poly = new ArrayList<GeoPoint>();
-				try {
-					Geocoder geoCoder = new Geocoder(context,
-							Locale.getDefault());
-					Address fromAddr = geoCoder.getFromLocationName(
-							addresses[0][0], 1).get(0);
-					Address toAddr = geoCoder.getFromLocationName(
-							addresses[0][1], 1).get(0);
+				GeoPoint fromAddr = addresses[0][0];
+				GeoPoint toAddr = addresses[0][1];
 
-					String encoded = queryRESTurl(getUrl(
-							fromAddr.getLatitude(), fromAddr.getLongitude(),
-							toAddr.getLatitude(), toAddr.getLongitude()));
-					// get only the encoded GeoPoints
-					encoded = encoded.split("points:\"")[1].split("\",")[0];
-					// replace two backslashes by one (some error from the
-					// transmission)
-					encoded = encoded.replace("\\\\", "\\");
+				String encoded = queryRESTurl(getUrl(
+						(double) fromAddr.getLatitudeE6() / 1e6,
+						(double) fromAddr.getLongitudeE6() / 1e6,
+						(double) toAddr.getLatitudeE6() / 1e6,
+						(double) toAddr.getLongitudeE6() / 1e6));
+				// get only the encoded GeoPoints
+				encoded = encoded.split("points:\"")[1].split("\",")[0];
+				// replace two backslashes by one (some error from the
+				// transmission)
+				encoded = encoded.replace("\\\\", "\\");
 
-					// decoding
+				// decoding
 
-					int index = 0, len = encoded.length();
-					int lat = 0, lng = 0;
+				int index = 0, len = encoded.length();
+				int lat = 0, lng = 0;
 
-					while (index < len) {
-						int b, shift = 0, result = 0;
-						do {
-							b = encoded.charAt(index++) - 63;
-							result |= (b & 0x1f) << shift;
-							shift += 5;
-						} while (b >= 0x20);
-						int dlat = ((result & 1) != 0 ? ~(result >> 1)
-								: (result >> 1));
-						lat += dlat;
+				while (index < len) {
+					int b, shift = 0, result = 0;
+					do {
+						b = encoded.charAt(index++) - 63;
+						result |= (b & 0x1f) << shift;
+						shift += 5;
+					} while (b >= 0x20);
+					int dlat = ((result & 1) != 0 ? ~(result >> 1)
+							: (result >> 1));
+					lat += dlat;
 
-						shift = 0;
-						result = 0;
-						do {
+					shift = 0;
+					result = 0;
+					do {
 
-							b = encoded.charAt(index++) - 63;
-							result |= (b & 0x1f) << shift;
-							shift += 5;
-						} while (b >= 0x20);
-						int dlng = ((result & 1) != 0 ? ~(result >> 1)
-								: (result >> 1));
-						lng += dlng;
+						b = encoded.charAt(index++) - 63;
+						result |= (b & 0x1f) << shift;
+						shift += 5;
+					} while (b >= 0x20);
+					int dlng = ((result & 1) != 0 ? ~(result >> 1)
+							: (result >> 1));
+					lng += dlng;
 
-						GeoPoint p = new GeoPoint(
-								(int) (((double) lat / 1E5) * 1E6),
-								(int) (((double) lng / 1E5) * 1E6));
-						poly.add(p);
-					}
-
-				} catch (IOException ex) {
-					ex.printStackTrace();
+					GeoPoint p = new GeoPoint(
+							(int) (((double) lat / 1E5) * 1E6),
+							(int) (((double) lng / 1E5) * 1E6));
+					poly.add(p);
 				}
 				return poly;
 			}
@@ -120,6 +113,49 @@ public class MapRoute {
 					} catch (InvocationTargetException e) {
 						e.printStackTrace();
 					}
+				}
+			}
+		}.execute(list);
+	}
+
+	public void calculateRoute(Address from, Address to) {
+		GeoPoint pointFrom = new GeoPoint((int) (from.getLatitude() * 1E6),
+				(int) (from.getLongitude() * 1E6));
+		GeoPoint pointTo = new GeoPoint((int) (to.getLatitude() * 1E6),
+				(int) (to.getLongitude() * 1E6));
+		calculateRoute(pointFrom, pointTo);
+	}
+
+	public void calculateRoute(String from, String to) {
+		String[] list = new String[2];
+		list[0] = from;
+		list[1] = to;
+		// clear the current list of points
+		points = null;
+		new AsyncTask<String[], Void, List<Address>>() {
+			@Override
+			protected List<Address> doInBackground(String[]... addresses) {
+				List<Address> list = new ArrayList<Address>();
+				Geocoder geoCoder = new Geocoder(context, Locale.getDefault());
+				Address fromAddr;
+				try {
+					fromAddr = geoCoder.getFromLocationName(addresses[0][0], 1)
+							.get(0);
+
+					Address toAddr = geoCoder.getFromLocationName(
+							addresses[0][1], 1).get(0);
+					list.add(fromAddr);
+					list.add(toAddr);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				return list;
+			}
+
+			@Override
+			protected void onPostExecute(List<Address> list) {
+				if (list != null && list.size() >= 2) {
+					calculateRoute(list.get(0), list.get(1));
 				}
 			}
 		}.execute(list);
