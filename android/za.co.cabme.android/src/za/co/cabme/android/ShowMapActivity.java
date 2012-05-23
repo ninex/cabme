@@ -22,14 +22,6 @@ import com.google.android.maps.MyLocationOverlay;
 
 public class ShowMapActivity extends MapActivity {
 
-	public static final String ADDRESS_LOCKED_FLAG = "za.co.cabme.android.AddressLockedFlag";
-	public static final String FROMADDR_FLAG = "za.co.cabme.android.FromAddressFlag";
-	public static final String TOADDR_FLAG = "za.co.cabme.android.ToAddressFlag";
-	public static final String FROMLAT_FLAG = "za.co.cabme.android.FromLatFlag";
-	public static final String FROMLONG_FLAG = "za.co.cabme.android.FromLongFlag";
-	public static final String TOLAT_FLAG = "za.co.cabme.android.ToLatFlag";
-	public static final String TOLONG_FLAG = "za.co.cabme.android.ToLongFlag";
-
 	private MapController mapController;
 	private MapView mapView;
 	private LocationManager locationManager;
@@ -62,13 +54,13 @@ public class ShowMapActivity extends MapActivity {
 		mapView.getOverlays().add(routeOverlay);
 		Bundle b = getIntent().getExtras();
 		if (b != null) {
-			String fromAddr = b.getString(FROMADDR_FLAG);
-			String toAddr = b.getString(TOADDR_FLAG);
+			String fromAddr = b.getString(Common.FROMADDR_FLAG);
+			String toAddr = b.getString(Common.TOADDR_FLAG);
 
-			int fromLat = b.getInt(FROMLAT_FLAG, 0);
-			int fromLong = b.getInt(FROMLONG_FLAG, 0);
-			int toLat = b.getInt(TOLAT_FLAG, 0);
-			int toLong = b.getInt(TOLONG_FLAG, 0);
+			int fromLat = b.getInt(Common.FROMLAT_FLAG, 0);
+			int fromLong = b.getInt(Common.FROMLONG_FLAG, 0);
+			int toLat = b.getInt(Common.TOLAT_FLAG, 0);
+			int toLong = b.getInt(Common.TOLONG_FLAG, 0);
 			GeoPoint from = null, to = null;
 			if (fromLat != 0 && fromLong != 0) {
 				from = new GeoPoint(fromLat, fromLong);
@@ -76,7 +68,7 @@ public class ShowMapActivity extends MapActivity {
 			if (toLat != 0 && toLong != 0) {
 				to = new GeoPoint(toLat, toLong);
 			}
-			locked = b.getBoolean(ADDRESS_LOCKED_FLAG, false);
+			locked = b.getBoolean(Common.ADDRESS_LOCKED_FLAG, false);
 			if (fromAddr == null || fromAddr.equals("")) {
 				// Add my location overlay
 				loadMyLocation();
@@ -183,19 +175,19 @@ public class ShowMapActivity extends MapActivity {
 		case R.id.menu_Save:
 			if (!locked) {
 				if (overlayFrom != null) {
-					i.putExtra(FROMADDR_FLAG, overlayFrom.getAddressString());
+					i.putExtra(Common.FROMADDR_FLAG, overlayFrom.getAddressString());
 					GeoPoint p1 = overlayFrom.getPoint();
 					if (p1 != null) {
-						i.putExtra(FROMLAT_FLAG, p1.getLatitudeE6());
-						i.putExtra(FROMLONG_FLAG, p1.getLongitudeE6());
+						i.putExtra(Common.FROMLAT_FLAG, p1.getLatitudeE6());
+						i.putExtra(Common.FROMLONG_FLAG, p1.getLongitudeE6());
 					}
 				}
 				if (overlayTo != null) {
-					i.putExtra(TOADDR_FLAG, overlayTo.getAddressString());
+					i.putExtra(Common.TOADDR_FLAG, overlayTo.getAddressString());
 					GeoPoint p2 = overlayTo.getPoint();
 					if (p2 != null) {
-						i.putExtra(TOLAT_FLAG, p2.getLatitudeE6());
-						i.putExtra(TOLONG_FLAG, p2.getLongitudeE6());
+						i.putExtra(Common.TOLAT_FLAG, p2.getLatitudeE6());
+						i.putExtra(Common.TOLONG_FLAG, p2.getLongitudeE6());
 					}
 				}
 			}

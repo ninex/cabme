@@ -8,7 +8,6 @@ import android.view.*;
 import android.widget.*;
 
 public class BookingListActivity extends ListActivity {
-	public static final String REVIEW_FLAG = "REVIEWFLAG";
 	boolean review = false;
 
 	public void onCreate(Bundle icicle) {
@@ -17,7 +16,7 @@ public class BookingListActivity extends ListActivity {
                 
 		Bundle b = getIntent().getExtras();
 		if (b!= null){
-			review = b.getBoolean(REVIEW_FLAG);
+			review = b.getBoolean(Common.REVIEW_FLAG);
 		}
 		if (review){
 			getActionBar().setTitle("Review Booking");
@@ -56,7 +55,7 @@ public class BookingListActivity extends ListActivity {
 			Toast.makeText(this, item + " selected", Toast.LENGTH_LONG).show();
 			Intent intent = new Intent(BookingListActivity.this, BookActivity.class);
 	    	Bundle b = new Bundle();
-	    	b.putBoolean(BookActivity.NEWBOOKING_FLAG, false);
+	    	b.putBoolean(Common.NEWBOOKING_FLAG, false);
 	    	intent.putExtras(b);
 	    	startActivity(intent);
 		}

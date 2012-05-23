@@ -31,15 +31,8 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 public class BookActivity extends Activity {
-	public static final String NEWBOOKING_FLAG = "NEWBOOKING_FLAG";
-	public static final int PICK_ADDRESS_FROM = 11;
-	public static final int PICK_ADDRESS_TO = 12;
-	static final int TIME_DIALOG_ID = 0;
-	static final int DATEPICKER_DIALOG_ID = 1;
-	static final int NUMPEOPLE_DIALOG_ID = 2;
 
 	boolean newBooking = false;
-
 	private TextView mTimeDisplay, mDateDisplay, txtNumPeople, txtDistance;
 	private int mHour, mMinute, mDay, mMonth, mYear, mNumPeople;
 	private GeoPoint pointFrom, pointTo;
@@ -54,7 +47,7 @@ public class BookActivity extends Activity {
 						| ActionBar.DISPLAY_SHOW_TITLE);
 		Bundle b = getIntent().getExtras();
 		if (b != null) {
-			newBooking = b.getBoolean(NEWBOOKING_FLAG);
+			newBooking = b.getBoolean(Common.NEWBOOKING_FLAG);
 			if (newBooking) {
 				getActionBar().setTitle("Make Booking");
 			} else {
@@ -82,19 +75,19 @@ public class BookActivity extends Activity {
 		mPickTime.setOnClickListener(new View.OnClickListener() {
 			@SuppressWarnings("deprecation")
 			public void onClick(View v) {
-				showDialog(TIME_DIALOG_ID);
+				showDialog(Common.TIME_DIALOG_ID);
 			}
 		});
 		mPickDate.setOnClickListener(new View.OnClickListener() {
 			@SuppressWarnings("deprecation")
 			public void onClick(View v) {
-				showDialog(DATEPICKER_DIALOG_ID);
+				showDialog(Common.DATEPICKER_DIALOG_ID);
 			}
 		});
 		pickNumPeople.setOnClickListener(new View.OnClickListener() {
 			@SuppressWarnings("deprecation")
 			public void onClick(View v) {
-				showDialog(NUMPEOPLE_DIALOG_ID);
+				showDialog(Common.NUMPEOPLE_DIALOG_ID);
 			}
 		});
 		btnDistance.setOnClickListener(new View.OnClickListener() {
@@ -102,13 +95,13 @@ public class BookActivity extends Activity {
 				Intent intent = new Intent(BookActivity.this,
 						ShowMapActivity.class);
 				Bundle b = new Bundle();
-				b.putString(ShowMapActivity.TOADDR_FLAG,
+				b.putString(Common.TOADDR_FLAG,
 						((TextView) findViewById(R.id.txtAddressTo)).getText()
 								.toString());
-				b.putString(ShowMapActivity.FROMADDR_FLAG,
+				b.putString(Common.FROMADDR_FLAG,
 						((TextView) findViewById(R.id.txtAddressFrom))
 								.getText().toString());
-				b.putBoolean(ShowMapActivity.ADDRESS_LOCKED_FLAG, true);
+				b.putBoolean(Common.ADDRESS_LOCKED_FLAG, true);
 				intent.putExtras(b);
 				startActivity(intent);
 			}
@@ -240,13 +233,13 @@ public class BookActivity extends Activity {
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
-		case TIME_DIALOG_ID:
+		case Common.TIME_DIALOG_ID:
 			return new TimePickerDialog(this, mTimeSetListener, mHour, mMinute,
 					false);
-		case DATEPICKER_DIALOG_ID:
+		case Common.DATEPICKER_DIALOG_ID:
 			return new DatePickerDialog(this, mDateSetListener, mYear, mMonth,
 					mDay);
-		case NUMPEOPLE_DIALOG_ID:
+		case Common.NUMPEOPLE_DIALOG_ID:
 			final CharSequence[] items = { "1", "2", "3", "4", "5", "6", "7",
 					"8", "9", "10" };
 
@@ -311,14 +304,14 @@ public class BookActivity extends Activity {
 		public void onClick(View view) {
 			Intent intent = new Intent(BookActivity.this, ShowMapActivity.class);
 			Bundle b = new Bundle();
-			b.putString(ShowMapActivity.FROMADDR_FLAG,
+			b.putString(Common.FROMADDR_FLAG,
 					((TextView) findViewById(R.id.txtAddressFrom)).getText()
 							.toString());
-			b.putString(ShowMapActivity.TOADDR_FLAG,
+			b.putString(Common.TOADDR_FLAG,
 					((TextView) findViewById(R.id.txtAddressTo)).getText()
 							.toString());
 			intent.putExtras(b);
-			startActivityForResult(intent, PICK_ADDRESS_FROM);
+			startActivityForResult(intent, Common.PICK_ADDRESS_FROM);
 		}
 	};
 
@@ -358,14 +351,14 @@ public class BookActivity extends Activity {
 		public void onClick(View view) {
 			Intent intent = new Intent(BookActivity.this, ShowMapActivity.class);
 			Bundle b = new Bundle();
-			b.putString(ShowMapActivity.TOADDR_FLAG,
+			b.putString(Common.TOADDR_FLAG,
 					((TextView) findViewById(R.id.txtAddressTo)).getText()
 							.toString());
-			b.putString(ShowMapActivity.FROMADDR_FLAG,
+			b.putString(Common.FROMADDR_FLAG,
 					((TextView) findViewById(R.id.txtAddressFrom)).getText()
 							.toString());
 			intent.putExtras(b);
-			startActivityForResult(intent, PICK_ADDRESS_TO);
+			startActivityForResult(intent, Common.PICK_ADDRESS_TO);
 		}
 	};
 
@@ -404,12 +397,12 @@ public class BookActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		int lat, lon;
 		if (newBooking) {
-			if (requestCode == PICK_ADDRESS_FROM) {
+			if (requestCode == Common.PICK_ADDRESS_FROM) {
 				if (resultCode == RESULT_OK) {
 					updateFromAddress(data.getCharSequenceExtra(
-							ShowMapActivity.FROMADDR_FLAG).toString());
-					lat = data.getIntExtra(ShowMapActivity.FROMLAT_FLAG, 0);
-					lon = data.getIntExtra(ShowMapActivity.FROMLONG_FLAG, 0);
+							Common.FROMADDR_FLAG).toString());
+					lat = data.getIntExtra(Common.FROMLAT_FLAG, 0);
+					lon = data.getIntExtra(Common.FROMLONG_FLAG, 0);
 					if (lat != 0 && lon != 0) {
 						pointFrom = new GeoPoint(lat, lon);
 					} else {
@@ -417,12 +410,12 @@ public class BookActivity extends Activity {
 					}
 				}
 			}
-			if (requestCode == PICK_ADDRESS_TO) {
+			if (requestCode == Common.PICK_ADDRESS_TO) {
 				if (resultCode == RESULT_OK) {
 					updateToAddress(data.getCharSequenceExtra(
-							ShowMapActivity.TOADDR_FLAG).toString());
-					lat = data.getIntExtra(ShowMapActivity.TOLAT_FLAG, 0);
-					lon = data.getIntExtra(ShowMapActivity.TOLONG_FLAG, 0);
+							Common.TOADDR_FLAG).toString());
+					lat = data.getIntExtra(Common.TOLAT_FLAG, 0);
+					lon = data.getIntExtra(Common.TOLONG_FLAG, 0);
 					if (lat != 0 && lon != 0) {
 						pointTo = new GeoPoint(lat, lon);
 					} else {
