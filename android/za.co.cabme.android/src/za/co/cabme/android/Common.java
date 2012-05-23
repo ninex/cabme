@@ -31,9 +31,12 @@ public class Common {
 	public static final String FROMLONG_FLAG = "za.co.cabme.android.FromLongFlag";
 	public static final String TOLAT_FLAG = "za.co.cabme.android.ToLatFlag";
 	public static final String TOLONG_FLAG = "za.co.cabme.android.ToLongFlag";
+	public static final String TAXI_FLAG = "za.co.cabme.android.TaxiFlag";
+	public static final String BOOKING_FLAG = "za.co.cabme.android.BookingFlag";
 	//Codes
 	public static final int PICK_ADDRESS_FROM = 11;
 	public static final int PICK_ADDRESS_TO = 12;
+	public static final int PICK_TAXI = 13;
 	public static final int TIME_DIALOG_ID = 0;
 	public static final int DATEPICKER_DIALOG_ID = 1;
 	public static final int NUMPEOPLE_DIALOG_ID = 2;

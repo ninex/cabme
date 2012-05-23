@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clickable="true"
-            android:orientation="vertical">
+            android:orientation="vertical" >
 
             <TextView
                 android:id="@+id/textView1"
@@ -68,7 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clickable="true"
-            android:orientation="vertical">
+            android:orientation="vertical" >
 
             <TextView
                 android:id="@+id/textView2"
@@ -147,7 +147,9 @@
                 android:layout_margin="20dp"
                 android:background="#FFD800" />
         </LinearLayout>
-        <LinearLayout android:id="@+id/btnDistance"
+
+        <LinearLayout
+            android:id="@+id/btnDistance"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical" >
@@ -164,6 +166,32 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0 km" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dip"
+                android:layout_margin="20dp"
+                android:background="#FFD800" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btnTaxi"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/taxi"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <TextView
+                android:id="@+id/txtTaxi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No taxi selected" />
 
             <View
                 android:layout_width="fill_parent"

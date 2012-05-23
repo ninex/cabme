@@ -20,5 +20,11 @@
         android:text="@+id/label"
         android:textSize="24dp" android:minHeight="20dp">
     </TextView>
-
+ <TextView
+        android:id="@+id/price"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:text="@+id/label"
+        android:textSize="24dp" android:minHeight="20dp">
+    </TextView>
 </LinearLayout>

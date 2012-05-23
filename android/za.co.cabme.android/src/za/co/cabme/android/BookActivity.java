@@ -5,6 +5,7 @@ import java.util.Calendar;
 
 import com.google.android.maps.GeoPoint;
 import com.google.gson.Gson;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -13,10 +14,8 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,10 +32,12 @@ import android.widget.Toast;
 public class BookActivity extends Activity {
 
 	boolean newBooking = false;
-	private TextView mTimeDisplay, mDateDisplay, txtNumPeople, txtDistance;
+	private TextView mTimeDisplay, mDateDisplay, txtNumPeople, txtDistance,
+			txtTaxi;
 	private int mHour, mMinute, mDay, mMonth, mYear, mNumPeople;
 	private GeoPoint pointFrom, pointTo;
 	private MapRoute mapRoute;
+	private Entities.Booking booking;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -50,8 +51,11 @@ public class BookActivity extends Activity {
 			newBooking = b.getBoolean(Common.NEWBOOKING_FLAG);
 			if (newBooking) {
 				getActionBar().setTitle("Make Booking");
+				booking = (new Entities()).new Booking();
 			} else {
 				getActionBar().setTitle("View Booking");
+				// Change this to load from bundle later
+				booking = (new Entities()).new Booking();
 			}
 		}
 		LinearLayout btnFrom = (LinearLayout) findViewById(R.id.btnFrom);
@@ -66,10 +70,12 @@ public class BookActivity extends Activity {
 		mDateDisplay = (TextView) findViewById(R.id.dateDisplay);
 		txtNumPeople = (TextView) findViewById(R.id.txtNumPeople);
 		txtDistance = (TextView) findViewById(R.id.txtDistance);
+		txtTaxi = (TextView) findViewById(R.id.txtTaxi);
 		LinearLayout mPickTime = (LinearLayout) findViewById(R.id.pickTime);
 		LinearLayout mPickDate = (LinearLayout) findViewById(R.id.pickDate);
 		LinearLayout pickNumPeople = (LinearLayout) findViewById(R.id.pickNumPeople);
 		LinearLayout btnDistance = (LinearLayout) findViewById(R.id.btnDistance);
+		LinearLayout btnTaxi = (LinearLayout) findViewById(R.id.btnTaxi);
 
 		// add a click listener to the button
 		mPickTime.setOnClickListener(new View.OnClickListener() {
@@ -106,6 +112,7 @@ public class BookActivity extends Activity {
 				startActivity(intent);
 			}
 		});
+		btnTaxi.setOnClickListener(mTaxiListener);
 
 		// get the current time
 		final Calendar c = Calendar.getInstance();
@@ -156,13 +163,16 @@ public class BookActivity extends Activity {
 
 	// updates the date in the TextView
 	private void updateDisplay() {
-		mTimeDisplay.setText(new StringBuilder().append(pad(mHour)).append(":")
-				.append(pad(mMinute)));
-		mDateDisplay.setText(new StringBuilder()
-				// Month is 0 based so add 1
-				.append(pad(mDay)).append("-").append(pad(mMonth + 1))
-				.append("-").append(mYear).append(" "));
+		String time = new StringBuilder().append(pad(mHour)).append(":")
+				.append(pad(mMinute)).toString();
+		String date = new StringBuilder().append(mYear).append("-")
+				.append(pad(mMonth + 1)).append("-").append(pad(mDay))
+				.append(" ").toString();
+		mTimeDisplay.setText(time);
+		mDateDisplay.setText(date);
 		txtNumPeople.setText(new StringBuilder().append(mNumPeople));
+		booking.NumberOfPeople = (byte) mNumPeople;
+		booking.PickupTime = date + time;
 	}
 
 	private void updateAddresses(String from, String to) {
@@ -176,8 +186,18 @@ public class BookActivity extends Activity {
 				&& !to.equals(this.getString(R.string.map_loading_addr))) {
 			txtTo.setText(to);
 		}
+		booking.AddrFrom = txtFrom.getText().toString();
+		booking.AddrTo = txtTo.getText().toString();
+		if (pointFrom != null) {
+			booking.latitudeFrom = pointFrom.getLatitudeE6();
+			booking.longitudeFrom = pointFrom.getLongitudeE6();
+		}
+		if (pointTo != null) {
+			booking.latitudeTo = pointTo.getLatitudeE6();
+			booking.longitudeTo = pointTo.getLongitudeE6();
+		}
 		// We have a route!
-		if (from != null && to != null) {
+		if (pointFrom != null && pointTo != null) {
 			txtDistance.setText(this.getString(R.string.map_calculating_dist));
 			mapRoute.calculateRoute(pointFrom, pointTo);
 		} else {
@@ -199,20 +219,7 @@ public class BookActivity extends Activity {
 			txtDistance.setText(new StringBuilder().append(
 					Math.ceil(distance) / 1000).append(" km"));
 		}
-		new AsyncTask<Void, Void, Void>() {
-			@Override
-			protected Void doInBackground(Void... arg0) {
-				String json = Common
-						.queryRESTurl(getString(R.string.baseWebUrl) + "taxis");
-				Log.i(BookActivity.class.getName(), json);
-				Gson gson = new Gson();
-				Entities.Taxi[] taxis = gson.fromJson(json, Entities.Taxi[].class);
-				for (int i=0;i<taxis.length;i++){
-					Log.i(BookActivity.class.getName(), "Entry "+i+" name:"+taxis[i].Name);
-				}
-				return null;
-			}
-		}.execute();
+		booking.ComputedDistance = (int) Math.ceil(distance);
 	}
 
 	private void updateFromAddress(String address) {
@@ -312,6 +319,17 @@ public class BookActivity extends Activity {
 							.toString());
 			intent.putExtras(b);
 			startActivityForResult(intent, Common.PICK_ADDRESS_FROM);
+		}
+	};
+
+	private OnClickListener mTaxiListener = new OnClickListener() {
+		public void onClick(View view) {
+			Intent intent = new Intent(BookActivity.this, TaxiActivity.class);
+			Bundle b = new Bundle();
+			Gson g = new Gson();
+			b.putString(Common.BOOKING_FLAG, g.toJson(booking));
+			intent.putExtras(b);
+			startActivityForResult(intent, Common.PICK_TAXI);
 		}
 	};
 
@@ -421,6 +439,15 @@ public class BookActivity extends Activity {
 					} else {
 						pointTo = null;
 					}
+				}
+			}
+			if (requestCode == Common.PICK_TAXI) {
+				if (resultCode == RESULT_OK) {
+					String json = data.getStringExtra(Common.TAXI_FLAG);
+					Gson g = new Gson();
+					Entities.Taxi taxi = g.fromJson(json, Entities.Taxi.class);
+					booking.TaxiId = taxi.Id;
+					txtTaxi.setText(taxi.Name);
 				}
 			}
 		}
