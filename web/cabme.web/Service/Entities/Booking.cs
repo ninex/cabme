@@ -65,7 +65,8 @@ namespace cabme.web.Service.Entities
 		public static Bookings GetAllBookingsByNumber (string number)
 		{
 			List<Booking > bookings = new List<Booking> ();
-			return new Bookings (bookings);
+			//return new Bookings (bookings);
+			return GetAllBookings();
 		}
 	}
 
