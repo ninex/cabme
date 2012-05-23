@@ -1,7 +1,10 @@
 package za.co.cabme.android;
 
 import java.lang.reflect.Method;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import com.google.android.maps.GeoPoint;
 import com.google.gson.Gson;
@@ -16,6 +19,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -54,8 +58,13 @@ public class BookActivity extends Activity {
 				booking = (new Entities()).new Booking();
 			} else {
 				getActionBar().setTitle("View Booking");
-				// Change this to load from bundle later
-				booking = (new Entities()).new Booking();
+				String json = b.getString(Common.BOOKING_FLAG, null);
+				if (json != null) {
+					Gson g = new Gson();
+					booking = g.fromJson(json, Entities.Booking.class);
+				} else {
+					booking = (new Entities()).new Booking();
+				}
 			}
 		}
 		LinearLayout btnFrom = (LinearLayout) findViewById(R.id.btnFrom);
@@ -114,19 +123,28 @@ public class BookActivity extends Activity {
 		});
 		btnTaxi.setOnClickListener(mTaxiListener);
 
+		// Routing
+		setupMapRoute();
 		// get the current time
-		final Calendar c = Calendar.getInstance();
+		Calendar c = Calendar.getInstance();
+		mNumPeople = 1;
+		// Booking
+		if (booking != null && booking.Id > 0) {
+			setupFromBooking();
+			try {
+				SimpleDateFormat formatter = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
+				Date date = (Date) formatter.parse(booking.PickupTime);
+				c.setTime(date);
+			} catch (ParseException e) {
+			}
+		}
 		mHour = c.get(Calendar.HOUR_OF_DAY);
 		mMinute = c.get(Calendar.MINUTE);
 		mYear = c.get(Calendar.YEAR);
 		mMonth = c.get(Calendar.MONTH);
 		mDay = c.get(Calendar.DAY_OF_MONTH);
-		mNumPeople = 1;
-
 		// display the current date
 		updateDisplay();
-		// Routing
-		setupMapRoute();
 	}
 
 	private void setupMapRoute() {
@@ -138,6 +156,18 @@ public class BookActivity extends Activity {
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void setupFromBooking() {
+		if (booking.latitudeFrom != 0 && booking.longitudeFrom != 0) {
+			pointFrom = new GeoPoint(booking.latitudeFrom,
+					booking.longitudeFrom);
+		}
+		if (booking.latitudeTo != 0 && booking.longitudeTo != 0) {
+			pointTo = new GeoPoint(booking.latitudeTo, booking.longitudeTo);
+		}
+		updateAddresses(booking.AddrFrom, booking.AddrTo);
+		mNumPeople = booking.NumberOfPeople;
 	}
 
 	// the callback received when the user "sets" the time in the dialog
@@ -176,6 +206,7 @@ public class BookActivity extends Activity {
 	}
 
 	private void updateAddresses(String from, String to) {
+		Log.i(BookActivity.class.getName(), from + "and to:"+to);
 		TextView txtFrom = (TextView) findViewById(R.id.txtAddressFrom);
 		TextView txtTo = (TextView) findViewById(R.id.txtAddressTo);
 		if (from != null && !from.equals("")
