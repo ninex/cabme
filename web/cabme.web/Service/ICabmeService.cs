@@ -19,5 +19,21 @@ namespace cabme.web.Service
            BodyStyle = WebMessageBodyStyle.Bare)]
         [OperationContract]
         Taxis GetAllTaxis();
+		
+		 [WebInvoke(Method = "GET",
+           UriTemplate = "bookings?number={number}",
+           RequestFormat = WebMessageFormat.Json,
+           ResponseFormat = WebMessageFormat.Json,
+           BodyStyle = WebMessageBodyStyle.Bare)]
+        [OperationContract]
+        Bookings GetAllBookingsForNumber(string number);		
+		
+		 [WebInvoke(Method = "POST",
+           UriTemplate = "booking",
+           RequestFormat = WebMessageFormat.Json,
+           ResponseFormat = WebMessageFormat.Json,
+           BodyStyle = WebMessageBodyStyle.Bare)]
+        [OperationContract]
+        Booking MakeBooking(Booking booking);
     }
 }

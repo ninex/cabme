@@ -17,5 +17,13 @@ namespace cabme.web.Service
         {           
             return Taxi.GetAllTaxis();
         }
+		
+		public Booking MakeBooking(Booking booking){
+			return Booking.MakeBooking(booking);
+		}
+		
+		public Bookings GetAllBookingsForNumber(string number){
+			return Booking.GetAllBookingsByNumber(number);
+		}
     }
 }
