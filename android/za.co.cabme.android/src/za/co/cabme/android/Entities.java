@@ -17,6 +17,7 @@ public class Entities {
 		}
 	}
 	public class Booking {
+		public int Id;
 		public String Name;
 		public String PhoneNumber;
 		public byte NumberOfPeople;
