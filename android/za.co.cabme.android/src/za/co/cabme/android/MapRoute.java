@@ -29,81 +29,83 @@ public class MapRoute {
 	}
 
 	public void calculateRoute(GeoPoint from, GeoPoint to) {
-		GeoPoint[] list = new GeoPoint[2];
-		list[0] = from;
-		list[1] = to;
-		// clear the current list of points
-		points = null;
-		new AsyncTask<GeoPoint[], Void, List<GeoPoint>>() {
-			@Override
-			protected List<GeoPoint> doInBackground(GeoPoint[]... addresses) {
-				List<GeoPoint> poly = new ArrayList<GeoPoint>();
-				GeoPoint fromAddr = addresses[0][0];
-				GeoPoint toAddr = addresses[0][1];
+		if (from != null && to != null) {
+			GeoPoint[] list = new GeoPoint[2];
+			list[0] = from;
+			list[1] = to;
+			// clear the current list of points
+			points = null;
+			new AsyncTask<GeoPoint[], Void, List<GeoPoint>>() {
+				@Override
+				protected List<GeoPoint> doInBackground(GeoPoint[]... addresses) {
+					List<GeoPoint> poly = new ArrayList<GeoPoint>();
+					GeoPoint fromPoint = addresses[0][0];
+					GeoPoint toPoint = addresses[0][1];
 
-				String encoded = Common.queryRESTurl(getUrl(
-						(double) fromAddr.getLatitudeE6() / 1e6,
-						(double) fromAddr.getLongitudeE6() / 1e6,
-						(double) toAddr.getLatitudeE6() / 1e6,
-						(double) toAddr.getLongitudeE6() / 1e6));
-				// get only the encoded GeoPoints
-				encoded = encoded.split("points:\"")[1].split("\",")[0];
-				// replace two backslashes by one (some error from the
-				// transmission)
-				encoded = encoded.replace("\\\\", "\\");
+					String encoded = Common.queryRESTurl(getUrl(
+							(double) fromPoint.getLatitudeE6() / 1e6,
+							(double) fromPoint.getLongitudeE6() / 1e6,
+							(double) toPoint.getLatitudeE6() / 1e6,
+							(double) toPoint.getLongitudeE6() / 1e6));
+					// get only the encoded GeoPoints
+					encoded = encoded.split("points:\"")[1].split("\",")[0];
+					// replace two backslashes by one (some error from the
+					// transmission)
+					encoded = encoded.replace("\\\\", "\\");
 
-				// decoding
+					// decoding
 
-				int index = 0, len = encoded.length();
-				int lat = 0, lng = 0;
+					int index = 0, len = encoded.length();
+					int lat = 0, lng = 0;
 
-				while (index < len) {
-					int b, shift = 0, result = 0;
-					do {
-						b = encoded.charAt(index++) - 63;
-						result |= (b & 0x1f) << shift;
-						shift += 5;
-					} while (b >= 0x20);
-					int dlat = ((result & 1) != 0 ? ~(result >> 1)
-							: (result >> 1));
-					lat += dlat;
+					while (index < len) {
+						int b, shift = 0, result = 0;
+						do {
+							b = encoded.charAt(index++) - 63;
+							result |= (b & 0x1f) << shift;
+							shift += 5;
+						} while (b >= 0x20);
+						int dlat = ((result & 1) != 0 ? ~(result >> 1)
+								: (result >> 1));
+						lat += dlat;
 
-					shift = 0;
-					result = 0;
-					do {
+						shift = 0;
+						result = 0;
+						do {
 
-						b = encoded.charAt(index++) - 63;
-						result |= (b & 0x1f) << shift;
-						shift += 5;
-					} while (b >= 0x20);
-					int dlng = ((result & 1) != 0 ? ~(result >> 1)
-							: (result >> 1));
-					lng += dlng;
+							b = encoded.charAt(index++) - 63;
+							result |= (b & 0x1f) << shift;
+							shift += 5;
+						} while (b >= 0x20);
+						int dlng = ((result & 1) != 0 ? ~(result >> 1)
+								: (result >> 1));
+						lng += dlng;
 
-					GeoPoint p = new GeoPoint(
-							(int) (((double) lat / 1E5) * 1E6),
-							(int) (((double) lng / 1E5) * 1E6));
-					poly.add(p);
+						GeoPoint p = new GeoPoint(
+								(int) (((double) lat / 1E5) * 1E6),
+								(int) (((double) lng / 1E5) * 1E6));
+						poly.add(p);
+					}
+					return poly;
 				}
-				return poly;
-			}
 
-			@Override
-			protected void onPostExecute(List<GeoPoint> poly) {
-				points = poly;
-				if (delegate != null) {
-					try {
-						delegate.invoke(obj, new Object[0]);
-					} catch (IllegalArgumentException e) {
-						e.printStackTrace();
-					} catch (IllegalAccessException e) {
-						e.printStackTrace();
-					} catch (InvocationTargetException e) {
-						e.printStackTrace();
+				@Override
+				protected void onPostExecute(List<GeoPoint> poly) {
+					points = poly;
+					if (delegate != null) {
+						try {
+							delegate.invoke(obj, new Object[0]);
+						} catch (IllegalArgumentException e) {
+							e.printStackTrace();
+						} catch (IllegalAccessException e) {
+							e.printStackTrace();
+						} catch (InvocationTargetException e) {
+							e.printStackTrace();
+						}
 					}
 				}
-			}
-		}.execute(list);
+			}.execute(list);
+		}
 	}
 
 	public void calculateRoute(Address from, Address to) {
@@ -149,7 +151,7 @@ public class MapRoute {
 		}.execute(list);
 	}
 
-	public float getDistance() {
+	public int getDistance() {
 		float distance = 0;
 		if (points != null && points.size() > 0) {
 			float[] results = new float[1];
@@ -175,7 +177,7 @@ public class MapRoute {
 				}
 			}
 		}
-		return (float) Math.ceil(distance);
+		return (int) Math.ceil(distance);
 	}
 
 	public List<GeoPoint> getPoints() {

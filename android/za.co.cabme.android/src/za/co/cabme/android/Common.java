@@ -25,12 +25,6 @@ public class Common {
 	public static final String NEWBOOKING_FLAG = "za.co.cabme.android.NewBookingFlag";
 	public static final String REVIEW_FLAG = "za.co.cabme.android.ReviewFlag";
 	public static final String ADDRESS_LOCKED_FLAG = "za.co.cabme.android.AddressLockedFlag";
-	public static final String FROMADDR_FLAG = "za.co.cabme.android.FromAddressFlag";
-	public static final String TOADDR_FLAG = "za.co.cabme.android.ToAddressFlag";
-	public static final String FROMLAT_FLAG = "za.co.cabme.android.FromLatFlag";
-	public static final String FROMLONG_FLAG = "za.co.cabme.android.FromLongFlag";
-	public static final String TOLAT_FLAG = "za.co.cabme.android.ToLatFlag";
-	public static final String TOLONG_FLAG = "za.co.cabme.android.ToLongFlag";
 	public static final String TAXI_FLAG = "za.co.cabme.android.TaxiFlag";
 	public static final String BOOKING_FLAG = "za.co.cabme.android.BookingFlag";
 	//Codes
@@ -40,6 +34,10 @@ public class Common {
 	public static final int TIME_DIALOG_ID = 0;
 	public static final int DATEPICKER_DIALOG_ID = 1;
 	public static final int NUMPEOPLE_DIALOG_ID = 2;
+	
+	public static boolean isNullOrEmpty(String input){
+		return input == null || input.trim().length() == 0;
+	}
 	
 	public static String queryRESTurl(String url) {
 		StringBuilder builder = new StringBuilder();

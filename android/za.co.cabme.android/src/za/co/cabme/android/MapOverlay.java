@@ -15,6 +15,7 @@ import android.graphics.*;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -42,14 +43,15 @@ public class MapOverlay extends Overlay {
 	}
 
 	public MapOverlay(Context context, Object obj, Method delegate,
-			MapView mapView, String lockedAddress, boolean locked,
-			GeoPoint firstPoint) {
+			MapView mapView, GeoPoint firstPoint, String lockedAddress,
+			boolean locked) {
 		this.context = context;
 		this.delegate = delegate;
 		this.obj = obj;
 		this.locked = locked;
 		this.mapView = mapView;
 		firstAddr = lockedAddress;
+		Log.i(MapOverlay.class.getName(),"loading:" +firstAddr + " at "+ firstPoint );
 		setupBalloon();
 		if (firstPoint != null) {
 			p = firstPoint;
@@ -103,10 +105,6 @@ public class MapOverlay extends Overlay {
 		return p;
 	}
 
-	public Address getAddress() {
-		return addr;
-	}
-
 	public String getAddressString() {
 		String add = "";
 		if (addr != null) {
@@ -116,6 +114,9 @@ public class MapOverlay extends Overlay {
 			if (add.endsWith(",\n")) {
 				add = add.substring(0, add.length() - 2);
 			}
+		}
+		if (Common.isNullOrEmpty(add) || add.equals(context.getString(R.string.map_loading_addr))) {
+			return null;
 		}
 		return add;
 	}

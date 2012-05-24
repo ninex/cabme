@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import com.google.android.maps.GeoPoint;
 import com.google.gson.Gson;
 
 import android.app.ActionBar;
@@ -19,7 +18,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -37,9 +35,8 @@ public class BookActivity extends Activity {
 
 	boolean newBooking = false;
 	private TextView mTimeDisplay, mDateDisplay, txtNumPeople, txtDistance,
-			txtTaxi;
+			txtTaxi, txtAddrFrom, txtAddrTo;
 	private int mHour, mMinute, mDay, mMonth, mYear, mNumPeople;
-	private GeoPoint pointFrom, pointTo;
 	private MapRoute mapRoute;
 	private Entities.Booking booking;
 
@@ -80,6 +77,8 @@ public class BookActivity extends Activity {
 		txtNumPeople = (TextView) findViewById(R.id.txtNumPeople);
 		txtDistance = (TextView) findViewById(R.id.txtDistance);
 		txtTaxi = (TextView) findViewById(R.id.txtTaxi);
+		txtAddrFrom = (TextView) findViewById(R.id.txtAddressFrom);
+		txtAddrTo = (TextView) findViewById(R.id.txtAddressTo);
 		LinearLayout mPickTime = (LinearLayout) findViewById(R.id.pickTime);
 		LinearLayout mPickDate = (LinearLayout) findViewById(R.id.pickDate);
 		LinearLayout pickNumPeople = (LinearLayout) findViewById(R.id.pickNumPeople);
@@ -110,12 +109,8 @@ public class BookActivity extends Activity {
 				Intent intent = new Intent(BookActivity.this,
 						ShowMapActivity.class);
 				Bundle b = new Bundle();
-				b.putString(Common.TOADDR_FLAG,
-						((TextView) findViewById(R.id.txtAddressTo)).getText()
-								.toString());
-				b.putString(Common.FROMADDR_FLAG,
-						((TextView) findViewById(R.id.txtAddressFrom))
-								.getText().toString());
+				Gson g = new Gson();
+				b.putString(Common.BOOKING_FLAG, g.toJson(booking));
 				b.putBoolean(Common.ADDRESS_LOCKED_FLAG, true);
 				intent.putExtras(b);
 				startActivity(intent);
@@ -160,14 +155,7 @@ public class BookActivity extends Activity {
 	}
 
 	private void setupFromBooking() {
-		if (booking.latitudeFrom != 0 && booking.longitudeFrom != 0) {
-			pointFrom = new GeoPoint(booking.latitudeFrom,
-					booking.longitudeFrom);
-		}
-		if (booking.latitudeTo != 0 && booking.longitudeTo != 0) {
-			pointTo = new GeoPoint(booking.latitudeTo, booking.longitudeTo);
-		}
-		updateAddresses(booking.AddrFrom, booking.AddrTo);
+		updateAddress();
 		mNumPeople = booking.NumberOfPeople;
 	}
 
@@ -209,60 +197,41 @@ public class BookActivity extends Activity {
 		}
 	}
 
-	private void updateAddresses(String from, String to) {
-		Log.i(BookActivity.class.getName(), from + "and to:" + to);
-		TextView txtFrom = (TextView) findViewById(R.id.txtAddressFrom);
-		TextView txtTo = (TextView) findViewById(R.id.txtAddressTo);
-		if (from != null && !from.equals("")
-				&& !from.equals(this.getString(R.string.map_loading_addr))) {
-			txtFrom.setText(from);
-		}
-		if (to != null && !to.equals("")
-				&& !to.equals(this.getString(R.string.map_loading_addr))) {
-			txtTo.setText(to);
-		}
-		booking.AddrFrom = txtFrom.getText().toString();
-		booking.AddrTo = txtTo.getText().toString();
-		if (pointFrom != null) {
-			booking.latitudeFrom = pointFrom.getLatitudeE6();
-			booking.longitudeFrom = pointFrom.getLongitudeE6();
-		}
-		if (pointTo != null) {
-			booking.latitudeTo = pointTo.getLatitudeE6();
-			booking.longitudeTo = pointTo.getLongitudeE6();
-		}
-		// We have a route!
-		if (pointFrom != null && pointTo != null) {
+	private void updateAddress() {
+		txtAddrFrom.setText(booking.AddrFrom);
+		txtAddrTo.setText(booking.AddrTo);
+		txtDistance.setText(displayedDistance(booking.ComputedDistance));		
+		// check if we have a route
+		if (booking.getFromPoint() != null && booking.getToPoint() != null) {
 			txtDistance.setText(this.getString(R.string.map_calculating_dist));
-			mapRoute.calculateRoute(pointFrom, pointTo);
+			mapRoute.calculateRoute(booking.getFromPoint(),
+					booking.getToPoint());
 		} else {
-			if (txtFrom.getText().length() > 0 && txtTo.getText().length() > 0) {
+			if (!Common.isNullOrEmpty(booking.AddrFrom) && !Common.isNullOrEmpty(booking.AddrTo)) {
 				txtDistance.setText(this
 						.getString(R.string.map_calculating_dist));
-				mapRoute.calculateRoute(txtFrom.getText().toString(), txtTo
-						.getText().toString());
+				mapRoute.calculateRoute(booking.AddrFrom, booking.AddrTo);
 			}
 		}
 	}
 
 	public void updateDistance() {
-		float distance = mapRoute.getDistance();
-		if (distance < 1000) {
-			txtDistance.setText(new StringBuilder().append(Math.ceil(distance))
-					.append(" m"));
-		} else {
-			txtDistance.setText(new StringBuilder().append(
-					Math.ceil(distance) / 1000).append(" km"));
+		int distance = mapRoute.getDistance();
+		txtDistance.setText(displayedDistance(distance));
+		booking.ComputedDistance = distance;
+	}
+	
+	private String displayedDistance(int distance){
+		if (distance == 0){
+			return getString(R.string.distance);
 		}
-		booking.ComputedDistance = (int) Math.ceil(distance);
-	}
-
-	private void updateFromAddress(String address) {
-		updateAddresses(address, null);
-	}
-
-	private void updateToAddress(String address) {
-		updateAddresses(null, address);
+		if (distance < 1000) {
+			return new StringBuilder().append(Math.ceil(distance))
+					.append(" m").toString();
+		} else {
+			return new StringBuilder().append(
+					Math.ceil(distance) / 1000).append(" km").toString();
+		}
 	}
 
 	private static String pad(int c) {
@@ -346,12 +315,8 @@ public class BookActivity extends Activity {
 		public void onClick(View view) {
 			Intent intent = new Intent(BookActivity.this, ShowMapActivity.class);
 			Bundle b = new Bundle();
-			b.putString(Common.FROMADDR_FLAG,
-					((TextView) findViewById(R.id.txtAddressFrom)).getText()
-							.toString());
-			b.putString(Common.TOADDR_FLAG,
-					((TextView) findViewById(R.id.txtAddressTo)).getText()
-							.toString());
+			Gson g = new Gson();
+			b.putString(Common.BOOKING_FLAG, g.toJson(booking));
 			intent.putExtras(b);
 			startActivityForResult(intent, Common.PICK_ADDRESS_FROM);
 		}
@@ -379,9 +344,10 @@ public class BookActivity extends Activity {
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int whichButton) {
-									pointFrom = null;
-									updateFromAddress(inputFrom.getText()
-											.toString());
+									booking.setFromPoint(null);
+									booking.AddrFrom = inputFrom.getText()
+											.toString();
+									updateAddress();
 								}
 							})
 					.setNegativeButton("Cancel",
@@ -404,12 +370,8 @@ public class BookActivity extends Activity {
 		public void onClick(View view) {
 			Intent intent = new Intent(BookActivity.this, ShowMapActivity.class);
 			Bundle b = new Bundle();
-			b.putString(Common.TOADDR_FLAG,
-					((TextView) findViewById(R.id.txtAddressTo)).getText()
-							.toString());
-			b.putString(Common.FROMADDR_FLAG,
-					((TextView) findViewById(R.id.txtAddressFrom)).getText()
-							.toString());
+			Gson g = new Gson();
+			b.putString(Common.BOOKING_FLAG, g.toJson(booking));
 			intent.putExtras(b);
 			startActivityForResult(intent, Common.PICK_ADDRESS_TO);
 		}
@@ -426,9 +388,10 @@ public class BookActivity extends Activity {
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int whichButton) {
-									pointTo = null;
-									updateToAddress(inputTo.getText()
-											.toString());
+									booking.setToPoint(null);
+									booking.AddrTo = inputTo.getText()
+											.toString();
+									updateAddress();
 								}
 							})
 					.setNegativeButton("Cancel",
@@ -448,32 +411,14 @@ public class BookActivity extends Activity {
 	};
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		int lat, lon;
 		if (newBooking) {
-			if (requestCode == Common.PICK_ADDRESS_FROM) {
+			if (requestCode == Common.PICK_ADDRESS_FROM
+					|| requestCode == Common.PICK_ADDRESS_TO) {
 				if (resultCode == RESULT_OK) {
-					updateFromAddress(data.getCharSequenceExtra(
-							Common.FROMADDR_FLAG).toString());
-					lat = data.getIntExtra(Common.FROMLAT_FLAG, 0);
-					lon = data.getIntExtra(Common.FROMLONG_FLAG, 0);
-					if (lat != 0 && lon != 0) {
-						pointFrom = new GeoPoint(lat, lon);
-					} else {
-						pointFrom = null;
-					}
-				}
-			}
-			if (requestCode == Common.PICK_ADDRESS_TO) {
-				if (resultCode == RESULT_OK) {
-					updateToAddress(data.getCharSequenceExtra(
-							Common.TOADDR_FLAG).toString());
-					lat = data.getIntExtra(Common.TOLAT_FLAG, 0);
-					lon = data.getIntExtra(Common.TOLONG_FLAG, 0);
-					if (lat != 0 && lon != 0) {
-						pointTo = new GeoPoint(lat, lon);
-					} else {
-						pointTo = null;
-					}
+					Gson g = new Gson();
+					String json = data.getStringExtra(Common.BOOKING_FLAG);
+					booking = g.fromJson(json, Entities.Booking.class);
+					updateAddress();
 				}
 			}
 			if (requestCode == Common.PICK_TAXI) {
