@@ -132,7 +132,8 @@ public class BookActivity extends Activity {
 		if (booking != null && booking.Id > 0) {
 			setupFromBooking();
 			try {
-				SimpleDateFormat formatter = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
+				SimpleDateFormat formatter = new SimpleDateFormat(
+						"yy-MM-dd hh:mm:ss");
 				Date date = (Date) formatter.parse(booking.PickupTime);
 				c.setTime(date);
 			} catch (ParseException e) {
@@ -203,10 +204,13 @@ public class BookActivity extends Activity {
 		txtNumPeople.setText(new StringBuilder().append(mNumPeople));
 		booking.NumberOfPeople = (byte) mNumPeople;
 		booking.PickupTime = date + time;
+		if (booking.SelectedTaxi != null) {
+			txtTaxi.setText(booking.SelectedTaxi.Name);
+		}
 	}
 
 	private void updateAddresses(String from, String to) {
-		Log.i(BookActivity.class.getName(), from + "and to:"+to);
+		Log.i(BookActivity.class.getName(), from + "and to:" + to);
 		TextView txtFrom = (TextView) findViewById(R.id.txtAddressFrom);
 		TextView txtTo = (TextView) findViewById(R.id.txtAddressTo);
 		if (from != null && !from.equals("")
@@ -478,6 +482,7 @@ public class BookActivity extends Activity {
 					Gson g = new Gson();
 					Entities.Taxi taxi = g.fromJson(json, Entities.Taxi.class);
 					booking.TaxiId = taxi.Id;
+					booking.SelectedTaxi = taxi;
 					txtTaxi.setText(taxi.Name);
 				}
 			}

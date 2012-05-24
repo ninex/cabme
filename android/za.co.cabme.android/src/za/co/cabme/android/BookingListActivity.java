@@ -78,7 +78,7 @@ public class BookingListActivity extends ListActivity {
 		@Override
 		protected Entities.Booking[] doInBackground(String... number) {
 			String json = Common.queryRESTurl(getString(R.string.baseWebUrl)
-					+ "bookings?number=" + number[0]);
+					+ "/bookings?number=" + number[0]);
 			Gson gson = new Gson();
 			Entities.Booking[] bookings = gson.fromJson(json,
 					Entities.Booking[].class);

@@ -66,7 +66,7 @@ public class TaxiActivity extends ListActivity {
 		@Override
 		protected Entities.Taxi[] doInBackground(Entities.Booking... arg0) {
 			String json = Common.queryRESTurl(getString(R.string.baseWebUrl)
-					+ "taxis");
+					+ "/taxis");
 			Gson gson = new Gson();
 			Entities.Taxi[] taxis = gson.fromJson(json, Entities.Taxi[].class);
 			return taxis;
