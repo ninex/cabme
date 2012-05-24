@@ -2,10 +2,7 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="cabme.web/Service/Entities/Booking.cs">
     <Files>
-      <File FileName="cabme.web/Service/ICabmeService.cs" Line="18" Column="51" />
-      <File FileName="cabme.web/Service/CabmeService.svc.cs" Line="14" Column="18" />
-      <File FileName="cabme.web/Service/Entities/Taxi.cs" Line="37" Column="38" />
-      <File FileName="cabme.web/Service/Entities/Booking.cs" Line="69" Column="28" />
+      <File FileName="cabme.web/Service/Entities/Booking.cs" Line="50" Column="15" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -15,7 +12,6 @@
               <Node name="Entities" expanded="True">
                 <Node name="Booking.cs" selected="True" />
               </Node>
-              <Node name="CabmeService.svc" expanded="True" />
             </Node>
           </Node>
         </State>

@@ -15,8 +15,6 @@ namespace cabme.web {
 		
 		protected System.Web.UI.WebControls.ContentPlaceHolder HeadContent;
 		
-		protected System.Web.UI.WebControls.Menu NavigationMenu;
-		
 		protected System.Web.UI.WebControls.ContentPlaceHolder MainContent;
 	}
 }

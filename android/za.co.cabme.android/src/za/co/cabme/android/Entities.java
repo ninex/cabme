@@ -30,6 +30,7 @@ public class Entities {
 		public int longitudeTo;
 		public int ComputedDistance;
 		public int TaxiId;
+		public Taxi SelectedTaxi;
 		
 		public Booking(){			
 		}

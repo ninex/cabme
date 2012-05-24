@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Collections.Generic;
 
@@ -45,6 +46,9 @@ namespace cabme.web.Service.Entities
 		
 		[DataMember]
 		public int TaxiId {get;set;}
+		
+		[DataMember]
+		public Taxi SelectedTaxi {get;set;}
 
 		public static Booking MakeBooking (Booking booking)
 		{
@@ -57,14 +61,14 @@ namespace cabme.web.Service.Entities
 			List<Booking > bookings = new List<Booking> ();
 			bookings.Add (new Booking (){ Id=2, Name="Tester", PhoneNumber="0825098244", NumberOfPeople=2, PickupTime="2012-05-21 14:21:00",
 				AddrFrom = "12 Carstens street, Cape Town, 8001", AddrTo = "11 Firdale Avenue, Cape Town, 8001", latitudeFrom=0,longitudeFrom=0,
-				latitudeTo=0,longitudeTo=0, ComputedDistance=1600, TaxiId=1});
+				latitudeTo=0,longitudeTo=0, ComputedDistance=1600, TaxiId=1, SelectedTaxi = Taxi.GetAllTaxis().Where(p => p.Id == 1).FirstOrDefault()});
 					
 			return new Bookings (bookings);
 		}
 
 		public static Bookings GetAllBookingsByNumber (string number)
 		{
-			List<Booking > bookings = new List<Booking> ();
+			//List<Booking > bookings = new List<Booking> ();
 			//return new Bookings (bookings);
 			return GetAllBookings();
 		}
