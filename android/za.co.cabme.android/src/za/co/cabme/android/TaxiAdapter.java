@@ -1,7 +1,5 @@
 package za.co.cabme.android;
 
-import java.text.DecimalFormat;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,12 +29,8 @@ public class TaxiAdapter extends ArrayAdapter<Entities.Taxi> {
 		
 		Entities.Taxi taxi = values[position];
 		label.setText(taxi.Name);
-		float computedPrice = (float)(taxi.RatePerKm * booking.ComputedDistance) / 1000;
-		if (computedPrice < taxi.MinRate){
-			computedPrice = taxi.MinRate;
-		}
-		DecimalFormat dec = new DecimalFormat("###.##");
-		price.setText("R" + dec.format(computedPrice/100));
+		booking.SelectedTaxi = taxi;
+		price.setText(booking.getPriceEstimate());
 
 		return rowView;
 	}

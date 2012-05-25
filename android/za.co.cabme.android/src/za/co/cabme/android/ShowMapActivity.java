@@ -48,12 +48,13 @@ public class ShowMapActivity extends MapActivity {
 
 		Bundle b = getIntent().getExtras();
 		if (b != null) {
+			boolean mapFrom = b.getBoolean(Common.MAPFROM_FLAG, true);
 			String json = b.getString(Common.BOOKING_FLAG);
 			Gson g = new Gson();
 			booking = g.fromJson(json, Entities.Booking.class);
 			if (booking != null) {
 				locked = b.getBoolean(Common.ADDRESS_LOCKED_FLAG, false);
-				loadPoints();
+				loadPoints(mapFrom);
 			}
 		}
 	}
@@ -85,11 +86,15 @@ public class ShowMapActivity extends MapActivity {
 	private void loadMyLocation() {
 		myLocationOverlay = new MyLocationOverlay(this, mapView);
 		mapView.getOverlays().add(myLocationOverlay);
-		myLocationOverlay.runOnFirstFix(new Runnable() {
-			public void run() {
-				mapController.animateTo(myLocationOverlay.getMyLocation());
-			}
-		});
+		if (overlayFrom.getPoint() == null) {
+			myLocationOverlay.runOnFirstFix(new Runnable() {
+				public void run() {
+					mapController.animateTo(myLocationOverlay.getMyLocation());
+				}
+			});
+		} else {
+			mapController.animateTo(overlayFrom.getPoint());
+		}
 	}
 
 	private void loadRouting() {
@@ -103,7 +108,7 @@ public class ShowMapActivity extends MapActivity {
 		}
 	}
 
-	private void loadPoints() {
+	private void loadPoints(boolean mapFrom) {
 		// Delegate
 		Method delegate = null;
 		try {
@@ -116,24 +121,31 @@ public class ShowMapActivity extends MapActivity {
 		from = booking.getFromPoint();
 		to = booking.getToPoint();
 		if (from == null || Common.isNullOrEmpty(booking.AddrFrom)) {
-			// Add my location overlay
-			loadMyLocation();
-			// Point select overlay
 			overlayFrom = new MapOverlay(getBaseContext(), this, delegate);
-			mapView.getOverlays().add(overlayFrom);
 		} else {
-			// Point select overlay
 			overlayFrom = new MapOverlay(getBaseContext(), this, delegate,
 					mapView, from, booking.AddrFrom, locked);
-			mapView.getOverlays().add(overlayFrom);
-			if (to != null && !Common.isNullOrEmpty(booking.AddrTo)) {
-				// Point select overlay
-				overlayTo = new MapOverlay(getBaseContext(), this, delegate,
-						mapView, to, booking.AddrTo, locked);
+		}
+		if (to != null && !Common.isNullOrEmpty(booking.AddrTo)) {
+			overlayTo = new MapOverlay(getBaseContext(), this, delegate,
+					mapView, to, booking.AddrTo, locked);
+		} else {
+			overlayTo = new MapOverlay(getBaseContext(), this, delegate);
+		}
+
+		if (mapFrom) {
+			loadMyLocation();
+			if (overlayTo != null) {
 				mapView.getOverlays().add(overlayTo);
-			} else {
-				// Point select overlay
-				overlayTo = new MapOverlay(getBaseContext(), this, delegate);
+			}
+			if (overlayFrom != null) {
+				mapView.getOverlays().add(overlayFrom);
+			}
+		} else {
+			if (overlayFrom != null) {
+				mapView.getOverlays().add(overlayFrom);
+			}
+			if (overlayTo != null) {
 				mapView.getOverlays().add(overlayTo);
 			}
 		}
@@ -141,7 +153,8 @@ public class ShowMapActivity extends MapActivity {
 
 	public void updateRoute() {
 		if (overlayFrom != null && overlayTo != null) {
-			mapRoute.calculateRoute(booking.getFromPoint(), booking.getToPoint());
+			mapRoute.calculateRoute(booking.getFromPoint(),
+					booking.getToPoint());
 		}
 	}
 

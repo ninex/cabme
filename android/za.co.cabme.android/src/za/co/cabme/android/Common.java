@@ -24,6 +24,7 @@ public class Common {
 	//Flags
 	public static final String NEWBOOKING_FLAG = "za.co.cabme.android.NewBookingFlag";
 	public static final String REVIEW_FLAG = "za.co.cabme.android.ReviewFlag";
+	public static final String MAPFROM_FLAG = "za.co.cabme.android.MapFromFlag";
 	public static final String ADDRESS_LOCKED_FLAG = "za.co.cabme.android.AddressLockedFlag";
 	public static final String TAXI_FLAG = "za.co.cabme.android.TaxiFlag";
 	public static final String BOOKING_FLAG = "za.co.cabme.android.BookingFlag";

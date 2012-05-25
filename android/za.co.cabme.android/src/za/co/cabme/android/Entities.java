@@ -1,5 +1,7 @@
 package za.co.cabme.android;
 
+import java.text.DecimalFormat;
+
 import com.google.android.maps.GeoPoint;
 
 public class Entities {
@@ -36,6 +38,7 @@ public class Entities {
 		public Taxi SelectedTaxi;
 
 		public Booking() {
+			NumberOfPeople = 1;
 		}
 
 		public GeoPoint getFromPoint() {
@@ -70,6 +73,18 @@ public class Entities {
 				latitudeTo = 0;
 				longitudeTo = 0;
 			}
+		}
+
+		public String getPriceEstimate() {
+			if (SelectedTaxi != null) {
+				float computedPrice = (float) (SelectedTaxi.RatePerKm * ComputedDistance) / 1000;
+				if (computedPrice < SelectedTaxi.MinRate) {
+					computedPrice = SelectedTaxi.MinRate;
+				}
+				DecimalFormat dec = new DecimalFormat("###.##");
+				return "R" + dec.format(computedPrice / 100);
+			}
+			return "No estimate";
 		}
 	}
 }

@@ -19,10 +19,17 @@ public class BookingAdapter extends ArrayAdapter<Entities.Booking> {
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View rowView = inflater.inflate(R.layout.rowlayout, parent, false);
-		TextView label = (TextView) rowView.findViewById(R.id.label);	
+		TextView label = (TextView) rowView.findViewById(R.id.label);
+		TextView fromRow = (TextView) rowView.findViewById(R.id.fromRow);
+		TextView toRow = (TextView) rowView.findViewById(R.id.toRow);
+		TextView price = (TextView) rowView.findViewById(R.id.price);
 		Entities.Booking booking = values[position];
-		
-		label.setText(booking.AddrTo);
+
+		label.setText(booking.PickupTime);
+		fromRow.setText(context.getString(R.string.from) + ": "
+				+ booking.AddrFrom);
+		toRow.setText(context.getString(R.string.to) + ": " + booking.AddrTo);
+		price.setText(context.getString(R.string.price) + ": " + booking.getPriceEstimate());
 
 		return rowView;
 	}

@@ -1,7 +1,6 @@
 package za.co.cabme.android;
 
 import java.lang.reflect.Method;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -47,29 +46,27 @@ public class BookActivity extends Activity {
 		getActionBar().setDisplayOptions(
 				ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_HOME_AS_UP
 						| ActionBar.DISPLAY_SHOW_TITLE);
-		Bundle b = getIntent().getExtras();
+		Bundle b;
+		if (savedInstanceState == null) {
+			b = getIntent().getExtras();
+		} else {
+			b = savedInstanceState;
+		}
 		if (b != null) {
 			newBooking = b.getBoolean(Common.NEWBOOKING_FLAG);
+			String json = b.getString(Common.BOOKING_FLAG, null);
+			if (json != null) {
+				Gson g = new Gson();
+				booking = g.fromJson(json, Entities.Booking.class);
+			} else {
+				booking = (new Entities()).new Booking();
+			}
 			if (newBooking) {
 				getActionBar().setTitle("Make Booking");
-				booking = (new Entities()).new Booking();
 			} else {
-				getActionBar().setTitle("View Booking");
-				String json = b.getString(Common.BOOKING_FLAG, null);
-				if (json != null) {
-					Gson g = new Gson();
-					booking = g.fromJson(json, Entities.Booking.class);
-				} else {
-					booking = (new Entities()).new Booking();
-				}
+				getActionBar().setTitle("View Booking");				
 			}
 		}
-		LinearLayout btnFrom = (LinearLayout) findViewById(R.id.btnFrom);
-		btnFrom.setOnClickListener(mMapFromListener);
-		btnFrom.setOnLongClickListener(mMapFromLongListener);
-		LinearLayout btnTo = (LinearLayout) findViewById(R.id.btnTo);
-		btnTo.setOnClickListener(mMapToListener);
-		btnTo.setOnLongClickListener(mMapToLongListener);
 
 		// capture our View elements
 		mTimeDisplay = (TextView) findViewById(R.id.timeDisplay);
@@ -79,60 +76,40 @@ public class BookActivity extends Activity {
 		txtTaxi = (TextView) findViewById(R.id.txtTaxi);
 		txtAddrFrom = (TextView) findViewById(R.id.txtAddressFrom);
 		txtAddrTo = (TextView) findViewById(R.id.txtAddressTo);
+		LinearLayout btnFrom = (LinearLayout) findViewById(R.id.btnFrom);
+		LinearLayout btnTo = (LinearLayout) findViewById(R.id.btnTo);
 		LinearLayout mPickTime = (LinearLayout) findViewById(R.id.pickTime);
 		LinearLayout mPickDate = (LinearLayout) findViewById(R.id.pickDate);
 		LinearLayout pickNumPeople = (LinearLayout) findViewById(R.id.pickNumPeople);
 		LinearLayout btnDistance = (LinearLayout) findViewById(R.id.btnDistance);
 		LinearLayout btnTaxi = (LinearLayout) findViewById(R.id.btnTaxi);
 
-		// add a click listener to the button
-		mPickTime.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			public void onClick(View v) {
-				showDialog(Common.TIME_DIALOG_ID);
-			}
-		});
-		mPickDate.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			public void onClick(View v) {
-				showDialog(Common.DATEPICKER_DIALOG_ID);
-			}
-		});
-		pickNumPeople.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings("deprecation")
-			public void onClick(View v) {
-				showDialog(Common.NUMPEOPLE_DIALOG_ID);
-			}
-		});
-		btnDistance.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				Intent intent = new Intent(BookActivity.this,
-						ShowMapActivity.class);
-				Bundle b = new Bundle();
-				Gson g = new Gson();
-				b.putString(Common.BOOKING_FLAG, g.toJson(booking));
-				b.putBoolean(Common.ADDRESS_LOCKED_FLAG, true);
-				intent.putExtras(b);
-				startActivity(intent);
-			}
-		});
-		btnTaxi.setOnClickListener(mTaxiListener);
+		btnFrom.setOnClickListener(mMapFromListener);
+		btnFrom.setOnLongClickListener(mMapFromLongListener);
+		btnTo.setOnClickListener(mMapToListener);
+		btnTo.setOnLongClickListener(mMapToLongListener);
+		mPickTime.setOnClickListener(pickTimeClickListener);
+		mPickDate.setOnClickListener(pickDateClickListener);
+		pickNumPeople.setOnClickListener(pickNumPeopleClickListener);
+		btnDistance.setOnClickListener(btnDistanceClickListener);
+		btnTaxi.setOnClickListener(btnTaxiListener);
 
 		// Routing
 		setupMapRoute();
 		// get the current time
 		Calendar c = Calendar.getInstance();
-		mNumPeople = 1;
 		// Booking
-		if (booking != null && booking.Id > 0) {
+		if (booking != null) {
 			setupFromBooking();
 			try {
 				SimpleDateFormat formatter = new SimpleDateFormat(
 						"yy-MM-dd hh:mm:ss");
 				Date date = (Date) formatter.parse(booking.PickupTime);
 				c.setTime(date);
-			} catch (ParseException e) {
+			} catch (Exception e) {
 			}
+		}else{
+			mNumPeople = 1;
 		}
 		mHour = c.get(Calendar.HOUR_OF_DAY);
 		mMinute = c.get(Calendar.MINUTE);
@@ -157,28 +134,8 @@ public class BookActivity extends Activity {
 	private void setupFromBooking() {
 		updateAddress();
 		mNumPeople = booking.NumberOfPeople;
+		((TextView) findViewById(R.id.txtPrice)).setText(booking.getPriceEstimate());
 	}
-
-	// the callback received when the user "sets" the time in the dialog
-	private TimePickerDialog.OnTimeSetListener mTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
-		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-			mHour = hourOfDay;
-			mMinute = minute;
-			updateDisplay();
-		}
-	};
-
-	// the callback received when the user "sets" the date in the dialog
-	private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
-
-		public void onDateSet(DatePicker view, int year, int monthOfYear,
-				int dayOfMonth) {
-			mYear = year;
-			mMonth = monthOfYear;
-			mDay = dayOfMonth;
-			updateDisplay();
-		}
-	};
 
 	// updates the date in the TextView
 	private void updateDisplay() {
@@ -195,19 +152,21 @@ public class BookActivity extends Activity {
 		if (booking.SelectedTaxi != null) {
 			txtTaxi.setText(booking.SelectedTaxi.Name);
 		}
+		((TextView) findViewById(R.id.txtPrice)).setText(booking.getPriceEstimate());
 	}
 
 	private void updateAddress() {
 		txtAddrFrom.setText(booking.AddrFrom);
 		txtAddrTo.setText(booking.AddrTo);
-		txtDistance.setText(displayedDistance(booking.ComputedDistance));		
+		txtDistance.setText(displayedDistance(booking.ComputedDistance));
 		// check if we have a route
 		if (booking.getFromPoint() != null && booking.getToPoint() != null) {
 			txtDistance.setText(this.getString(R.string.map_calculating_dist));
 			mapRoute.calculateRoute(booking.getFromPoint(),
 					booking.getToPoint());
 		} else {
-			if (!Common.isNullOrEmpty(booking.AddrFrom) && !Common.isNullOrEmpty(booking.AddrTo)) {
+			if (!Common.isNullOrEmpty(booking.AddrFrom)
+					&& !Common.isNullOrEmpty(booking.AddrTo)) {
 				txtDistance.setText(this
 						.getString(R.string.map_calculating_dist));
 				mapRoute.calculateRoute(booking.AddrFrom, booking.AddrTo);
@@ -219,18 +178,21 @@ public class BookActivity extends Activity {
 		int distance = mapRoute.getDistance();
 		txtDistance.setText(displayedDistance(distance));
 		booking.ComputedDistance = distance;
+		booking.TaxiId = 0;
+		booking.SelectedTaxi = null;
+		txtTaxi.setText(getString(R.string.select_taxi));
 	}
-	
-	private String displayedDistance(int distance){
-		if (distance == 0){
+
+	private String displayedDistance(int distance) {
+		if (distance == 0) {
 			return getString(R.string.distance);
 		}
 		if (distance < 1000) {
-			return new StringBuilder().append(Math.ceil(distance))
-					.append(" m").toString();
+			return new StringBuilder().append(Math.ceil(distance)).append(" m")
+					.toString();
 		} else {
-			return new StringBuilder().append(
-					Math.ceil(distance) / 1000).append(" km").toString();
+			return new StringBuilder().append(Math.ceil(distance) / 1000)
+					.append(" km").toString();
 		}
 	}
 
@@ -239,6 +201,25 @@ public class BookActivity extends Activity {
 			return String.valueOf(c);
 		else
 			return "0" + String.valueOf(c);
+	}
+
+	private void makeBooking() {
+		Toast.makeText(BookActivity.this, "Booking created", Toast.LENGTH_SHORT)
+				.show();
+	}
+
+	private void cancelBooking() {
+		Toast.makeText(BookActivity.this, "Booking cancelled",
+				Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle savedInstance) {
+		if (savedInstance != null) {
+			savedInstance.putBoolean(Common.NEWBOOKING_FLAG, newBooking);
+			Gson g = new Gson();
+			savedInstance.putString(Common.BOOKING_FLAG, g.toJson(booking));
+		}
 	}
 
 	@Override
@@ -301,28 +282,57 @@ public class BookActivity extends Activity {
 		}
 	}
 
-	private void makeBooking() {
-		Toast.makeText(BookActivity.this, "Booking created", Toast.LENGTH_SHORT)
-				.show();
-	}
+	// the callback received when the user "sets" the time in the dialog
+	private TimePickerDialog.OnTimeSetListener mTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
+		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+			mHour = hourOfDay;
+			mMinute = minute;
+			updateDisplay();
+		}
+	};
 
-	private void cancelBooking() {
-		Toast.makeText(BookActivity.this, "Booking cancelled",
-				Toast.LENGTH_SHORT).show();
-	}
+	// the callback received when the user "sets" the date in the dialog
+	private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
+		public void onDateSet(DatePicker view, int year, int monthOfYear,
+				int dayOfMonth) {
+			mYear = year;
+			mMonth = monthOfYear;
+			mDay = dayOfMonth;
+			updateDisplay();
+		}
+	};
 
-	private OnClickListener mMapFromListener = new OnClickListener() {
-		public void onClick(View view) {
+	private OnClickListener pickTimeClickListener = new OnClickListener() {
+		@SuppressWarnings("deprecation")
+		public void onClick(View v) {
+			showDialog(Common.TIME_DIALOG_ID);
+		}
+	};
+	private OnClickListener pickDateClickListener = new OnClickListener() {
+		@SuppressWarnings("deprecation")
+		public void onClick(View v) {
+			showDialog(Common.DATEPICKER_DIALOG_ID);
+		}
+	};
+	private OnClickListener pickNumPeopleClickListener = new OnClickListener() {
+		@SuppressWarnings("deprecation")
+		public void onClick(View v) {
+			showDialog(Common.NUMPEOPLE_DIALOG_ID);
+		}
+	};
+	private OnClickListener btnDistanceClickListener = new OnClickListener() {
+		public void onClick(View v) {
 			Intent intent = new Intent(BookActivity.this, ShowMapActivity.class);
 			Bundle b = new Bundle();
 			Gson g = new Gson();
 			b.putString(Common.BOOKING_FLAG, g.toJson(booking));
+			b.putBoolean(Common.ADDRESS_LOCKED_FLAG, true);
 			intent.putExtras(b);
-			startActivityForResult(intent, Common.PICK_ADDRESS_FROM);
+			startActivity(intent);
 		}
 	};
 
-	private OnClickListener mTaxiListener = new OnClickListener() {
+	private OnClickListener btnTaxiListener = new OnClickListener() {
 		public void onClick(View view) {
 			Intent intent = new Intent(BookActivity.this, TaxiActivity.class);
 			Bundle b = new Bundle();
@@ -330,6 +340,18 @@ public class BookActivity extends Activity {
 			b.putString(Common.BOOKING_FLAG, g.toJson(booking));
 			intent.putExtras(b);
 			startActivityForResult(intent, Common.PICK_TAXI);
+		}
+	};
+
+	private OnClickListener mMapFromListener = new OnClickListener() {
+		public void onClick(View view) {
+			Intent intent = new Intent(BookActivity.this, ShowMapActivity.class);
+			Bundle b = new Bundle();
+			Gson g = new Gson();
+			b.putString(Common.BOOKING_FLAG, g.toJson(booking));
+			b.putBoolean(Common.MAPFROM_FLAG, true);
+			intent.putExtras(b);
+			startActivityForResult(intent, Common.PICK_ADDRESS_FROM);
 		}
 	};
 
@@ -372,6 +394,7 @@ public class BookActivity extends Activity {
 			Bundle b = new Bundle();
 			Gson g = new Gson();
 			b.putString(Common.BOOKING_FLAG, g.toJson(booking));
+			b.putBoolean(Common.MAPFROM_FLAG, false);
 			intent.putExtras(b);
 			startActivityForResult(intent, Common.PICK_ADDRESS_TO);
 		}

@@ -18,5 +18,7 @@
     <string name="map_select_addr">Address:</string>
     <string name="distance">Distance</string>
     <string name="taxi">Taxi</string>
+    <string name="price">Estimated Price</string>
+    <string name="select_taxi">No taxi selected</string>
     <string name="baseWebUrl">http://www.cabme.co.za/service/cabmeservice.svc</string>
 </resources>
