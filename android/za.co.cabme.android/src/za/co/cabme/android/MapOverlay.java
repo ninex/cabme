@@ -51,7 +51,8 @@ public class MapOverlay extends Overlay {
 		this.locked = locked;
 		this.mapView = mapView;
 		firstAddr = lockedAddress;
-		Log.i(MapOverlay.class.getName(),"loading:" +firstAddr + " at "+ firstPoint );
+		Log.i(MapOverlay.class.getName(), "loading:" + firstAddr + " at "
+				+ firstPoint);
 		setupBalloon();
 		if (firstPoint != null) {
 			p = firstPoint;
@@ -115,7 +116,8 @@ public class MapOverlay extends Overlay {
 				add = add.substring(0, add.length() - 2);
 			}
 		}
-		if (Common.isNullOrEmpty(add) || add.equals(context.getString(R.string.map_loading_addr))) {
+		if (Common.isNullOrEmpty(add)
+				|| add.equals(context.getString(R.string.map_loading_addr))) {
 			return null;
 		}
 		return add;
@@ -130,8 +132,28 @@ public class MapOverlay extends Overlay {
 			Point screenPts = new Point();
 			mapView.getProjection().toPixels(p, screenPts);
 
-			canvas.drawBitmap(marker, screenPts.x - (marker.getWidth() / 2),
-					screenPts.y - (marker.getHeight()), null);
+			Paint panelPaint = new Paint();
+			panelPaint.setAntiAlias(true);
+			panelPaint.setARGB(230, 255, 216, 0);
+
+			int r = 15, offset = 30;
+
+			Path baloonTip = new Path();
+			baloonTip.moveTo(screenPts.x - r, screenPts.y - offset);
+			baloonTip.lineTo(screenPts.x, screenPts.y);
+			baloonTip.lineTo(screenPts.x + r, screenPts.y - offset);
+			canvas.drawPath(baloonTip, panelPaint);
+
+			canvas.drawArc(new RectF(screenPts.x - r, screenPts.y - offset - r,
+					screenPts.x + r, screenPts.y - offset + r), 180, 180, true,
+					panelPaint);
+
+			panelPaint.setARGB(230, 0, 0, 0);
+			canvas.drawCircle(screenPts.x, screenPts.y - offset , r / 3,
+					panelPaint);
+
+			// canvas.drawBitmap(marker, screenPts.x - (marker.getWidth() / 2),
+			// screenPts.y - (marker.getHeight()), null);
 		}
 		return true;
 	}
