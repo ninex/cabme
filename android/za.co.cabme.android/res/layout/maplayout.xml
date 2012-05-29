@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
@@ -14,17 +14,27 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:text="@string/from" />
+            android:layout_centerInParent="true"
+            android:layout_toLeftOf="@+id/spacer"
+            android:text="@string/map_select_from"
+            android:width="80dp" />
+
+        <Space
+            android:id="@+id/spacer"
+            android:layout_width="5dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
 
         <Button
             android:id="@+id/btnTo"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:text="@string/to" />
-    </LinearLayout>
+            android:layout_centerInParent="true"
+            android:layout_toRightOf="@+id/spacer"
+            android:text="@string/map_select_to" 
+            android:width="80dp"/>
+    </RelativeLayout>
 
     <com.google.android.maps.MapView
         xmlns:android="http://schemas.android.com/apk/res/android"
