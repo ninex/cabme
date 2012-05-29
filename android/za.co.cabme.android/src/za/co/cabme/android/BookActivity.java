@@ -452,6 +452,7 @@ public class BookActivity extends Activity {
 					booking.TaxiId = taxi.Id;
 					booking.SelectedTaxi = taxi;
 					txtTaxi.setText(taxi.Name);
+					((TextView) findViewById(R.id.txtPrice)).setText(booking.getPriceEstimate());
 				}
 			}
 		}
