@@ -4,150 +4,120 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:stretchColumns="0,3" >
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center" >
 
-        <TableRow
-            android:id="@+id/tableRow1"
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center" >
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <TableLayout android:layout_gravity="center" >
-
-                <TableRow>
-
-                    <ImageButton
-                        android:id="@+id/btnBook"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_margin="15dp"
-                        android:background="#000"
-                        android:minHeight="100dip"
-                        android:minWidth="100dip"
-                        android:src="@drawable/ic_launcher"
-                        android:text="Button" />
-                </TableRow>
-
-                <TableRow android:layout_gravity="center" >
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center_vertical"
-                        android:gravity="center"
-                        android:text="@string/newBook" />
-                </TableRow>
-            </TableLayout>
-
-            <TableLayout android:layout_gravity="center" >
-
-                <TableRow>
-
-                    <ImageButton
-                        android:id="@+id/btnViewBookings"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_margin="15dp"
-                        android:background="#000"
-                        android:minHeight="100dip"
-                        android:minWidth="100dip"
-                        android:src="@drawable/ic_launcher_bookings"
-                        android:text="Button" />
-                </TableRow>
-
-                <TableRow>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center_vertical"
-                        android:gravity="center"
-                        android:text="@string/viewBookings" />
-                </TableRow>
-            </TableLayout>
+            <ImageButton
+                android:id="@+id/btnBook"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="#000"
+                android:minHeight="100dip"
+                android:minWidth="100dip"
+                android:src="@drawable/ic_launcher"
+                android:text="Button" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </TableRow>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/btnBook"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:text="@string/newBook" 
+                android:layout_centerInParent="true"/>
+        </RelativeLayout>
 
-        <TableRow
-            android:id="@+id/tableRow2"
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"  >
+
+            <ImageButton
+                android:id="@+id/btnViewBookings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="#000"
+                android:minHeight="100dip"
+                android:minWidth="100dip"
+                android:src="@drawable/ic_launcher_bookings"
+                android:text="Button" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/btnViewBookings"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:text="@string/viewBookings" 
+                android:layout_centerInParent="true"/>
+        </RelativeLayout>
+    </LinearLayout>
 
-            <TableLayout android:layout_gravity="center" >
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center" >
 
-                <TableRow>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
 
-                    <ImageButton
-                        android:id="@+id/btnReview"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_margin="15dp"
-                        android:background="#000"
-                        android:minHeight="100dip"
-                        android:minWidth="100dip"
-                        android:src="@drawable/ic_launcher"
-                        android:text="Button" />
-                </TableRow>
-
-                <TableRow>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center_vertical"
-                        android:gravity="center"
-                        android:text="@string/review" />
-                </TableRow>
-            </TableLayout>
-
-            <TableLayout android:layout_gravity="center" >
-
-                <TableRow>
-
-                    <ImageButton
-                        android:id="@+id/btnSettings"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_margin="15dp"
-                        android:background="#000"
-                        android:minHeight="100dip"
-                        android:minWidth="100dip"
-                        android:src="@drawable/ic_launcher" />
-                </TableRow>
-
-                <TableRow>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center_vertical"
-                        android:gravity="center"
-                        android:text="@string/settings" />
-                </TableRow>
-            </TableLayout>
+            <ImageButton
+                android:id="@+id/btnReview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="#000"
+                android:minHeight="100dip"
+                android:minWidth="100dip"
+                android:src="@drawable/ic_launcher"
+                android:text="Button" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </TableRow>
-    </TableLayout>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/btnReview"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:text="@string/review" 
+                android:layout_centerInParent="true"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" >
+
+            <ImageButton
+                android:id="@+id/btnSettings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="#000"
+                android:minHeight="100dip"
+                android:minWidth="100dip"
+                android:src="@drawable/ic_launcher" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/btnSettings"
+                android:layout_gravity="center_vertical"
+                android:text="@string/settings"
+                android:layout_centerInParent="true"/>
+        </RelativeLayout>
+    </LinearLayout>
 
 </LinearLayout>
