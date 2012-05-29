@@ -12,6 +12,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -26,15 +29,15 @@ public class ShowMapActivity extends MapActivity {
 	private MapView mapView;
 	private LocationManager locationManager;
 	private MyLocationOverlay myLocationOverlay;
-	private MapOverlay overlayFrom, overlayTo;
+	private MapOverlay mapOverlay;
 	private GeoUpdateHandler geoListener;
 	private RouteOverlay routeOverlay;
 	private MapRoute mapRoute;
-	private boolean locked = false;
+	private boolean locked = false, mapFrom = true;
 	private Entities.Booking booking;
 
-	public void onCreate(Bundle bundle) {
-		super.onCreate(bundle);
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		setContentView(R.layout.maplayout); // bind the layout to the activity
 		getActionBar().setDisplayOptions(
 				ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_HOME_AS_UP
@@ -45,10 +48,14 @@ public class ShowMapActivity extends MapActivity {
 		loadRouting();
 		routeOverlay = new RouteOverlay(getBaseContext(), null);
 		mapView.getOverlays().add(routeOverlay);
-
-		Bundle b = getIntent().getExtras();
+		Bundle b;
+		if (savedInstanceState == null) {
+			b = getIntent().getExtras();
+		} else {
+			b = savedInstanceState;
+		}
 		if (b != null) {
-			boolean mapFrom = b.getBoolean(Common.MAPFROM_FLAG, true);
+			mapFrom = b.getBoolean(Common.MAPFROM_FLAG, true);
 			String json = b.getString(Common.BOOKING_FLAG);
 			Gson g = new Gson();
 			booking = g.fromJson(json, Entities.Booking.class);
@@ -71,29 +78,31 @@ public class ShowMapActivity extends MapActivity {
 		// Configure location manager
 		geoListener = new GeoUpdateHandler();
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-				100, 10, geoListener);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
+				10, geoListener);
 		locationManager.requestLocationUpdates(
-				LocationManager.NETWORK_PROVIDER, 100, 10, geoListener);
+				LocationManager.NETWORK_PROVIDER, 0, 10, geoListener);
 		// point to last GPS location
 		Location l = locationManager
 				.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-		int lat = (int) (l.getLatitude() * 1E6);
-		int lng = (int) (l.getLongitude() * 1E6);
-		mapController.animateTo(new GeoPoint(lat, lng));
+		if (l != null) {
+			int lat = (int) (l.getLatitude() * 1E6);
+			int lng = (int) (l.getLongitude() * 1E6);
+			mapController.animateTo(new GeoPoint(lat, lng));
+		}
 	}
 
-	private void loadMyLocation() {
+	private void loadMyLocation(GeoPoint from) {
 		myLocationOverlay = new MyLocationOverlay(this, mapView);
 		mapView.getOverlays().add(myLocationOverlay);
-		if (overlayFrom.getPoint() == null) {
+		if (from == null) {
 			myLocationOverlay.runOnFirstFix(new Runnable() {
 				public void run() {
 					mapController.animateTo(myLocationOverlay.getMyLocation());
 				}
 			});
 		} else {
-			mapController.animateTo(overlayFrom.getPoint());
+			mapController.animateTo(from);
 		}
 	}
 
@@ -117,44 +126,38 @@ public class ShowMapActivity extends MapActivity {
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
 		}
+		Button btnFrom = (Button) findViewById(R.id.btnFrom);
+		btnFrom.setOnClickListener(mbtnFromListener);
+		Button btnTo = (Button) findViewById(R.id.btnTo);
+		btnTo.setOnClickListener(mbtnToListener);
+
 		GeoPoint from = null, to = null;
 		from = booking.getFromPoint();
 		to = booking.getToPoint();
-		if (from == null || Common.isNullOrEmpty(booking.AddrFrom)) {
-			overlayFrom = new MapOverlay(getBaseContext(), this, delegate);
-		} else {
-			overlayFrom = new MapOverlay(getBaseContext(), this, delegate,
-					mapView, from, booking.AddrFrom, locked);
-		}
-		if (to != null && !Common.isNullOrEmpty(booking.AddrTo)) {
-			overlayTo = new MapOverlay(getBaseContext(), this, delegate,
-					mapView, to, booking.AddrTo, locked);
-		} else {
-			overlayTo = new MapOverlay(getBaseContext(), this, delegate);
-		}
-
-		if (mapFrom) {
-			loadMyLocation();
-			if (overlayTo != null) {
-				mapView.getOverlays().add(overlayTo);
-			}
-			if (overlayFrom != null) {
-				mapView.getOverlays().add(overlayFrom);
-			}
-		} else {
-			if (overlayFrom != null) {
-				mapView.getOverlays().add(overlayFrom);
-			}
-			if (overlayTo != null) {
-				mapView.getOverlays().add(overlayTo);
-			}
-		}
+		loadMyLocation(from);
+		mapOverlay = new MapOverlay(getBaseContext(), this, delegate, mapView,
+				from, to, booking.AddrFrom, booking.AddrTo, locked, mapFrom);
+		mapView.getOverlays().add(mapOverlay);
 	}
 
+	private OnClickListener mbtnFromListener = new OnClickListener() {
+		public void onClick(View view) {
+			mapOverlay.useFrom();
+		}
+	};
+	private OnClickListener mbtnToListener = new OnClickListener() {
+		public void onClick(View view) {
+			mapOverlay.useTo();
+		}
+	};
+
 	public void updateRoute() {
-		if (overlayFrom != null && overlayTo != null) {
-			mapRoute.calculateRoute(booking.getFromPoint(),
-					booking.getToPoint());
+		if (mapOverlay != null) {
+			GeoPoint from = mapOverlay.getFromPoint(), to = mapOverlay
+					.getToPoint();
+			booking.setFromPoint(from);
+			booking.setToPoint(to);
+			mapRoute.calculateRoute(from, to);
 		}
 	}
 
@@ -181,13 +184,11 @@ public class ShowMapActivity extends MapActivity {
 		case R.id.menu_Save:
 			if (!locked) {
 				Gson g = new Gson();
-				if (overlayFrom != null) {
-					booking.AddrFrom = overlayFrom.getAddressString();
-					booking.setFromPoint(overlayFrom.getPoint());
-				}
-				if (overlayTo != null) {
-					booking.AddrTo = overlayTo.getAddressString();
-					booking.setToPoint(overlayTo.getPoint());
+				if (mapOverlay != null) {
+					booking.AddrFrom = mapOverlay.getAddressFromString();
+					booking.setFromPoint(mapOverlay.getFromPoint());
+					booking.AddrTo = mapOverlay.getAddressToString();
+					booking.setToPoint(mapOverlay.getToPoint());
 				}
 				i.putExtra(Common.BOOKING_FLAG, g.toJson(booking));
 			}
@@ -218,6 +219,16 @@ public class ShowMapActivity extends MapActivity {
 	@Override
 	protected boolean isRouteDisplayed() {
 		return false;
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle savedInstance) {
+		if (savedInstance != null) {
+			savedInstance.putBoolean(Common.MAPFROM_FLAG, mapFrom);
+			savedInstance.putBoolean(Common.ADDRESS_LOCKED_FLAG, locked);
+			Gson g = new Gson();
+			savedInstance.putString(Common.BOOKING_FLAG, g.toJson(booking));
+		}
 	}
 
 	@Override
