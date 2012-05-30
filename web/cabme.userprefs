@@ -2,11 +2,13 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="cabme.web/Service/Entities/Booking.cs">
     <Files>
-      <File FileName="cabme.web/Service/Entities/Booking.cs" Line="50" Column="15" />
+      <File FileName="cabme.web/Service/Entities/Booking.cs" Line="35" Column="21" />
+      <File FileName="cabme.web/Service/Entities/Taxi.cs" Line="16" Column="35" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
+          <Node name="cabme.data" expanded="True" />
           <Node name="cabme.web" expanded="True">
             <Node name="Service" expanded="True">
               <Node name="Entities" expanded="True">
