@@ -25,5 +25,10 @@ namespace cabme.web.Service
 		public Bookings GetAllBookingsForNumber(string number){
 			return Booking.GetAllBookingsByNumber(number);
 		}
+
+        public Bookings GetAllBookings()
+        {
+            return Booking.GetAllBookings();
+        }
     }
 }

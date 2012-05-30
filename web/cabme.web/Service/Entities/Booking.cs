@@ -2,88 +2,199 @@ using System;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Collections.Generic;
+using Data = cabme.data;
 
 namespace cabme.web.Service.Entities
 {
     [DataContract(Namespace = "http://cabme.co.za/booking")]
-	public class Booking
-	{		
-		[DataMember]
-		public int Id { get; set; }
-		
+    public class Booking
+    {
         [DataMember]
-		public string Name { get; set; }
+        public int Id { get; set; }
 
         [DataMember]
-		public string PhoneNumber { get; set; }
+        public string Name { get; set; }
 
         [DataMember]
-		public byte NumberOfPeople { get; set; }
+        public string PhoneNumber { get; set; }
 
         [DataMember]
-		public string PickupTime { get; set; }
+        public short NumberOfPeople { get; set; }
 
         [DataMember]
-		public string AddrFrom { get; set; }
+        public string PickupTime { get; set; }
+        public DateTime dPickupTime
+        {
+            set
+            {
+                PickupTime = value.ToString("yyyy-MM-dd hh:mm:ss");
+            }
+        }
 
         [DataMember]
-		public int latitudeFrom { get; set; }
+        public string AddrFrom { get; set; }
 
         [DataMember]
-		public int longitudeFrom { get; set; }
+        public int latitudeFrom { get; set; }
 
         [DataMember]
-		public string AddrTo { get; set; }
+        public int longitudeFrom { get; set; }
 
         [DataMember]
-		public int latitudeTo { get; set; }
+        public string AddrTo { get; set; }
 
         [DataMember]
-		public int longitudeTo { get; set; }
+        public int latitudeTo { get; set; }
 
         [DataMember]
-		public int ComputedDistance { get; set; }
-		
-		[DataMember]
-		public int TaxiId {get;set;}
-		
-		[DataMember]
-		public Taxi SelectedTaxi {get;set;}
+        public int longitudeTo { get; set; }
 
-		public static Booking MakeBooking (Booking booking)
-		{
-			booking.Id = 999;
-			return booking;
-		}
-		
-		public static Bookings GetAllBookings ()
-		{
-			List<Booking > bookings = new List<Booking> ();
-			bookings.Add (new Booking (){ Id=2, Name="Tester", PhoneNumber="0825098244", NumberOfPeople=2, PickupTime="2012-05-21 14:21:00",
-				AddrFrom = "12 Carstens street, Cape Town, 8001", AddrTo = "11 Firdale Avenue, Cape Town, 8001", latitudeFrom=0,longitudeFrom=0,
-				latitudeTo=0,longitudeTo=0, ComputedDistance=1600, TaxiId=1, SelectedTaxi = Taxi.GetAllTaxis().Where(p => p.Id == 1).FirstOrDefault()});
-					
-			return new Bookings (bookings);
-		}
+        [DataMember]
+        public int ComputedDistance { get; set; }
 
-		public static Bookings GetAllBookingsByNumber (string number)
-		{
-			//List<Booking > bookings = new List<Booking> ();
-			//return new Bookings (bookings);
-			return GetAllBookings();
-		}
-	}
+        [DataMember]
+        public int EstimatedPrice { get; set; }
+
+        [DataMember]
+        public bool Active { get; set; }
+
+        [DataMember]
+        public bool Confirmed { get; set; }
+
+        [DataMember]
+        public int TaxiId { get; set; }
+
+        public DateTime LastModified { get; set; }
+
+        public DateTime Created { get; set; }
+
+        [DataMember]
+        public Taxi SelectedTaxi { get; set; }
+
+        public static Booking MakeBooking(Booking booking)
+        {
+            using (Data.contentDataContext context = new Data.contentDataContext())
+            {
+                Data.Booking dataBooking;
+                if (booking.Id == 0)
+                {
+                    dataBooking = new Data.Booking()
+                    {
+                        Id = 0,
+                        Created = DateTime.Now
+                    };
+                }
+                else
+                {
+                    dataBooking = context.Bookings.Where(p => p.Id == booking.Id).SingleOrDefault();
+                    if (dataBooking == null)
+                    {
+                        return null;
+                    }
+                }
+                dataBooking.Name = booking.Name;
+                dataBooking.PhoneNumber = booking.PhoneNumber;
+                dataBooking.NumberOfPeople = booking.NumberOfPeople;
+                dataBooking.PickupTime = DateTime.ParseExact(booking.PickupTime, "yyyy-MM-dd hh:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+                dataBooking.AddrFrom = booking.AddrFrom;
+                dataBooking.LatitudeFrom = booking.latitudeFrom;
+                dataBooking.LongitudeFrom = booking.longitudeFrom;
+                dataBooking.AddrTo = booking.AddrTo;
+                dataBooking.LatitudeTo = booking.latitudeTo;
+                dataBooking.LongitudeTo = booking.longitudeTo;
+                dataBooking.ComputedDistance = booking.ComputedDistance;
+                dataBooking.EstimatedPrice = booking.EstimatedPrice;
+                dataBooking.Active = booking.Active;
+                dataBooking.Confirmed = booking.Confirmed;
+                dataBooking.TaxiId = booking.TaxiId;
+                dataBooking.LastModified = DateTime.Now;
+                if (dataBooking.Id == 0)
+                {
+                    context.Bookings.InsertOnSubmit(dataBooking);
+                }
+                context.SubmitChanges();
+                booking.Id = dataBooking.Id;
+            }
+            return booking;
+        }
+
+        public static Bookings GetAllBookings()
+        {
+            try
+            {
+                using (Data.contentDataContext context = new Data.contentDataContext())
+                {
+                    return new Bookings(AllQueryableBookings(context).ToList());
+                }
+            }
+            catch { return null; }
+        }
+
+        public static Bookings GetAllBookingsByNumber(string number)
+        {
+            try
+            {
+                using (Data.contentDataContext context = new Data.contentDataContext())
+                {
+                    return new Bookings(AllQueryableBookings(context).Where(p => p.PhoneNumber == number).ToList());
+                }
+            }
+            catch { return null; }
+        }
+
+        private static IQueryable<Booking> AllQueryableBookings(Data.contentDataContext context)
+        {
+            return from booking in context.Bookings
+                   join taxi in context.Taxis on booking.TaxiId equals taxi.Id into outer
+                   from taxi in outer.DefaultIfEmpty()
+                   select new Booking
+                   {
+                       Id = booking.Id,
+                       Name = booking.Name,
+                       PhoneNumber = booking.PhoneNumber,
+                       NumberOfPeople = booking.NumberOfPeople,
+                       dPickupTime =booking.PickupTime,
+                       AddrFrom = booking.AddrFrom,
+                       latitudeFrom = booking.LatitudeFrom.HasValue ? booking.LatitudeFrom.Value : 0,
+                       longitudeFrom = booking.LongitudeFrom.HasValue ? booking.LongitudeFrom.Value : 0,
+                       AddrTo = booking.AddrTo,
+                       latitudeTo = booking.LatitudeTo.HasValue ? booking.LatitudeTo.Value : 0,
+                       longitudeTo = booking.LongitudeTo.HasValue ? booking.LongitudeTo.Value : 0,
+                       ComputedDistance = booking.ComputedDistance,
+                       EstimatedPrice = booking.EstimatedPrice,
+                       Active = booking.Active,
+                       Confirmed = booking.Confirmed,
+                       TaxiId = booking.TaxiId.HasValue ? booking.TaxiId.Value : 0,
+                       LastModified = booking.LastModified,
+                       Created = booking.Created,
+                       SelectedTaxi = new Taxi
+                       {
+                           Id = taxi.Id,
+                           Name = taxi.Name,
+                           PhoneNumber = taxi.PhoneNumber,
+                           RatePerKm = taxi.RatePerKm,
+                           MinRate = taxi.MinRate,
+                           Units = taxi.Units,
+                           dStartOfService = taxi.StartOfService,
+                           dEndOfService = taxi.EndOfService,
+                           Is24HService = taxi.Is24HService,
+                           FleetSize = taxi.FleetSize
+                       }
+                   };
+        }
+    }
 
     [CollectionDataContract(Namespace = "http://cabme.co.za/bookings")]
-	public class Bookings : List<Booking>
-	{
-		public Bookings ()
-		{
-		}
+    public class Bookings : List<Booking>
+    {
+        public Bookings()
+        {
+        }
 
-		public Bookings (List<Booking> bookings) : base(bookings)
-		{
-		}
-	}
+        public Bookings(List<Booking> bookings)
+            : base(bookings)
+        {
+        }
+    }
 }
 
