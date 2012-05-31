@@ -11,6 +11,7 @@ public class Entities {
 		public String PhoneNumber;
 		public int RatePerKm;
 		public int MinRate;
+		public int Units;
 		public String StartOfService;
 		public String EndOfService;
 		public boolean Is24HService;
@@ -34,11 +35,16 @@ public class Entities {
 		public int latitudeTo;
 		public int longitudeTo;
 		public int ComputedDistance;
+		public int EstimatedPrice;
+		public boolean Active;
+		public boolean Confirmed;
 		public int TaxiId;
 		public Taxi SelectedTaxi;
 
 		public Booking() {
 			NumberOfPeople = 1;
+			Active = true;
+			Confirmed = false;
 		}
 
 		public GeoPoint getFromPoint() {
@@ -77,13 +83,21 @@ public class Entities {
 
 		public String getPriceEstimate() {
 			if (SelectedTaxi != null) {
-				float computedPrice = (float) (SelectedTaxi.RatePerKm * ComputedDistance) / 1000;
+				int computedPrice = (int) (SelectedTaxi.RatePerKm * ComputedDistance) / 1000;
 				if (computedPrice < SelectedTaxi.MinRate) {
 					computedPrice = SelectedTaxi.MinRate;
+				} else {
+					if (computedPrice % SelectedTaxi.Units > 0) {
+						computedPrice = computedPrice
+								- (computedPrice % SelectedTaxi.Units)
+								+ SelectedTaxi.Units;
+					}
 				}
+				EstimatedPrice = computedPrice;
 				DecimalFormat dec = new DecimalFormat("###.##");
-				return "R" + dec.format(computedPrice / 100);
+				return "R" + dec.format((float) computedPrice / 100);
 			}
+			EstimatedPrice = 0;
 			return "No estimate";
 		}
 	}
