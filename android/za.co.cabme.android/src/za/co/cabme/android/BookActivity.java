@@ -42,7 +42,7 @@ public class BookActivity extends Activity {
 
 	boolean newBooking = false;
 	private TextView mTimeDisplay, mDateDisplay, txtNumPeople, txtDistance,
-			txtTaxi, txtAddrFrom, txtAddrTo;
+			txtTaxi, txtAddrFrom, txtAddrTo, txtPrice;
 	private int mHour, mMinute, mDay, mMonth, mYear, mNumPeople;
 	private MapRoute mapRoute;
 	private Entities.Booking booking;
@@ -84,6 +84,7 @@ public class BookActivity extends Activity {
 		txtTaxi = (TextView) findViewById(R.id.txtTaxi);
 		txtAddrFrom = (TextView) findViewById(R.id.txtAddressFrom);
 		txtAddrTo = (TextView) findViewById(R.id.txtAddressTo);
+		txtPrice = ((TextView) findViewById(R.id.txtPrice));
 		LinearLayout btnFrom = (LinearLayout) findViewById(R.id.btnFrom);
 		LinearLayout btnTo = (LinearLayout) findViewById(R.id.btnTo);
 		LinearLayout mPickTime = (LinearLayout) findViewById(R.id.pickTime);
@@ -142,8 +143,10 @@ public class BookActivity extends Activity {
 	private void setupFromBooking() {
 		updateAddress();
 		mNumPeople = booking.NumberOfPeople;
-		((TextView) findViewById(R.id.txtPrice)).setText(booking
-				.getPriceEstimate());
+		txtPrice.setText(booking.getPriceEstimate());
+		if (booking.SelectedTaxi != null) {
+			txtTaxi.setText(booking.SelectedTaxi.Name);
+		}
 	}
 
 	// updates the date in the TextView
@@ -161,8 +164,7 @@ public class BookActivity extends Activity {
 		if (booking.SelectedTaxi != null) {
 			txtTaxi.setText(booking.SelectedTaxi.Name);
 		}
-		((TextView) findViewById(R.id.txtPrice)).setText(booking
-				.getPriceEstimate());
+		txtPrice.setText(booking.getPriceEstimate());
 	}
 
 	private void updateAddress() {
@@ -188,9 +190,13 @@ public class BookActivity extends Activity {
 		int distance = mapRoute.getDistance();
 		txtDistance.setText(displayedDistance(distance));
 		booking.ComputedDistance = distance;
-		booking.TaxiId = 0;
-		booking.SelectedTaxi = null;
-		txtTaxi.setText(getString(R.string.select_taxi));
+		if (booking.SelectedTaxi != null) {
+			txtPrice.setText(booking.getPriceEstimate());
+		} else {
+			booking.TaxiId = 0;
+			booking.SelectedTaxi = null;
+			txtTaxi.setText(getString(R.string.select_taxi));
+		}
 	}
 
 	private String displayedDistance(int distance) {
@@ -230,9 +236,8 @@ public class BookActivity extends Activity {
 			new AsyncTask<Void, Void, String>() {
 				@Override
 				protected String doInBackground(Void... params) {
-					Gson g = new GsonBuilder()
-							.serializeNulls()
-							//.setPrettyPrinting()
+					Gson g = new GsonBuilder().serializeNulls()
+					// .setPrettyPrinting()
 							.create();
 					String result = Common.postRESTurl(
 							getString(R.string.baseWebUrl) + "/booking",
@@ -522,8 +527,7 @@ public class BookActivity extends Activity {
 					booking.TaxiId = taxi.Id;
 					booking.SelectedTaxi = taxi;
 					txtTaxi.setText(taxi.Name);
-					((TextView) findViewById(R.id.txtPrice)).setText(booking
-							.getPriceEstimate());
+					txtPrice.setText(booking.getPriceEstimate());
 				}
 			}
 		}
