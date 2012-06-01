@@ -42,6 +42,6 @@ namespace cabme.web.Service
            ResponseFormat = WebMessageFormat.Json,
            BodyStyle = WebMessageBodyStyle.Bare)]
         [OperationContract]
-        Booking MakeBooking(Booking booking);
+        void MakeBooking(Booking booking);
     }
 }

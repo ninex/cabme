@@ -95,7 +95,7 @@ namespace cabme.web.Service.Entities
                 dataBooking.Name = booking.Name;
                 dataBooking.PhoneNumber = booking.PhoneNumber;
                 dataBooking.NumberOfPeople = booking.NumberOfPeople;
-                dataBooking.PickupTime = DateTime.ParseExact(booking.PickupTime, "yyyy-MM-dd hh:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+                dataBooking.PickupTime = DateTime.ParseExact(booking.PickupTime, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
                 dataBooking.AddrFrom = booking.AddrFrom;
                 dataBooking.LatitudeFrom = booking.latitudeFrom;
                 dataBooking.LongitudeFrom = booking.longitudeFrom;
@@ -153,7 +153,7 @@ namespace cabme.web.Service.Entities
                        Name = booking.Name,
                        PhoneNumber = booking.PhoneNumber,
                        NumberOfPeople = booking.NumberOfPeople,
-                       dPickupTime =booking.PickupTime,
+                       dPickupTime = booking.PickupTime,
                        AddrFrom = booking.AddrFrom,
                        latitudeFrom = booking.LatitudeFrom.HasValue ? booking.LatitudeFrom.Value : 0,
                        longitudeFrom = booking.LongitudeFrom.HasValue ? booking.LongitudeFrom.Value : 0,
