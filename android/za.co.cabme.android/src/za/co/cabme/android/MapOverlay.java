@@ -82,16 +82,22 @@ public class MapOverlay extends Overlay {
 	}
 
 	private void getFirstPoint() {
-		new AsyncTask<String, Void, GeoPoint>() {
+		new AsyncTask<String, Void, Void>() {
 			@Override
-			protected GeoPoint doInBackground(String... address) {
+			protected Void doInBackground(String... address) {
 				try {
+					boolean useFr = useFrom;
 					Geocoder geoCoder = new Geocoder(context,
 							Locale.getDefault());
 					Address addr = geoCoder.getFromLocationName(address[0], 1)
 							.get(0);
-					return new GeoPoint((int) (addr.getLatitude() * 1e6),
+					GeoPoint point = new GeoPoint((int) (addr.getLatitude() * 1e6),
 							(int) (addr.getLongitude() * 1e6));
+					if (useFr) {
+						from = point;
+					} else {
+						to = point;
+					}
 				} catch (IOException ex) {
 					ex.printStackTrace();
 				}
@@ -99,12 +105,9 @@ public class MapOverlay extends Overlay {
 			}
 
 			@Override
-			protected void onPostExecute(GeoPoint point) {
-				if (useFrom) {
-					from = point;
-				} else {
-					to = point;
-				}
+			protected void onPostExecute(Void param) {
+				regenFrom = true;
+				regenTo = false;
 				drawBalloon(mapView, firstAddrFrom);
 			}
 		}.execute(firstAddrFrom);

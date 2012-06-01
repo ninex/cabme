@@ -23,14 +23,18 @@ public class BookingAdapter extends ArrayAdapter<Entities.Booking> {
 		TextView fromRow = (TextView) rowView.findViewById(R.id.fromRow);
 		TextView toRow = (TextView) rowView.findViewById(R.id.toRow);
 		TextView price = (TextView) rowView.findViewById(R.id.price);
+		TextView taxi = (TextView) rowView.findViewById(R.id.taxi);
 		Entities.Booking booking = values[position];
 
 		label.setText(booking.PickupTime);
 		fromRow.setText(context.getString(R.string.from) + ": "
 				+ booking.AddrFrom);
 		toRow.setText(context.getString(R.string.to) + ": " + booking.AddrTo);
-		price.setText(context.getString(R.string.price) + ": " + booking.getPriceEstimate());
-
+		price.setText(context.getString(R.string.price) + ": "
+				+ booking.getPriceEstimate());
+		if (booking.SelectedTaxi != null) {
+			taxi.setText(booking.SelectedTaxi.Name);
+		}
 		return rowView;
 	}
 }

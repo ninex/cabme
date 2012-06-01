@@ -40,12 +40,12 @@
             android:id="@+id/fromRow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:maxLines="4"
             android:minHeight="20dp"
-            android:text="fromRow"
-            android:textSize="18dp"
             android:minLines="1"
-            android:maxLines="4" 
-            android:layout_margin="10dp" >
+            android:text="fromRow"
+            android:textSize="18dp" >
         </TextView>
     </LinearLayout>
 
@@ -58,12 +58,12 @@
             android:id="@+id/toRow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:maxLines="4"
             android:minHeight="20dp"
-            android:text="toRow"
-            android:textSize="18dp"
             android:minLines="1"
-            android:maxLines="4"  
-            android:layout_margin="10dp">
+            android:text="toRow"
+            android:textSize="18dp" >
         </TextView>
     </LinearLayout>
 
@@ -72,17 +72,29 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
+        
+
         <TextView
             android:id="@+id/price"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:gravity="right"
             android:minHeight="20dp"
             android:text="distance"
-            android:textSize="18dp"
-            android:gravity="right"
-            android:layout_marginRight="10dp"  >
+            android:textSize="18dp" >
         </TextView>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/taxi"
+        android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:gravity="right"
+            android:minHeight="20dp"
+            android:text="taxi"
+            android:textSize="18dp"  />
 
     <View
         android:layout_width="fill_parent"
