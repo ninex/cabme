@@ -6,17 +6,25 @@ import java.util.Calendar;
 import java.util.Date;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -64,7 +72,7 @@ public class BookActivity extends Activity {
 			if (newBooking) {
 				getActionBar().setTitle("Make Booking");
 			} else {
-				getActionBar().setTitle("View Booking");				
+				getActionBar().setTitle("View Booking");
 			}
 		}
 
@@ -108,7 +116,7 @@ public class BookActivity extends Activity {
 				c.setTime(date);
 			} catch (Exception e) {
 			}
-		}else{
+		} else {
 			mNumPeople = 1;
 		}
 		mHour = c.get(Calendar.HOUR_OF_DAY);
@@ -134,7 +142,8 @@ public class BookActivity extends Activity {
 	private void setupFromBooking() {
 		updateAddress();
 		mNumPeople = booking.NumberOfPeople;
-		((TextView) findViewById(R.id.txtPrice)).setText(booking.getPriceEstimate());
+		((TextView) findViewById(R.id.txtPrice)).setText(booking
+				.getPriceEstimate());
 	}
 
 	// updates the date in the TextView
@@ -148,11 +157,12 @@ public class BookActivity extends Activity {
 		mDateDisplay.setText(date);
 		txtNumPeople.setText(new StringBuilder().append(mNumPeople));
 		booking.NumberOfPeople = (byte) mNumPeople;
-		booking.PickupTime = date + time;
+		booking.PickupTime = date + time + ":00";
 		if (booking.SelectedTaxi != null) {
 			txtTaxi.setText(booking.SelectedTaxi.Name);
 		}
-		((TextView) findViewById(R.id.txtPrice)).setText(booking.getPriceEstimate());
+		((TextView) findViewById(R.id.txtPrice)).setText(booking
+				.getPriceEstimate());
 	}
 
 	private void updateAddress() {
@@ -204,8 +214,68 @@ public class BookActivity extends Activity {
 	}
 
 	private void makeBooking() {
-		Toast.makeText(BookActivity.this, "Booking created", Toast.LENGTH_SHORT)
-				.show();
+		if (Common.isNullOrEmpty(booking.PhoneNumber)) {
+			booking.PhoneNumber = ((TelephonyManager) getBaseContext()
+					.getSystemService(Context.TELEPHONY_SERVICE))
+					.getLine1Number();
+
+			// Add logic here if we can't read number like this
+		}
+		if (booking != null && booking.Confirmed == false
+				&& !Common.isNullOrEmpty(booking.PhoneNumber)
+				&& !Common.isNullOrEmpty(booking.PickupTime)
+				&& !Common.isNullOrEmpty(booking.AddrFrom)
+				&& !Common.isNullOrEmpty(booking.AddrTo) && booking.TaxiId > 0
+				&& booking.NumberOfPeople > 0) {
+			new AsyncTask<Void, Void, String>() {
+				@Override
+				protected String doInBackground(Void... params) {
+					Gson g = new GsonBuilder()
+							.serializeNulls()
+							//.setPrettyPrinting()
+							.create();
+					String result = Common.postRESTurl(
+							getString(R.string.baseWebUrl) + "/booking",
+							g.toJson(booking));
+					Log.i(BookActivity.class.getName(),
+							"Result from creating booking:" + result);
+					return result;
+				}
+
+				@Override
+				protected void onPostExecute(String result) {
+					NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+					Notification.Builder note = new Notification.Builder(
+							getBaseContext()).setContentText(booking.AddrFrom)
+							.setSmallIcon(R.drawable.ic_launcher)
+							.setWhen(System.currentTimeMillis())
+							.setAutoCancel(true);
+
+					if (result != null) {
+						note.setContentTitle("Booking Created");
+						note.setContentIntent(PendingIntent.getActivity(
+								getApplicationContext(),
+								Common.NOTIFY_BOOKINGCREATED, new Intent(
+										getBaseContext(),
+										BookingListActivity.class),
+								PendingIntent.FLAG_CANCEL_CURRENT));
+					} else {
+						note.setContentTitle("Error creating booking");
+						note.setContentIntent(PendingIntent.getActivity(
+								getApplicationContext(),
+								Common.NOTIFY_BOOKINGCREATED, new Intent(
+										getBaseContext(), BookActivity.class),
+								PendingIntent.FLAG_CANCEL_CURRENT));
+					}
+					notificationManager.notify(Common.NOTIFY_BOOKINGCREATED,
+							note.getNotification());
+				}
+			}.execute();
+		} else {
+			Toast.makeText(BookActivity.this, "Insufficient info",
+					Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	private void cancelBooking() {
@@ -452,7 +522,8 @@ public class BookActivity extends Activity {
 					booking.TaxiId = taxi.Id;
 					booking.SelectedTaxi = taxi;
 					txtTaxi.setText(taxi.Name);
-					((TextView) findViewById(R.id.txtPrice)).setText(booking.getPriceEstimate());
+					((TextView) findViewById(R.id.txtPrice)).setText(booking
+							.getPriceEstimate());
 				}
 			}
 		}

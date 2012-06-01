@@ -15,7 +15,7 @@ public class Entities {
 		public String StartOfService;
 		public String EndOfService;
 		public boolean Is24HService;
-		public byte FleetSize;
+		public short FleetSize;
 
 		public Taxi() {
 
@@ -26,7 +26,7 @@ public class Entities {
 		public int Id;
 		public String Name;
 		public String PhoneNumber;
-		public byte NumberOfPeople;
+		public short NumberOfPeople;
 		public String PickupTime;
 		public String AddrFrom;
 		public int latitudeFrom;
