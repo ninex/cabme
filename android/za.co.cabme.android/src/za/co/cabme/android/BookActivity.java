@@ -425,6 +425,7 @@ public class BookActivity extends Activity {
 			Gson g = new Gson();
 			b.putString(Common.BOOKING_FLAG, g.toJson(booking));
 			b.putBoolean(Common.MAPFROM_FLAG, true);
+			b.putBoolean(Common.ADDRESS_LOCKED_FLAG, !newBooking);
 			intent.putExtras(b);
 			startActivityForResult(intent, Common.PICK_ADDRESS_FROM);
 		}
@@ -470,6 +471,7 @@ public class BookActivity extends Activity {
 			Gson g = new Gson();
 			b.putString(Common.BOOKING_FLAG, g.toJson(booking));
 			b.putBoolean(Common.MAPFROM_FLAG, false);
+			b.putBoolean(Common.ADDRESS_LOCKED_FLAG, !newBooking);
 			intent.putExtras(b);
 			startActivityForResult(intent, Common.PICK_ADDRESS_TO);
 		}
