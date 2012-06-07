@@ -5,6 +5,7 @@
 <head runat="server">
     <title></title>
     <link href="~/Styles/Site.css" rel="stylesheet" type="text/css" />
+    <link rel="shortcut icon" href="/assets/images/logo.png" >
     <asp:ContentPlaceHolder ID="HeadContent" runat="server">
     </asp:ContentPlaceHolder>
 </head>
@@ -12,8 +13,10 @@
     <form runat="server">
     <div class="page">
         <div class="header">
+        
+            <img runat="server" src="~/assets/images/logo.png" alt="cabme logo" />
                 <h1>
-                    cabme.co.za
+                    cabme
                 </h1>
         </div>
         <div class="main">

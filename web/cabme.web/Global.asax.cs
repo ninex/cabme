@@ -4,16 +4,18 @@ using System.Linq;
 using System.Web;
 using System.Web.Security;
 using System.Web.SessionState;
+using System.Web.Configuration;
 
 namespace cabme.web
 {
     public class Global : System.Web.HttpApplication
     {
-
-        void Application_Start(object sender, EventArgs e)
+        private void Application_Start(Object sender, EventArgs e)
         {
-            // Code that runs on application startup
+        }
 
+        void Application_BeginRequest(object sender, EventArgs e)
+        {            
         }
 
         void Application_End(object sender, EventArgs e)
@@ -42,6 +44,5 @@ namespace cabme.web
             // or SQLServer, the event is not raised.
 
         }
-
     }
 }

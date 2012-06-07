@@ -90,6 +90,11 @@ first child of the left and right table columns */
     -moz-border-radius: 15px 15px 0px 0px;
     -webkit-border-radius: 15px 15px 0px 0px;
 }
+.header img
+{
+	max-width: 48px;
+	float:left;
+}
 
 .header h1
 {

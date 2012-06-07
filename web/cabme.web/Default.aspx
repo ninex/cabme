@@ -10,4 +10,7 @@
     <p>
         We are currently in dev stages on the android app.
     </p>
+    <p>
+        Mobile web development has also started.
+    </p>
 </asp:Content>
