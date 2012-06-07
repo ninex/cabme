@@ -1,0 +1,14 @@
+﻿body 
+{
+}
+.page
+{
+    width: 100%;
+    min-width:100%;
+    background-color: #fff;
+    margin: 20px auto 0px auto;
+    border: 1px solid #000;
+    border-radius: 15px;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+}
