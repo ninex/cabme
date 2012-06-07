@@ -13,7 +13,7 @@
     <p>
         Mobile web development has also started.
     </p>
-    <% if (!IsMobile)
+    <% if (IsMobile)
        { %>
     <p>
         Disclaimer: This is a dummy form and doesn't book a taxi.</p>
