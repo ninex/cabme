@@ -63,6 +63,7 @@
     <Content Include="Account\ChangePasswordSuccess.aspx" />
     <Content Include="Account\Login.aspx" />
     <Content Include="Account\Register.aspx" />
+    <Content Include="assets\images\logo.png" />
     <Content Include="Service\CabmeService.svc" />
     <Content Include="Styles\Mobile.css" />
     <Content Include="Styles\Site.css" />
