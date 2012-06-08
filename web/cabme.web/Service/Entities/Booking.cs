@@ -92,6 +92,14 @@ namespace cabme.web.Service.Entities
                         return null;
                     }
                 }
+                if (booking.TaxiId > 0 && booking.EstimatedPrice == 0 && booking.ComputedDistance > 0)
+                {
+                    dataBooking.EstimatedPrice = getPriceEstimate(booking.TaxiId, booking.ComputedDistance);
+                }
+                else
+                {
+                    dataBooking.EstimatedPrice = booking.EstimatedPrice;
+                }
                 dataBooking.Name = booking.Name;
                 dataBooking.PhoneNumber = booking.PhoneNumber;
                 dataBooking.NumberOfPeople = booking.NumberOfPeople;
@@ -103,7 +111,6 @@ namespace cabme.web.Service.Entities
                 dataBooking.LatitudeTo = booking.latitudeTo;
                 dataBooking.LongitudeTo = booking.longitudeTo;
                 dataBooking.ComputedDistance = booking.ComputedDistance;
-                dataBooking.EstimatedPrice = booking.EstimatedPrice;
                 dataBooking.Active = booking.Active;
                 dataBooking.Confirmed = booking.Confirmed;
                 dataBooking.TaxiId = booking.TaxiId;
@@ -116,6 +123,30 @@ namespace cabme.web.Service.Entities
                 booking.Id = dataBooking.Id;
             }
             return booking;
+        }
+
+        private static int getPriceEstimate(int taxiId, int distance) {
+            using (Data.contentDataContext context = new Data.contentDataContext())
+            {
+                var taxi = context.Taxis.Where(p => p.Id == taxiId).SingleOrDefault();
+                if (taxi == null)
+                    return 0;
+                var computedPrice = (taxi.RatePerKm * distance) / 1000;
+                if (computedPrice < taxi.MinRate)
+                {
+                    computedPrice = taxi.MinRate;
+                }
+                else
+                {
+                    if (computedPrice % taxi.Units > 0)
+                    {
+                        computedPrice = computedPrice
+                                - (computedPrice % taxi.Units)
+                                + taxi.Units;
+                    }
+                }
+                return computedPrice;
+            }
         }
 
         public static Bookings GetAllBookings()
