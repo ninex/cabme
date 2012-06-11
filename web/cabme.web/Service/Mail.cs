@@ -1,0 +1,43 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
+using System.Web;
+using System.Net.Mail;
+using System.Net;
+
+namespace cabme.web.Service
+{
+    public class Mail
+    {
+        public static void SendMail(string to, string from, string subject, string body)
+        {
+            try
+            {
+                ///Smtp config
+                string smtp = ConfigurationManager.AppSettings["Smtp"];
+                string user = ConfigurationManager.AppSettings["EmailUser"];
+                string pwd = ConfigurationManager.AppSettings["EmailPassword"];
+                SmtpClient client = new SmtpClient(smtp);
+                client.Credentials = new NetworkCredential(user, pwd);
+                client.EnableSsl = true;
+
+                ///mail details
+                MailMessage msg = new MailMessage();
+                msg.From = new MailAddress(from);
+                msg.To.Add(to);
+                msg.Subject = subject;
+                msg.IsBodyHtml = true;
+                msg.BodyEncoding = System.Text.Encoding.UTF8;
+                msg.Body = body;
+                msg.Priority = MailPriority.Normal;
+
+                client.Send(msg);
+            }
+            catch (Exception ex)
+            {
+                Elmah.ErrorLog.GetDefault(null).Log(new Elmah.Error(ex));
+            }
+        }
+    }
+}
