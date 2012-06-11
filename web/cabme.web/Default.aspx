@@ -26,7 +26,7 @@
             <label>
                 Pickup time<input id="pickupTime" type="time" /></label>
             <label>
-                Number of people<input type="number" value="1" /></label>
+                Number of people<input type="number" id="number" value="1" /></label>
             <label>
                 Address from<input type="text" id="from" /></label>
             <label>
