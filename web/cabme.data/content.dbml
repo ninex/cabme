@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="content" Class="contentDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="AppSettings" ConnectionString="Data Source=ABRIE-MSI\SQL2008;Initial Catalog=content;Integrated Security=True" SettingsObjectName="cabme.data.Properties.Settings" SettingsPropertyName="contentConnectionString" Provider="System.Data.SqlClient" />
+  <Connection Mode="AppSettings" ConnectionString="Data Source=localhost\SQL2008;Initial Catalog=content;Integrated Security=True" SettingsObjectName="cabme.data.Properties.Settings" SettingsPropertyName="contentConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.Booking" Member="Bookings">
     <Type Name="Booking">
       <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -34,6 +34,18 @@
       <Column Name="EndOfService" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="Is24HService" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="FleetSize" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" />
+      <Association Name="Taxi_ContactDetail" Member="ContactDetails" ThisKey="Id" OtherKey="TaxiId" Type="ContactDetail" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ContactDetail" Member="ContactDetails">
+    <Type Name="ContactDetail">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="TaxiId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PhoneNumber" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="BookingEmail" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="BookingSMS" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="UseEmail" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="Taxi_ContactDetail" Member="Taxi" ThisKey="TaxiId" OtherKey="Id" Type="Taxi" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>

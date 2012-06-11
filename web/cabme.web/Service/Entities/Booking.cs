@@ -73,6 +73,10 @@ namespace cabme.web.Service.Entities
 
         public static Booking MakeBooking(Booking booking)
         {
+            if (booking.NumberOfPeople <= 0 || string.IsNullOrEmpty(booking.AddrFrom) || string.IsNullOrEmpty(booking.AddrTo) || booking.TaxiId <= 0)
+            {
+                return null;
+            }
             using (Data.contentDataContext context = new Data.contentDataContext())
             {
                 Data.Booking dataBooking;
@@ -87,7 +91,7 @@ namespace cabme.web.Service.Entities
                 else
                 {
                     dataBooking = context.Bookings.Where(p => p.Id == booking.Id).SingleOrDefault();
-                    if (dataBooking == null)
+                    if (dataBooking == null || dataBooking.Confirmed)
                     {
                         return null;
                     }
@@ -119,13 +123,35 @@ namespace cabme.web.Service.Entities
                 {
                     context.Bookings.InsertOnSubmit(dataBooking);
                 }
+                //Store booking to database
                 context.SubmitChanges();
                 booking.Id = dataBooking.Id;
+
+                var contactDetails = context.ContactDetails.Where(p => p.TaxiId == booking.TaxiId).SingleOrDefault();
+                if (contactDetails != null && (!string.IsNullOrEmpty(contactDetails.BookingEmail) || !string.IsNullOrEmpty(contactDetails.BookingSMS)))
+                {
+                    if (contactDetails.UseEmail && !string.IsNullOrEmpty(contactDetails.BookingEmail))
+                    {
+                        //Send confirm booking email
+                        Mail.SendMail(contactDetails.BookingEmail, "cabme@abrie.net", "Test email", "Body of test email");
+                    }
+                    else
+                    {
+                        //TODO: SMS service
+                    }
+                }
+                else
+                {
+                    //TODO: Problem that has to be addressed
+                    Elmah.ErrorLog.GetDefault(null).Log(new Elmah.Error(new Exception("No contact details found for taxi:" + booking.TaxiId)));
+                }
             }
+
             return booking;
         }
 
-        private static int getPriceEstimate(int taxiId, int distance) {
+        private static int getPriceEstimate(int taxiId, int distance)
+        {
             using (Data.contentDataContext context = new Data.contentDataContext())
             {
                 var taxi = context.Taxis.Where(p => p.Id == taxiId).SingleOrDefault();
@@ -178,6 +204,7 @@ namespace cabme.web.Service.Entities
             return from booking in context.Bookings
                    join taxi in context.Taxis on booking.TaxiId equals taxi.Id into outer
                    from taxi in outer.DefaultIfEmpty()
+                   orderby booking.LastModified descending
                    select new Booking
                    {
                        Id = booking.Id,
