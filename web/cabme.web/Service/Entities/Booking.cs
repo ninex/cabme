@@ -3,6 +3,8 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Collections.Generic;
 using Data = cabme.data;
+using System.ServiceModel.Web;
+using System.Net;
 
 namespace cabme.web.Service.Entities
 {
@@ -73,13 +75,16 @@ namespace cabme.web.Service.Entities
 
         public static Booking MakeBooking(Booking booking)
         {
-            if (booking.NumberOfPeople <= 0 || string.IsNullOrEmpty(booking.AddrFrom) || string.IsNullOrEmpty(booking.AddrTo) || booking.TaxiId <= 0)
+            if (booking == null | booking.NumberOfPeople <= 0 || string.IsNullOrEmpty(booking.AddrFrom) || string.IsNullOrEmpty(booking.AddrTo) ||
+                booking.TaxiId <= 0 || string.IsNullOrEmpty(booking.PhoneNumber))
             {
+                WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.BadRequest;
                 return null;
             }
             using (Data.contentDataContext context = new Data.contentDataContext())
             {
                 Data.Booking dataBooking;
+                // New booking or update
                 if (booking.Id == 0)
                 {
                     dataBooking = new Data.Booking()
@@ -93,12 +98,17 @@ namespace cabme.web.Service.Entities
                     dataBooking = context.Bookings.Where(p => p.Id == booking.Id).SingleOrDefault();
                     if (dataBooking == null || dataBooking.Confirmed)
                     {
+                        WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.BadRequest;
                         return null;
                     }
                 }
-                if (booking.TaxiId > 0 && booking.EstimatedPrice == 0 && booking.ComputedDistance > 0)
+                if (booking.EstimatedPrice == 0 && booking.ComputedDistance > 0)
                 {
-                    dataBooking.EstimatedPrice = getPriceEstimate(booking.TaxiId, booking.ComputedDistance);
+                    if (booking.SelectedTaxi == null)
+                    {
+                        booking.SelectedTaxi = Taxi.GetTaxi(booking.TaxiId);
+                    }
+                    dataBooking.EstimatedPrice = booking.SelectedTaxi.GetPriceEstimate(booking.ComputedDistance);
                 }
                 else
                 {
@@ -126,9 +136,12 @@ namespace cabme.web.Service.Entities
                 //Store booking to database
                 context.SubmitChanges();
                 booking.Id = dataBooking.Id;
-
+                //Load contact details for taxi
                 var contactDetails = context.ContactDetails.Where(p => p.TaxiId == booking.TaxiId).SingleOrDefault();
-                if (contactDetails != null && (!string.IsNullOrEmpty(contactDetails.BookingEmail) || !string.IsNullOrEmpty(contactDetails.BookingSMS)))
+                //Is the contact details valid
+                if (contactDetails != null && (
+                    (contactDetails.UseEmail && !string.IsNullOrEmpty(contactDetails.BookingEmail)) ||
+                    (!contactDetails.UseEmail && !string.IsNullOrEmpty(contactDetails.BookingSMS))))
                 {
                     if (contactDetails.UseEmail && !string.IsNullOrEmpty(contactDetails.BookingEmail))
                     {
@@ -150,53 +163,27 @@ namespace cabme.web.Service.Entities
             return booking;
         }
 
-        private static int getPriceEstimate(int taxiId, int distance)
+        public static Bookings GetAllBookings()
         {
             using (Data.contentDataContext context = new Data.contentDataContext())
             {
-                var taxi = context.Taxis.Where(p => p.Id == taxiId).SingleOrDefault();
-                if (taxi == null)
-                    return 0;
-                var computedPrice = (taxi.RatePerKm * distance) / 1000;
-                if (computedPrice < taxi.MinRate)
+                return new Bookings(AllQueryableBookings(context).ToList());
+            }
+        }
+
+        public static Bookings GetAllBookingsByNumber(string number, bool? active)
+        {
+            using (Data.contentDataContext context = new Data.contentDataContext())
+            {
+                if (active.HasValue)
                 {
-                    computedPrice = taxi.MinRate;
+                    return new Bookings(AllQueryableBookings(context).Where(p => p.PhoneNumber == number && p.Active == active).ToList());
                 }
                 else
-                {
-                    if (computedPrice % taxi.Units > 0)
-                    {
-                        computedPrice = computedPrice
-                                - (computedPrice % taxi.Units)
-                                + taxi.Units;
-                    }
-                }
-                return computedPrice;
-            }
-        }
-
-        public static Bookings GetAllBookings()
-        {
-            try
-            {
-                using (Data.contentDataContext context = new Data.contentDataContext())
-                {
-                    return new Bookings(AllQueryableBookings(context).ToList());
-                }
-            }
-            catch { return null; }
-        }
-
-        public static Bookings GetAllBookingsByNumber(string number)
-        {
-            try
-            {
-                using (Data.contentDataContext context = new Data.contentDataContext())
                 {
                     return new Bookings(AllQueryableBookings(context).Where(p => p.PhoneNumber == number).ToList());
                 }
             }
-            catch { return null; }
         }
 
         private static IQueryable<Booking> AllQueryableBookings(Data.contentDataContext context)

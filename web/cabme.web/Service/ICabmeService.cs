@@ -12,36 +12,36 @@ namespace cabme.web.Service
     [ServiceContract(Namespace = "http://cabme.co.za")]
     public interface ICabmeService
     {
-        [WebInvoke(Method = "GET",
-           UriTemplate = "taxis",
-           RequestFormat = WebMessageFormat.Json,
-           ResponseFormat = WebMessageFormat.Json,
-           BodyStyle = WebMessageBodyStyle.Bare)]
-        [OperationContract]
-        Taxis GetAllTaxis();
-		
-		 [WebInvoke(Method = "GET",
-           UriTemplate = "bookings?number={number}",
-           RequestFormat = WebMessageFormat.Json,
-           ResponseFormat = WebMessageFormat.Json,
-           BodyStyle = WebMessageBodyStyle.Bare)]
-        [OperationContract]
-        Bookings GetAllBookingsForNumber(string number);
+        #region Taxis
 
-         [WebInvoke(Method = "GET",
-           UriTemplate = "bookings",
-           RequestFormat = WebMessageFormat.Json,
-           ResponseFormat = WebMessageFormat.Json,
-           BodyStyle = WebMessageBodyStyle.Bare)]
-         [OperationContract]
-         Bookings GetAllBookings();	
-		
-		 [WebInvoke(Method = "POST",
-           UriTemplate = "booking",
+        [WebInvoke(Method = "GET",
+           UriTemplate = "taxis?distance={distance}",
            RequestFormat = WebMessageFormat.Json,
            ResponseFormat = WebMessageFormat.Json,
            BodyStyle = WebMessageBodyStyle.Bare)]
         [OperationContract]
-        void MakeBooking(Booking booking);
+        Taxis GetAllTaxis(string distance);
+
+        #endregion
+
+        #region Bookings
+
+        [WebInvoke(Method = "GET",
+           UriTemplate = "bookings?number={number}&active={active}",
+           RequestFormat = WebMessageFormat.Json,
+           ResponseFormat = WebMessageFormat.Json,
+           BodyStyle = WebMessageBodyStyle.Bare)]
+        [OperationContract]
+        Bookings GetAllBookingsForNumber(string number, string active);
+
+        [WebInvoke(Method = "POST",
+          UriTemplate = "booking",
+          RequestFormat = WebMessageFormat.Json,
+          ResponseFormat = WebMessageFormat.Json,
+          BodyStyle = WebMessageBodyStyle.Bare)]
+        [OperationContract]
+        Booking MakeBooking(Booking booking);
+
+        #endregion
     }
 }
