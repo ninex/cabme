@@ -20,7 +20,7 @@ namespace cabme.web.Service
                 string pwd = ConfigurationManager.AppSettings["EmailPassword"];
                 SmtpClient client = new SmtpClient(smtp);
                 client.Credentials = new NetworkCredential(user, pwd);
-                client.EnableSsl = true;
+                client.EnableSsl = false;
 
                 ///mail details
                 MailMessage msg = new MailMessage();
