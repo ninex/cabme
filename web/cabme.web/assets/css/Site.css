@@ -93,6 +93,7 @@ first child of the left and right table columns */
 .header img
 {
 	max-width: 48px;
+	min-width: 48px;
 	float:left;
 }
 
