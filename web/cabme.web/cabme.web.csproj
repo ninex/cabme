@@ -66,8 +66,8 @@
     <Content Include="assets\images\logo.png" />
     <Content Include="assets\js\book.js" />
     <Content Include="Service\CabmeService.svc" />
-    <Content Include="Styles\Mobile.css" />
-    <Content Include="Styles\Site.css" />
+    <Content Include="assets\css\Mobile.css" />
+    <Content Include="assets\css\Site.css" />
     <Content Include="Default.aspx" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\jquery-1.4.1-vsdoc.js" />
