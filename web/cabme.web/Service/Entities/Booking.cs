@@ -145,8 +145,9 @@ namespace cabme.web.Service.Entities
                 {
                     if (contactDetails.UseEmail && !string.IsNullOrEmpty(contactDetails.BookingEmail))
                     {
+                        string mailBody = string.Format("Booking received from {0} for {4} people pickup time: {1}\r\nFrom:{2}\r\nTo:{3}\r\n", booking.PhoneNumber, booking.PickupTime, booking.AddrFrom, booking.AddrTo, booking.NumberOfPeople);
                         //Send confirm booking email
-                        Mail.SendMail(contactDetails.BookingEmail, "cabme@abrie.net", "Test email", "Body of test email");
+                        Mail.SendMail(contactDetails.BookingEmail, "cabme@abrie.net", "Test booking email", mailBody);
                     }
                     else
                     {
