@@ -4,19 +4,10 @@
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
 </asp:Content>
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">
-    <h2>
-        Coming soon
-    </h2>
-    <p>
-        We are currently in dev stages on the android app.
-    </p>
-    <p>
-        Mobile web development has also started.
-    </p>
     <% if (IsMobile)
        { %>
     <p>
-        Disclaimer: This is a dummy form and doesn't book a taxi.</p>
+        Disclaimer: This is a beta form and doesn't book a taxi.</p>
     <div id="book">
         <h2>
             Book taxi</h2>
@@ -45,7 +36,8 @@
             </label>
             <label>
                 Taxi<select id="ddlTaxi"></select></label>
-            <label>Estimated route</label>
+            <label>
+                Estimated route</label>
             <div id="map_canvas" style="width: 100%; height: 200px">
             </div>
             <input type="button" id="btnBook" value="Book" onclick="step2();" />
@@ -57,5 +49,17 @@
     </div>
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyB2SQU0TkPbS1-MT4D8fkdvZ4J0JkIeBf8&sensor=false"></script>
     <script type="text/javascript" src="assets/js/book.js"></script>
+    <%}
+       else
+       {  %>
+    <h2>
+        Coming soon
+    </h2>
+    <p>
+        We are currently in dev stages on the android app.
+    </p>
+    <p>
+        Mobile web development has also started.
+    </p>
     <%} %>
 </asp:Content>
