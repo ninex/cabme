@@ -20,6 +20,9 @@
     <div id="book">
         <h2>
             Book taxi</h2>
+        <div id="loading" class="loading">
+            <img src="assets/images/loader.gif" alt="loading" />
+        </div>
         <div id="step1">
             <label>
                 Pickup date<input id="pickupDate" type="date" /></label>
@@ -42,11 +45,14 @@
             </label>
             <label>
                 Taxi<select id="ddlTaxi"></select></label>
-            <div id="map_canvas" style="width: 100%; height: 200px"></div>
+            <label>Estimated route</label>
+            <div id="map_canvas" style="width: 100%; height: 200px">
+            </div>
             <input type="button" id="btnBook" value="Book" onclick="step2();" />
         </div>
-        <div id="step3" style="display:none;">
-            <p>Booking sent to server for processing.</p>
+        <div id="step3" style="display: none;">
+            <p>
+                Booking sent to server for processing.</p>
         </div>
     </div>
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyB2SQU0TkPbS1-MT4D8fkdvZ4J0JkIeBf8&sensor=false"></script>
