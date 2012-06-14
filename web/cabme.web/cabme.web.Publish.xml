@@ -8,6 +8,7 @@
     <file relUrl="Service/CabmeService.svc" publishTime="05/30/2012 11:31:50" />
     <file relUrl="Account/Login.aspx" publishTime="05/30/2012 11:31:50" />
     <file relUrl="bin/cabme.web.dll" publishTime="05/31/2012 11:03:14" />
+    <file relUrl="bin/cabme.data.dll" publishTime="05/31/2012 10:59:46" />
     <file relUrl="Account/ChangePasswordSuccess.aspx" publishTime="05/30/2012 11:31:50" />
     <file relUrl="bin/cabme.web.pdb" publishTime="05/31/2012 11:03:14" />
     <file relUrl="Styles/Site.css" publishTime="05/30/2012 11:31:50" />
@@ -16,34 +17,34 @@
     <file relUrl="Global.asax" publishTime="05/30/2012 11:31:50" />
     <file relUrl="Scripts/jquery-1.4.1-vsdoc.js" publishTime="05/30/2012 11:31:50" />
     <file relUrl="About.aspx" publishTime="05/30/2012 11:31:49" />
-    <file relUrl="Scripts/jquery-1.4.1.min.js" publishTime="05/30/2012 11:31:50" />
     <file relUrl="Default.aspx" publishTime="05/30/2012 11:31:50" />
-    <file relUrl="bin/cabme.data.dll" publishTime="05/31/2012 10:59:46" />
+    <file relUrl="Scripts/jquery-1.4.1.min.js" publishTime="05/30/2012 11:31:50" />
   </publishProfile>
   <publishProfile publishUrl="C:\temp\github\cabme\web\publish" deleteExistingFiles="True" ftpAnonymousLogin="False" ftpPassiveMode="True" msdeploySite="" msdeploySiteID="" msdeployRemoteSitePhysicalPath="" msdeployAllowUntrustedCertificate="False" msdeploySkipExtraFilesOnServer="True" msdeployMarkAsApp="False" profileName="Profile2" publishMethod="FileSystem" replaceMatchingFiles="False" userName="" savePWD="False" userPWD="" SelectedForPublish="True">
-    <file relUrl="Web.config" publishTime="06/13/2012 17:45:42" />
-    <file relUrl="bin/Elmah.dll" publishTime="06/13/2012 17:35:42" />
-    <file relUrl="Site.Master" publishTime="06/13/2012 17:35:42" />
-    <file relUrl="Account/Web.config" publishTime="05/22/2012 18:34:45" />
-    <file relUrl="Account/Register.aspx" publishTime="05/22/2012 18:34:45" />
-    <file relUrl="Service/CabmeService.svc" publishTime="05/22/2012 18:38:39" />
-    <file relUrl="Scripts/jquery-1.4.1.min.js" publishTime="05/22/2012 18:34:45" />
-    <file relUrl="bin/cabme.web.dll" publishTime="06/13/2012 17:45:26" />
-    <file relUrl="assets/js/book.js" publishTime="06/13/2012 17:35:42" />
-    <file relUrl="MobileSite.Master" publishTime="06/13/2012 17:35:42" />
-    <file relUrl="packages.config" publishTime="06/04/2012 23:29:03" />
-    <file relUrl="Account/ChangePasswordSuccess.aspx" publishTime="05/22/2012 18:34:45" />
-    <file relUrl="Account/Login.aspx" publishTime="05/22/2012 18:34:45" />
-    <file relUrl="Scripts/jquery-1.4.1.js" publishTime="05/22/2012 18:34:45" />
-    <file relUrl="Account/ChangePassword.aspx" publishTime="05/22/2012 18:34:45" />
-    <file relUrl="bin/cabme.web.pdb" publishTime="06/13/2012 17:45:26" />
-    <file relUrl="assets/css/Site.css" publishTime="06/13/2012 17:35:42" />
-    <file relUrl="Global.asax" publishTime="05/22/2012 18:34:45" />
-    <file relUrl="assets/css/Mobile.css" publishTime="06/13/2012 17:35:42" />
-    <file relUrl="Scripts/jquery-1.4.1-vsdoc.js" publishTime="05/22/2012 18:34:45" />
-    <file relUrl="About.aspx" publishTime="05/24/2012 23:28:11" />
-    <file relUrl="Default.aspx" publishTime="06/13/2012 17:35:42" />
-    <file relUrl="bin/cabme.data.dll" publishTime="06/13/2012 17:45:26" />
-    <file relUrl="assets/images/logo.png" publishTime="06/13/2012 17:35:42" />
+    <file relUrl="Web.config" publishTime="06/13/2012 16:33:29" />
+    <file relUrl="assets/images/loader.gif" publishTime="06/14/2012 11:15:34" />
+    <file relUrl="bin/Elmah.dll" publishTime="06/08/2012 10:42:18" />
+    <file relUrl="Site.Master" publishTime="06/13/2012 16:31:56" />
+    <file relUrl="Account/Web.config" publishTime="06/01/2012 09:13:53" />
+    <file relUrl="Account/Register.aspx" publishTime="06/01/2012 09:13:53" />
+    <file relUrl="Service/CabmeService.svc" publishTime="06/01/2012 09:13:53" />
+    <file relUrl="bin/cabme.web.dll" publishTime="06/14/2012 16:52:01" />
+    <file relUrl="assets/js/book.js" publishTime="06/14/2012 16:41:49" />
+    <file relUrl="MobileSite.Master" publishTime="06/13/2012 16:32:07" />
+    <file relUrl="packages.config" publishTime="06/07/2012 13:25:56" />
+    <file relUrl="Account/ChangePasswordSuccess.aspx" publishTime="06/01/2012 09:13:53" />
+    <file relUrl="Account/Login.aspx" publishTime="06/01/2012 09:13:53" />
+    <file relUrl="Scripts/jquery-1.4.1.js" publishTime="06/01/2012 09:13:53" />
+    <file relUrl="Account/ChangePassword.aspx" publishTime="06/01/2012 09:13:53" />
+    <file relUrl="bin/cabme.web.pdb" publishTime="06/14/2012 16:52:01" />
+    <file relUrl="assets/css/Site.css" publishTime="06/14/2012 12:34:55" />
+    <file relUrl="bin/cabme.data.dll" publishTime="06/14/2012 16:51:59" />
+    <file relUrl="Global.asax" publishTime="06/01/2012 09:13:53" />
+    <file relUrl="assets/css/Mobile.css" publishTime="06/07/2012 16:56:39" />
+    <file relUrl="Scripts/jquery-1.4.1-vsdoc.js" publishTime="06/01/2012 09:13:53" />
+    <file relUrl="About.aspx" publishTime="06/01/2012 09:13:53" />
+    <file relUrl="Default.aspx" publishTime="06/14/2012 16:46:17" />
+    <file relUrl="Scripts/jquery-1.4.1.min.js" publishTime="06/01/2012 09:13:53" />
+    <file relUrl="assets/images/logo.png" publishTime="06/07/2012 15:01:03" />
   </publishProfile>
 </publishData>
