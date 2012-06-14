@@ -43,5 +43,17 @@ namespace cabme.web.Service
         Booking MakeBooking(Booking booking);
 
         #endregion
+
+        #region Suburbs
+
+        [WebInvoke(Method = "GET",
+           UriTemplate = "suburbs?city={city}",
+           RequestFormat = WebMessageFormat.Json,
+           ResponseFormat = WebMessageFormat.Json,
+           BodyStyle = WebMessageBodyStyle.Bare)]
+        [OperationContract]
+        Suburbs GetAllSuburbsForCity(string city);
+
+        #endregion
     }
 }

@@ -107,5 +107,30 @@ namespace cabme.web.Service
         }
 
         #endregion
+
+        #region Suburbs
+
+        public Suburbs GetAllSuburbsForCity(string city)
+        {
+            try
+            {
+                if (String.IsNullOrEmpty(city))
+                {
+                    return Suburb.GetAllSuburbs();
+                }
+                else
+                {
+                    return Suburb.GetAllByCity(city);
+                }
+            }
+            catch (Exception ex)
+            {
+                WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.InternalServerError;
+                Elmah.ErrorLog.GetDefault(null).Log(new Elmah.Error(ex));
+                return null;
+            }
+        }
+
+        #endregion
     }
 }

@@ -48,4 +48,12 @@
       <Association Name="Taxi_ContactDetail" Member="Taxi" ThisKey="TaxiId" OtherKey="Id" Type="Taxi" IsForeignKey="true" />
     </Type>
   </Table>
+  <Table Name="dbo.Suburb" Member="Suburbs">
+    <Type Name="Suburb">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="City" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="PostalCode" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
 </Database>

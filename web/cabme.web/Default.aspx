@@ -16,16 +16,26 @@
         </div>
         <div id="step1">
             <label>
+                City
+                <select id="city" onchange="cityChanged();" >
+                    <option selected value="Cape Town">Cape Town</option>
+                    <option value="Johannesburg">Johannesburg</option>
+                </select></label>
+            <label>
                 Pickup date<input id="pickupDate" type="date" /></label>
             <label>
                 Pickup time<input id="pickupTime" type="time" /></label>
             <label>
                 Number of people<input type="number" id="number" value="1" /></label>
             <label>
-                Address from<input type="text" id="from" /></label>
+                Address from<input type="text" id="from" />
+                <select id="fromSuburb" onchange="suburbChanged();">
+                </select></label>
             <label>
-                Address to<input type="text" id="to" /></label>
-            <input type="button" id="btnConfirm" value="Confirm" onclick="step1();" />
+                Address to<input type="text" id="to" />
+                <select id="toSuburb" onchange="suburbChanged();">
+                </select></label>
+            <input type="button" id="btnConfirm" value="Next" onclick="step1();" />
         </div>
         <div id="step2" style="display: none">
             <label>
@@ -44,7 +54,7 @@
         </div>
         <div id="step3" style="display: none;">
             <p>
-                Booking sent to server for processing.</p>
+                Booking sent to server for confirmation.</p>
         </div>
     </div>
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyB2SQU0TkPbS1-MT4D8fkdvZ4J0JkIeBf8&sensor=false"></script>

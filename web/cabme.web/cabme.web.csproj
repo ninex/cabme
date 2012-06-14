@@ -144,6 +144,7 @@
     <Compile Include="Service\CabmeService.svc.cs">
       <DependentUpon>CabmeService.svc</DependentUpon>
     </Compile>
+    <Compile Include="Service\Entities\Suburb.cs" />
     <Compile Include="Service\Entities\Taxi.cs" />
     <Compile Include="Service\ICabmeService.cs" />
     <Compile Include="Service\Mail.cs" />

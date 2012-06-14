@@ -9,23 +9,76 @@ $(document).ready(function () {
     if (supports_html5_storage()) {
         $('#from').val(localStorage["from"]);
         $('#txtPhone').val(localStorage["phone"]);
+        $('#city').val(localStorage["city"]);
     }
     if (navigator.geolocation && $('#from').val().length <= 0) {
-        navigator.geolocation.getCurrentPosition(success);
+        navigator.geolocation.getCurrentPosition(getPosSuccess);
+    } else {
+        loadSuburbs();
     }
     $('#loading').hide();
 });
+function cityChanged() {
+    loadSuburbs();
+}
+function suburbChanged() {
+    var city = $('#city').attr('selected', true).val();
+    localStorage[city + 'suburbFrom'] = $('#fromSuburb').attr('selected', true).val();
+    localStorage[city + 'suburbTo'] = $('#toSuburb').attr('selected', true).val();
+}
+function loadSuburbs() {
+    var city = $('#city').attr('selected', true).val();
+    var url = '/service/cabmeservice.svc/suburbs?city=' + city;
+    localStorage['city'] = city;
+    $.getJSON(url, function (json) {
+        var options = '';
+        $.each(json, function (index, suburb) {
+            var val = suburb.Name + ', ' + suburb.City + ', ' + suburb.PostalCode;
+            options += '<option value="' + val + '">' + suburb.Name + '</option>';
+        });
+        $('#fromSuburb').html(options);
+        $('#toSuburb').html(options);
+        var suburb = localStorage[city + 'suburbFrom'];
+        $('#fromSuburb option[value*="' + suburb + '"]').attr('selected', 'selected');
+        suburb = localStorage[city + 'suburbTo'];
+        $('#toSuburb option[value*="' + suburb + '"]').attr('selected', 'selected');
+    });
+}
 
-function success(position) {
+function getPosSuccess(position) {
     var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
     geocoder = new google.maps.Geocoder();
     geocoder.geocode({ 'latLng': latlng }, function (results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
-            if (results[1]) {
-                $('#from').val(results[1].formatted_address);
-            }
+            var haveSuburb = false, haveAddress = false;
+            var suburb = '';
+            $.each(results, function (i, item) {
+                if (item.types[0] == "street_address" && !haveAddress) {
+                    if (item.address_components[1]) {
+                        $('#from').val(item.address_components[0].long_name + ' ' + item.address_components[1].long_name);
+                        haveAddress = true;
+                    }
+                }
+                if (item.types[0] == "sublocality" && !haveSuburb) {
+                    if (item.address_components[0]) {
+                        suburb = item.address_components[0].long_name;
+                        haveSuburb = true;
+                    }
+                }
+                if (item.types[0] == "locality") {
+                    if (item.address_components[0]) {
+                        city = item.address_components[0].long_name;
+                    }
+                }
+            });
+
+            localStorage[city + 'suburbFrom'] = suburb;
+            localStorage[city + 'suburbTo'] = suburb;
+            $('#city').val(city);
+            cityChanged();
         } else {
             console.log("Geocoder failed due to: " + status);
+            loadSuburbs();
         }
     });
 }
@@ -43,7 +96,7 @@ function step1() {
     var regNum = /^[0-9]+$/;
     if (!regDate.test(pickupDate)) {
         msg += "Invalid date specified.<br/>";
-    } 
+    }
     if (!regTime.test(pickupTime)) {
         msg += "Invalid time specified.<br/>";
     }
@@ -51,13 +104,18 @@ function step1() {
         msg += "Invalid number of people specified.<br/>";
     }
     if (origin.length <= 0 || destination.length <= 0) {
-        msg += "Please provide a address from and to.<br/>";
+        msg += "Please provide an address from and to.<br/>";
     }
     if (msg.length > 0) {
         popup('Error', msg);
         return;
     }
+
     $('#loading').show();
+
+    origin += ', ' + $('#fromSuburb').attr('selected', true).val();
+    destination += ', ' + $('#toSuburb').attr('selected', true).val();
+
     var service = new google.maps.DistanceMatrixService();
     service.getDistanceMatrix(
 			  {
@@ -74,7 +132,7 @@ function step2() {
     if (!regNum.test($('#txtPhone').val())) {
         popup('Error', 'Invalid phone number.');
         return;
-    } 
+    }
 
     $('#step2').slideUp();
     if (supports_html5_storage()) {
