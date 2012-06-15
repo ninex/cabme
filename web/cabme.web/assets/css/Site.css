@@ -153,7 +153,7 @@ first child of the left and right table columns */
 div.loading
 {
 	display: block;
-	position: absolute;
+	position: fixed;
 	top: 0;
 	left: 0;
 	width: 100%;
@@ -163,7 +163,7 @@ div.loading
 	_background: none; /*this line removes the background in IE*/
 	border-top: 1px solid #ddd;
 	border-bottom: 1px solid #ddd; /*set the padding, so that the content       of the div is centered vertically*/
-	padding-top: 25%;
+	padding-top: 30%;
 }
 div.popContainer
 {

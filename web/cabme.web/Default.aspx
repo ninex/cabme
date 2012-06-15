@@ -57,7 +57,6 @@
                 Booking sent to server for confirmation.</p>
         </div>
     </div>
-    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyB2SQU0TkPbS1-MT4D8fkdvZ4J0JkIeBf8&sensor=false"></script>
     <script type="text/javascript" src="assets/js/book.js"></script>
     <%}
        else
