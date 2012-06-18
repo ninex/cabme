@@ -43,27 +43,6 @@ h2
 	font-weight: 600;
 }
 
-h3
-{
-	font-size: 1.2em;
-}
-
-h4
-{
-	font-size: 1.1em;
-}
-
-h5, h6
-{
-	font-size: 1em;
-}
-
-/* this rule styles <h1> and <h2> tags that are the 
-first child of the left and right table columns */
-.rightColumn > h1, .rightColumn > h2, .leftColumn > h1, .leftColumn > h2
-{
-	margin-top: 0px;
-}
 
 
 /* PRIMARY LAYOUT ELEMENTS   
@@ -95,6 +74,8 @@ first child of the left and right table columns */
 {
 	max-width: 48px;
 	min-width: 48px;
+	min-height: 48px;
+	max-height: 48px;
 	float: left;
 }
 
@@ -107,7 +88,7 @@ first child of the left and right table columns */
 	border: none;
 	line-height: 2em;
 	font-size: 2em;
-	text-align: right;
+	text-align: left;
 }
 
 .main
@@ -116,22 +97,64 @@ first child of the left and right table columns */
 	margin: 12px 8px 8px 8px;
 	min-height: 420px;
 }
-
-.leftCol
+.loginDisplay
 {
-	padding: 6px 0px;
-	margin: 12px 8px 8px 8px;
-	width: 200px;
-	min-height: 200px;
+	position: fixed;
+	top: 0px;
+	right: 10px;
+	width: auto;
+	padding: 5px;
+	text-align: center;
+	color: #000;
+	background-color: #ffd800;
+	border-radius: 0px 0px 5px 5px;
+	-moz-border-radius: 0px 0px 5px 5px;
+	-webkit-border-radius: 0px 0px 5px 5px;
+	z-index: 999;
+	min-width: 60px;
 }
 
-.footer
+.loginDisplay a:link
 {
-	color: #4e5766;
-	padding: 8px 0px 0px 0px;
-	margin: 0px auto;
-	text-align: center;
-	line-height: normal;
+	color: #000;
+	text-decoration: none;
+}
+
+.loginDisplay a:visited
+{
+	color: #000;
+}
+
+.loginDisplay a:hover
+{
+	color: #333;
+}
+.failureNotification
+{
+	font-size: 1.2em;
+	color: Red;
+}
+
+fieldset
+{
+	margin: 1em 0px;
+	padding: 1em;
+	border: 1px solid #ccc;
+}
+
+fieldset p
+{
+	margin: 2px 12px 10px 10px;
+}
+
+fieldset.login label, fieldset.register label, fieldset.changePassword label
+{
+	display: block;
+}
+
+fieldset label.inline
+{
+	display: inline;
 }
 
 
