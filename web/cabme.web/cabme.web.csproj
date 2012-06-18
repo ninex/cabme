@@ -93,6 +93,7 @@
       <DependentUpon>About.aspx</DependentUpon>
     </Compile>
     <Compile Include="Account\CabmeMembershipProvider.cs" />
+    <Compile Include="Account\CabmeRoleProvider.cs" />
     <Compile Include="Account\ChangePassword.aspx.cs">
       <DependentUpon>ChangePassword.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

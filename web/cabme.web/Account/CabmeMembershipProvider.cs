@@ -10,16 +10,55 @@ namespace cabme.web.Account
 {
     public class CabmeMembershipProvider : MembershipProvider
     {
+        private string mApplicationName;
+        private bool mEnablePasswordReset;
+        private bool mEnablePasswordRetrieval = false;
+        private bool mRequiresQuestionAndAnswer = false;
+        private bool mRequiresUniqueEmail = true;
+        private int mMaxInvalidPasswordAttempts;
+        private int mPasswordAttemptWindow;
+        private int mMinRequiredPasswordLength;
+        private int mMinRequiredNonalphanumericCharacters;
+        private string mPasswordStrengthRegularExpression;
+        private MembershipPasswordFormat mPasswordFormat = MembershipPasswordFormat.Hashed;
+
+        public override void Initialize(string name, NameValueCollection config)
+        {
+            if (config == null)
+                throw new ArgumentNullException("config");
+
+            if (name == null || name.Length == 0)
+                name = "CabmeMembershipProvider";
+
+            if (String.IsNullOrEmpty(config["description"]))
+            {
+                config.Remove("description");
+                config.Add("description", "Cabme Membership Provider");
+            }
+
+            base.Initialize(name, config);
+
+            mApplicationName = GetConfigValue(config["applicationName"],
+                          System.Web.Hosting.HostingEnvironment.ApplicationVirtualPath);
+            mMaxInvalidPasswordAttempts = Convert.ToInt32(
+                          GetConfigValue(config["maxInvalidPasswordAttempts"], "5"));
+            mPasswordAttemptWindow = Convert.ToInt32(
+                          GetConfigValue(config["passwordAttemptWindow"], "10"));
+            mMinRequiredNonalphanumericCharacters = Convert.ToInt32(
+                          GetConfigValue(config["minRequiredNonalphanumericCharacters"], "1"));
+            mMinRequiredPasswordLength = Convert.ToInt32(
+                          GetConfigValue(config["minRequiredPasswordLength"], "6"));
+            mEnablePasswordReset = Convert.ToBoolean(
+                          GetConfigValue(config["enablePasswordReset"], "true"));
+            mPasswordStrengthRegularExpression = Convert.ToString(
+                           GetConfigValue(config["passwordStrengthRegularExpression"], ""));
+
+        }
+
         public override string ApplicationName
         {
-            get
-            {
-                return _ApplicationName;
-            }
-            set
-            {
-                _ApplicationName = value;
-            }
+            get { return mApplicationName; }
+            set { mApplicationName = value; }
         }
 
         public override bool ChangePassword(string username, string oldPassword, string newPassword)
@@ -68,12 +107,12 @@ namespace cabme.web.Account
 
         public override bool EnablePasswordReset
         {
-            get { return _EnablePasswordReset; }
+            get { return mEnablePasswordReset; }
         }
 
         public override bool EnablePasswordRetrieval
         {
-            get { return _EnablePasswordRetrieval; }
+            get { return mEnablePasswordRetrieval; }
         }
 
         public override MembershipUserCollection FindUsersByEmail(string emailToMatch, int pageIndex, int pageSize, out int totalRecords)
@@ -116,98 +155,44 @@ namespace cabme.web.Account
             throw new NotImplementedException();
         }
 
-        private string GetConfigValue(string configValue, string defaultValue)
-        {
-            if (string.IsNullOrEmpty(configValue))
-                return defaultValue;
-
-            return configValue;
-        }
-        //
-        // Properties from web.config, default all to False
-        //
-        private string _ApplicationName;
-        private bool _EnablePasswordReset;
-        private bool _EnablePasswordRetrieval = false;
-        private bool _RequiresQuestionAndAnswer = false;
-        private bool _RequiresUniqueEmail = true;
-        private int _MaxInvalidPasswordAttempts;
-        private int _PasswordAttemptWindow;
-        private int _MinRequiredPasswordLength;
-        private int _MinRequiredNonalphanumericCharacters;
-        private string _PasswordStrengthRegularExpression;
-        private MembershipPasswordFormat _PasswordFormat = MembershipPasswordFormat.Hashed;
-
-        public override void Initialize(string name, NameValueCollection config)
-        {
-            if (config == null)
-                throw new ArgumentNullException("config");
-
-            if (name == null || name.Length == 0)
-                name = "CustomMembershipProvider";
-
-            if (String.IsNullOrEmpty(config["description"]))
-            {
-                config.Remove("description");
-                config.Add("description", "Custom Membership Provider");
-            }
-
-            base.Initialize(name, config);
-
-            _ApplicationName = GetConfigValue(config["applicationName"],
-                          System.Web.Hosting.HostingEnvironment.ApplicationVirtualPath);
-            _MaxInvalidPasswordAttempts = Convert.ToInt32(
-                          GetConfigValue(config["maxInvalidPasswordAttempts"], "5"));
-            _PasswordAttemptWindow = Convert.ToInt32(
-                          GetConfigValue(config["passwordAttemptWindow"], "10"));
-            _MinRequiredNonalphanumericCharacters = Convert.ToInt32(
-                          GetConfigValue(config["minRequiredNonalphanumericCharacters"], "1"));
-            _MinRequiredPasswordLength = Convert.ToInt32(
-                          GetConfigValue(config["minRequiredPasswordLength"], "6"));
-            _EnablePasswordReset = Convert.ToBoolean(
-                          GetConfigValue(config["enablePasswordReset"], "true"));
-            _PasswordStrengthRegularExpression = Convert.ToString(
-                           GetConfigValue(config["passwordStrengthRegularExpression"], ""));
-
-        }
         public override int MaxInvalidPasswordAttempts
         {
-            get { return _MaxInvalidPasswordAttempts; }
+            get { return mMaxInvalidPasswordAttempts; }
         }
 
         public override int MinRequiredNonAlphanumericCharacters
         {
-            get { return _MinRequiredNonalphanumericCharacters; }
+            get { return mMinRequiredNonalphanumericCharacters; }
         }
 
         public override int MinRequiredPasswordLength
         {
-            get { return _MinRequiredPasswordLength; }
+            get { return mMinRequiredPasswordLength; }
         }
 
         public override int PasswordAttemptWindow
         {
-            get { return _PasswordAttemptWindow; }
+            get { return mPasswordAttemptWindow; }
         }
 
         public override MembershipPasswordFormat PasswordFormat
         {
-            get { return _PasswordFormat; }
+            get { return mPasswordFormat; }
         }
 
         public override string PasswordStrengthRegularExpression
         {
-            get { return _PasswordStrengthRegularExpression; }
+            get { return mPasswordStrengthRegularExpression; }
         }
 
         public override bool RequiresQuestionAndAnswer
         {
-            get { return _RequiresQuestionAndAnswer; }
+            get { return mRequiresQuestionAndAnswer; }
         }
 
         public override bool RequiresUniqueEmail
         {
-            get { return _RequiresUniqueEmail; }
+            get { return mRequiresUniqueEmail; }
         }
 
         public override string ResetPassword(string username, string answer)
@@ -239,6 +224,14 @@ namespace cabme.web.Account
                     return Hash.ValidatePassword(password, user.Password);
                 }
             }
+        }
+
+        private string GetConfigValue(string configValue, string defaultValue)
+        {
+            if (string.IsNullOrEmpty(configValue))
+                return defaultValue;
+
+            return configValue;
         }
     }
 }
