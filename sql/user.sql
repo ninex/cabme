@@ -6,6 +6,9 @@ GO
 
 SET ANSI_PADDING ON
 GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[User]') AND type in (N'U'))
+DROP TABLE [dbo].[User]
+GO
 
 CREATE TABLE [dbo].[User](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
@@ -14,6 +17,7 @@ CREATE TABLE [dbo].[User](
 	[Email] [varchar](50) NOT NULL,
 	[Created] [datetime] NOT NULL,
 	[LastModified] [datetime] NOT NULL,
+	[LastAccess] [datetime] NOT NULL
  CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
