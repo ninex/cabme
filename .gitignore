@@ -2,7 +2,8 @@
 [Tt]humbs.db
 *.DS_Store
 *.tmp
-*Publish.xml
+*[Pp]ublish.xml
+[Pp]ackages/
 
 #Visual Studio files
 *.[Oo]bj
