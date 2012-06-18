@@ -6,6 +6,9 @@ GO
 
 SET ANSI_PADDING ON
 GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Role]') AND type in (N'U'))
+DROP TABLE [dbo].[Role]
+GO
 
 CREATE TABLE [dbo].[Role](
 	[Id] [int] IDENTITY(1,1) NOT NULL,

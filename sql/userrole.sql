@@ -4,6 +4,10 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[UserRole]') AND type in (N'U'))
+DROP TABLE [dbo].[UserRole]
+GO
+
 CREATE TABLE [dbo].[UserRole](
 	[UserId] [int] NOT NULL,
 	[RoleId] [int] NOT NULL

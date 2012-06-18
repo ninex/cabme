@@ -7,6 +7,10 @@ GO
 SET ANSI_PADDING ON
 GO
 
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Taxi]') AND type in (N'U'))
+DROP Table [dbo].Taxi
+GO
+
 CREATE TABLE [dbo].[Taxi](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [varchar](60) NOT NULL,

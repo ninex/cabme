@@ -6,6 +6,9 @@ GO
 
 SET ANSI_PADDING ON
 GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Suburb]') AND type in (N'U'))
+DROP TABLE [dbo].[Suburb]
+GO
 
 CREATE TABLE [dbo].[Suburb](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
