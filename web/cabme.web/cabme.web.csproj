@@ -66,6 +66,7 @@
     <Content Include="assets\images\loader.gif" />
     <Content Include="assets\images\logo.png" />
     <Content Include="assets\js\book.js" />
+    <Content Include="Confirm.aspx" />
     <Content Include="Service\CabmeService.svc" />
     <Content Include="assets\css\Mobile.css" />
     <Content Include="assets\css\Site.css" />
@@ -125,6 +126,13 @@
     </Compile>
     <Compile Include="BasePage.cs">
       <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Confirm.aspx.cs">
+      <DependentUpon>Confirm.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Confirm.aspx.designer.cs">
+      <DependentUpon>Confirm.aspx</DependentUpon>
     </Compile>
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>

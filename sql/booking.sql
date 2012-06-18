@@ -8,6 +8,10 @@ GO
 SET ANSI_PADDING ON
 GO
 
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Booking]') AND type in (N'U'))
+DROP TABLE [dbo].[Booking]
+GO
+
 CREATE TABLE [dbo].[Booking](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [varchar](60) NULL,
@@ -27,6 +31,7 @@ CREATE TABLE [dbo].[Booking](
 	[TaxiId] [int] NULL,
 	[LastModified] [datetime] NOT NULL,
 	[Created] [datetime] NOT NULL,
+	[Hash] varchar(128) 
  CONSTRAINT [PK_Booking] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

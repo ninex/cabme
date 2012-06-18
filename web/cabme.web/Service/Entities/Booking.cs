@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using Data = cabme.data;
 using System.ServiceModel.Web;
 using System.Net;
+using System.Web;
+using System.Web.Routing;
+using System.ServiceModel;
 
 namespace cabme.web.Service.Entities
 {
@@ -70,6 +73,8 @@ namespace cabme.web.Service.Entities
 
         public DateTime Created { get; set; }
 
+        public string Hash { get; set; }
+
         [DataMember]
         public Taxi SelectedTaxi { get; set; }
 
@@ -129,6 +134,7 @@ namespace cabme.web.Service.Entities
                 dataBooking.Confirmed = booking.Confirmed;
                 dataBooking.TaxiId = booking.TaxiId;
                 dataBooking.LastModified = DateTime.Now;
+                dataBooking.Hash = Account.Hash.HashPassword(booking.PickupTime + booking.PhoneNumber);
                 if (dataBooking.Id == 0)
                 {
                     context.Bookings.InsertOnSubmit(dataBooking);
@@ -136,6 +142,13 @@ namespace cabme.web.Service.Entities
                 //Store booking to database
                 context.SubmitChanges();
                 booking.Id = dataBooking.Id;
+#if DEBUG
+                string url = "http://www.cabme.co.za/confirm.aspx?hash=" + dataBooking.Hash;
+#else
+                string url = "http://" + OperationContext.Current.RequestContext.RequestMessage.Headers.To.Host + "/confirm.aspx?hash=" + dataBooking.Hash;
+#endif
+                
+
                 //Load contact details for taxi
                 var contactDetails = context.ContactDetails.Where(p => p.TaxiId == booking.TaxiId).SingleOrDefault();
                 //Is the contact details valid
@@ -145,7 +158,7 @@ namespace cabme.web.Service.Entities
                 {
                     if (contactDetails.UseEmail && !string.IsNullOrEmpty(contactDetails.BookingEmail))
                     {
-                        string mailBody = string.Format("Booking received from {0} for {4} people pickup time: {1}\r\nFrom:{2}\r\nTo:{3}\r\n", booking.PhoneNumber, booking.PickupTime, booking.AddrFrom, booking.AddrTo, booking.NumberOfPeople);
+                        string mailBody = string.Format("Booking received from 'insert suburb here'<br/><a href=\"{0}\">Click here to confirm</a>", url);
                         //Send confirm booking email
                         Mail.SendMail(contactDetails.BookingEmail, "cabme@abrie.net", "Test booking email", mailBody);
                     }
@@ -187,6 +200,22 @@ namespace cabme.web.Service.Entities
             }
         }
 
+        public static Booking Confirm(string hash)
+        {
+            using (Data.contentDataContext context = new Data.contentDataContext())
+            {
+                var booking = AllQueryableBookings(context).Where(p => p.Hash == hash && !p.Confirmed).SingleOrDefault();
+                if (booking != null)
+                {
+                    var dbBooking = context.Bookings.Where(p => p.Id == booking.Id).SingleOrDefault();
+                    booking.Confirmed = true;
+                    dbBooking.Confirmed = true;
+                    context.SubmitChanges();
+                }
+                return booking;
+            }
+        }
+
         private static IQueryable<Booking> AllQueryableBookings(Data.contentDataContext context)
         {
             return from booking in context.Bookings
@@ -213,6 +242,7 @@ namespace cabme.web.Service.Entities
                        TaxiId = booking.TaxiId.HasValue ? booking.TaxiId.Value : 0,
                        LastModified = booking.LastModified,
                        Created = booking.Created,
+                       Hash = booking.Hash,
                        SelectedTaxi = new Taxi
                        {
                            Id = taxi.Id,

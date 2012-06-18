@@ -2,12 +2,6 @@
 <ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="content">
   <DataContextMoniker Name="/contentDataContext" />
   <nestedChildShapes>
-    <classShape Id="4ec78dfd-5000-4472-98da-16eb652ec006" absoluteBounds="0.75, 0.75, 2, 4.2708154296875">
-      <DataClassMoniker Name="/contentDataContext/Booking" />
-      <nestedChildShapes>
-        <elementListCompartment Id="a0865486-aeab-4961-96ab-8cf02da7985a" absoluteBounds="0.765, 1.21, 1.9700000000000002, 3.7108154296875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
-      </nestedChildShapes>
-    </classShape>
     <classShape Id="78aa0b06-4db1-485e-87b1-718ba81e6eb2" absoluteBounds="3.75, 0.75, 2, 2.7324039713541666">
       <DataClassMoniker Name="/contentDataContext/Taxi" />
       <nestedChildShapes>
@@ -20,7 +14,7 @@
         <elementListCompartment Id="37679470-bf7a-4048-86cf-9313e5772652" absoluteBounds="4.64, 4.96, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(5.1875 : 3.48240397135417); (5.1875 : 4.5)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(5.1875 : 3.48240397135417); (5.1875 : 4.5)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/contentDataContext/Taxi/Taxi_ContactDetail" />
       <nodes>
         <classShapeMoniker Id="78aa0b06-4db1-485e-87b1-718ba81e6eb2" />
@@ -31,6 +25,12 @@
       <DataClassMoniker Name="/contentDataContext/Suburb" />
       <nestedChildShapes>
         <elementListCompartment Id="23c60f6c-ef5c-4431-a107-90c763a9a596" absoluteBounds="6.14, 1.21, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="f4d43e25-3356-44ff-9502-f7fb9c6830fd" absoluteBounds="1, 1.125, 2, 4.4631168619791666">
+      <DataClassMoniker Name="/contentDataContext/Booking" />
+      <nestedChildShapes>
+        <elementListCompartment Id="1cd6d52d-1bc7-4acd-addb-841105fb03ba" absoluteBounds="1.0150000000000001, 1.585, 1.9700000000000002, 3.903116861979167" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
   </nestedChildShapes>
