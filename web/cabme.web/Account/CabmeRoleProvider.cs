@@ -105,6 +105,7 @@ namespace cabme.web.Account
                 return (from user in context.Users
                         join userRole in context.UserRoles on user.Id equals userRole.UserId
                         join role in context.Roles on userRole.RoleId equals role.Id
+                        where user.Name == username
                         select role.Name).ToArray();
             }
         }
@@ -116,6 +117,7 @@ namespace cabme.web.Account
                 return (from role in context.Roles
                         join userRole in context.UserRoles on role.Id equals userRole.RoleId
                         join user in context.Users on userRole.UserId equals user.Id
+                        where role.Name == roleName
                         select user.Name).ToArray();
             }
         }

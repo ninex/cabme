@@ -69,14 +69,15 @@
     <Content Include="assets\images\logo.png" />
     <Content Include="assets\js\book.js" />
     <Content Include="Confirm.aspx" />
+    <Content Include="Scripts\jquery-1.7.2-vsdoc.js" />
+    <Content Include="Scripts\jquery-1.7.2.js" />
+    <Content Include="Scripts\jquery-1.7.2.min.js" />
+    <Content Include="Scripts\modernizr-2.5.3.js" />
     <Content Include="Service\CabmeService.svc" />
     <Content Include="assets\css\Mobile.css" />
     <Content Include="assets\css\Site.css" />
     <Content Include="Default.aspx" />
     <Content Include="Global.asax" />
-    <Content Include="Scripts\jquery-1.4.1-vsdoc.js" />
-    <Content Include="Scripts\jquery-1.4.1.js" />
-    <Content Include="Scripts\jquery-1.4.1.min.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

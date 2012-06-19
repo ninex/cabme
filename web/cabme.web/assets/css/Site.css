@@ -97,38 +97,6 @@ h2
 	margin: 12px 8px 8px 8px;
 	min-height: 420px;
 }
-.loginDisplay
-{
-	position: fixed;
-	top: 0px;
-	right: 10px;
-	width: auto;
-	padding: 5px;
-	text-align: center;
-	color: #000;
-	background-color: #ffd800;
-	border-radius: 0px 0px 5px 5px;
-	-moz-border-radius: 0px 0px 5px 5px;
-	-webkit-border-radius: 0px 0px 5px 5px;
-	z-index: 999;
-	min-width: 60px;
-}
-
-.loginDisplay a:link
-{
-	color: #000;
-	text-decoration: none;
-}
-
-.loginDisplay a:visited
-{
-	color: #000;
-}
-
-.loginDisplay a:hover
-{
-	color: #333;
-}
 .failureNotification
 {
 	font-size: 1.2em;
@@ -219,4 +187,122 @@ div.pop
 	-moz-border-radius: 15px;
 	-webkit-border-radius: 15px;
 	padding: 0 15px 15px 15px;
+}
+
+.loginDisplay
+{
+	position: fixed;
+	top: 0px;
+	right: 10px;
+	width: auto; /*padding: 5px;*/
+	text-align: center;
+	color: #000;
+	background-color: #ffd800;
+	border-radius: 0px 0px 5px 5px;
+	-moz-border-radius: 0px 0px 5px 5px;
+	-webkit-border-radius: 0px 0px 5px 5px;
+	z-index: 999;
+	min-width: 100px;
+	border: 1px solid #000;
+}
+
+.loginDisplay a:link
+{
+	color: #000;
+	text-decoration: none;
+}
+
+.loginDisplay a:visited
+{
+	color: #000;
+}
+.loginDisplay a:hover
+{
+	color: #333;
+}
+.loginDisplay:hover
+{
+	border-radius: 0px;
+	-moz-border-radius: 0px;
+	-webkit-border-radius: 0px;
+}
+/* JS disabled styles */
+.no-js nav li:hover ul
+{
+	display: block;
+}
+
+/* base nav styles */
+nav
+{
+	display: block;
+	position: relative;
+}
+nav ul
+{
+	padding: 0;
+	margin: 0;
+}
+nav li
+{
+	position: relative;
+	list-style-type: none;
+}
+nav ul:after
+{
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+nav li a
+{
+	display: block;
+	padding: 10px 20px;
+	text-decoration: none;
+}
+nav li a:focus
+{
+	outline: none;
+	text-decoration: underline;
+}
+nav li:first-child a
+{
+	border-left: none;
+}
+nav li.last a
+{
+	border-radius: 0px 0px 5px 5px;
+	-moz-border-radius: 0px 0px 5px 5px;
+	-webkit-border-radius: 0px 0px 5px 5px;
+}
+nav a span
+{
+	display: block;
+	float: right;
+	margin-left: 5px;
+}
+nav ul ul
+{
+	display: none;
+	width: 100%;
+	position: absolute;
+	left: -1px;
+	background: #ffd800;	
+	border-top:1px dashed #000;
+	border-right:1px solid #000;
+	border-left:1px solid #000;
+	border-bottom:1px solid #000;
+	border-radius: 0px 0px 5px 5px;
+	-moz-border-radius: 0px 0px 5px 5px;
+	-webkit-border-radius: 0px 0px 5px 5px;
+}
+nav ul ul li
+{
+	float: none;
+}
+nav ul ul a:hover
+{
+	background-color: #DBBE1A;	
 }
