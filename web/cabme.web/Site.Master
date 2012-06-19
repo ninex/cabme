@@ -7,7 +7,7 @@
     <title></title>
     <link href="assets/css/Site.css" rel="stylesheet" type="text/css" />
     <link rel="shortcut icon" href="/assets/images/logo.png">
-    <script src="Scripts/jquery-1.4.1.min.js" type="text/javascript"></script>
+    <script src="Scripts/jquery-1.7.2.min.js" type="text/javascript"></script>
     <asp:ContentPlaceHolder ID="HeadContent" runat="server">
     </asp:ContentPlaceHolder>
     <%--<script type="text/javascript">
@@ -32,6 +32,7 @@
                 <a href="~/Account/Login.aspx" id="HeadLoginStatus" runat="server">Log In</a>
             </AnonymousTemplate>
             <LoggedInTemplate>
+                <label>test </label>|
                 <asp:LoginStatus ID="HeadLoginStatus" runat="server" LogoutAction="Redirect" LogoutText="Log Out"
                     LogoutPageUrl="~/" />
             </LoggedInTemplate>
