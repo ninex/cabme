@@ -21,6 +21,7 @@ namespace cabme.web.Account
         private int mMinRequiredNonalphanumericCharacters;
         private string mPasswordStrengthRegularExpression;
         private MembershipPasswordFormat mPasswordFormat = MembershipPasswordFormat.Hashed;
+        private string mProviderName;
 
         public override void Initialize(string name, NameValueCollection config)
         {
@@ -29,6 +30,7 @@ namespace cabme.web.Account
 
             if (name == null || name.Length == 0)
                 name = "CabmeMembershipProvider";
+            mProviderName = name;
 
             if (String.IsNullOrEmpty(config["description"]))
             {
@@ -107,7 +109,7 @@ namespace cabme.web.Account
                     context.Users.InsertOnSubmit(user);
                     context.SubmitChanges();
                     status = MembershipCreateStatus.Success;
-                    //TODO: Return membership user
+                    return GetUser(user);
                 }
                 catch (Exception ex)
                 {
@@ -259,6 +261,23 @@ namespace cabme.web.Account
                     return valid;
                 }
             }
+        }
+
+        private MembershipUser GetUser(Data.User user)
+        {
+            return new MembershipUser(mProviderName,
+                user.Name,
+                null,
+                user.Email,
+                null,
+                null,
+                true,
+                false,
+                user.Created,
+                user.LastAccess.HasValue ? user.LastAccess.Value : user.Created,
+                user.LastAccess.HasValue ? user.LastAccess.Value : user.Created,
+                user.LastModified,
+                DateTime.MinValue);
         }
 
         private string GetConfigValue(string configValue, string defaultValue)
