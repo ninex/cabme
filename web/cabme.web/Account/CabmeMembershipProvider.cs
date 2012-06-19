@@ -63,7 +63,25 @@ namespace cabme.web.Account
 
         public override bool ChangePassword(string username, string oldPassword, string newPassword)
         {
-            throw new NotImplementedException();
+            using (Data.securityDataContext context = new Data.securityDataContext())
+            {
+                var user = context.Users.Where(p => p.Name == username).SingleOrDefault();
+                if (user == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    bool valid = Hash.ValidatePassword(oldPassword, user.Password);
+                    if (valid)
+                    {
+                        user.Password = Hash.HashPassword(newPassword);
+                        user.LastModified = DateTime.Now;
+                        context.SubmitChanges();
+                    }
+                    return valid;
+                }
+            }
         }
 
         public override bool ChangePasswordQuestionAndAnswer(string username, string password, string newPasswordQuestion, string newPasswordAnswer)
@@ -102,7 +120,18 @@ namespace cabme.web.Account
 
         public override bool DeleteUser(string username, bool deleteAllRelatedData)
         {
-            throw new NotImplementedException();
+            using (Data.securityDataContext context = new Data.securityDataContext())
+            {
+                var user = context.Users.Where(p => p.Name == username).SingleOrDefault();
+                if (user != null)
+                {
+                    //Deletes the record. We may consider in the future to disable as per deleteAllRelatedData
+                    context.Users.DeleteOnSubmit(user);
+                    context.SubmitChanges();
+                    return true;
+                }
+            }
+            return false;
         }
 
         public override bool EnablePasswordReset
