@@ -25,14 +25,10 @@ window.onload = loadMapScript;
 
 function mapsLoaded() {
     geocoder = new google.maps.Geocoder();
-    service = new google.maps.DistanceMatrixService(); 
+    service = new google.maps.DistanceMatrixService();
     directionsService = new google.maps.DirectionsService();
-    if (navigator.geolocation && $('#from').val().length <= 0) {
-        navigator.geolocation.getCurrentPosition(getPosSuccess, getPosFail, { timeout: 3000 });
-    } else {
-        loadSuburbs();
-        $('#loading').hide();
-    }
+    loadSuburbs();
+    $('#loading').hide();
 }
 function cityChanged() {
     loadSuburbs();
@@ -59,46 +55,6 @@ function loadSuburbs() {
         suburb = localStorage[city + 'suburbTo'];
         $('#toSuburb option[value*="' + suburb + '"]').attr('selected', 'selected');
     });
-}
-function getPosFail(error) {
-    loadSuburbs();
-    $('#loading').hide();
-}
-function getPosSuccess(position) {
-    var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-    geocoder.geocode({ 'latLng': latlng }, function (results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
-            var haveSuburb = false, haveAddress = false;
-            var suburb = '';
-            $.each(results, function (i, item) {
-                if (item.types[0] == "street_address" && !haveAddress) {
-                    if (item.address_components[1]) {
-                        $('#from').val(item.address_components[0].long_name + ' ' + item.address_components[1].long_name);
-                        haveAddress = true;
-                    }
-                }
-                if (item.types[0] == "sublocality" && !haveSuburb) {
-                    if (item.address_components[0]) {
-                        suburb = item.address_components[0].long_name;
-                        haveSuburb = true;
-                    }
-                }
-                if (item.types[0] == "locality") {
-                    if (item.address_components[0]) {
-                        city = item.address_components[0].long_name;
-                    }
-                }
-            });
-            localStorage[city + 'suburbFrom'] = suburb;
-            localStorage[city + 'suburbTo'] = suburb;
-            $('#city').val(city);
-            cityChanged();
-        } else {
-            console.log("Geocoder failed due to: " + status);
-            loadSuburbs();
-        }
-    });
-    $('#loading').hide();
 }
 
 function step1() {
@@ -225,7 +181,7 @@ function distanceResults(response, status) {
                     origin: $('#from').val() + ', ' + $('#fromSuburb').attr('selected', true).val(),
                     destination: $('#to').val() + ', ' + $('#toSuburb').attr('selected', true).val(),
                     travelMode: google.maps.TravelMode.DRIVING
-                };                
+                };
                 directionsService.route(request, function (result, status) {
                     if (status == google.maps.DirectionsStatus.OK) {
                         directionsDisplay.setDirections(result);
