@@ -221,7 +221,13 @@ namespace cabme.web.Account
                 }
                 else
                 {
-                    return Hash.ValidatePassword(password, user.Password);
+                    bool valid = Hash.ValidatePassword(password, user.Password);
+                    if (valid)
+                    {
+                        user.LastAccess = DateTime.Now;
+                        context.SubmitChanges();
+                    }
+                    return valid;
                 }
             }
         }
