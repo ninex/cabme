@@ -147,7 +147,7 @@ namespace cabme.web.Service.Entities
 #else
                 string url = "http://" + OperationContext.Current.RequestContext.RequestMessage.Headers.To.Host + "/confirm.aspx?hash=" + dataBooking.Hash;
 #endif
-                
+
 
                 //Load contact details for taxi
                 var contactDetails = context.ContactDetails.Where(p => p.TaxiId == booking.TaxiId).SingleOrDefault();
@@ -196,6 +196,25 @@ namespace cabme.web.Service.Entities
                 else
                 {
                     return new Bookings(AllQueryableBookings(context).Where(p => p.PhoneNumber == number).ToList());
+                }
+            }
+        }
+
+        public static Bookings GetAllTaxiBookingsForUser(string userName)
+        {
+            using (Data.contentDataContext context = new Data.contentDataContext())
+            {
+                var id = (from user in context.Users
+                         join userTaxi in context.UserTaxis on user.Id equals userTaxi.UserId
+                         where user.Name == userName
+                         select userTaxi.TaxiId).SingleOrDefault();
+                if (id > 0)
+                {
+                    return new Bookings(AllQueryableBookings(context).Where(p => p.TaxiId == id).ToList());
+                }
+                else
+                {
+                    return null;
                 }
             }
         }

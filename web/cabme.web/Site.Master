@@ -40,8 +40,8 @@
                     <LoggedInTemplate>
                         <li><a href="#" title="Actions">Actions</a>
                             <ul>
-                                <li><a href="#" title="Make Booking">Book</a></li>
-                                <li><a href="#" title="View Bookings">View</a></li>
+                                <li><a href="Default.aspx" title="Make Booking">Book</a></li>
+                                <li><a href="Booking.aspx" title="View Bookings">View</a></li>
                                 <li><a href="#" title="Review Bookings">Review</a></li>
                                 <li class="last">
                                     <asp:LoginStatus ID="HeadLoginStatus" runat="server" LogoutAction="Redirect" LogoutText="Log Out"
@@ -55,7 +55,7 @@
                             <ContentTemplate>
                                 <li><a href="#" title="Actions">Actions</a>
                                     <ul>
-                                        <li><a href="#" title="View Bookings">View</a></li>
+                                        <li><a href="Booking.aspx" title="View Bookings">View</a></li>
                                         <li class="last">
                                             <asp:LoginStatus ID="HeadLoginStatus" runat="server" LogoutAction="Redirect" LogoutText="Log Out"
                                                 LogoutPageUrl="~/" />
@@ -68,8 +68,8 @@
                             <ContentTemplate>
                                 <li><a href="#" title="Actions">Actions</a>
                             <ul>
-                                <li><a href="#" title="Make Booking">Book</a></li>
-                                <li><a href="#" title="View Bookings">View</a></li>
+                                <li><a href="Default.aspx" title="Make Booking">Book</a></li>
+                                <li><a href="Booking.aspx" title="View Bookings">View</a></li>
                                 <li><a href="#" title="Review Bookings">Review</a></li>
                                 <li><a href="#" title="Admin Bookings">Admin</a></li>
                                 <li class="last">
