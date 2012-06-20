@@ -32,7 +32,7 @@ namespace cabme.web.Account
 
         public override void AddUsersToRoles(string[] usernames, string[] roleNames)
         {
-            using (Data.securityDataContext context = new Data.securityDataContext())
+            using (Data.contentDataContext context = new Data.contentDataContext())
             {
                 var list = from user in context.Users
                            join name in usernames on user.Name equals name
@@ -56,7 +56,7 @@ namespace cabme.web.Account
 
         public override void CreateRole(string roleName)
         {
-            using (Data.securityDataContext context = new Data.securityDataContext())
+            using (Data.contentDataContext context = new Data.contentDataContext())
             {
                 if (context.Roles.Where(p => p.Name == roleName).Count() <= 0)
                 {
@@ -72,7 +72,7 @@ namespace cabme.web.Account
 
         public override bool DeleteRole(string roleName, bool throwOnPopulatedRole)
         {
-            using (Data.securityDataContext context = new Data.securityDataContext())
+            using (Data.contentDataContext context = new Data.contentDataContext())
             {
                 var role = context.Roles.Where(p => p.Name == roleName).SingleOrDefault();
                 if (role != null)
@@ -92,7 +92,7 @@ namespace cabme.web.Account
 
         public override string[] GetAllRoles()
         {
-            using (Data.securityDataContext context = new Data.securityDataContext())
+            using (Data.contentDataContext context = new Data.contentDataContext())
             {
                 return context.Roles.Select(p => p.Name).ToArray();
             }
@@ -100,7 +100,7 @@ namespace cabme.web.Account
 
         public override string[] GetRolesForUser(string username)
         {
-            using (Data.securityDataContext context = new Data.securityDataContext())
+            using (Data.contentDataContext context = new Data.contentDataContext())
             {
                 return (from user in context.Users
                         join userRole in context.UserRoles on user.Id equals userRole.UserId
@@ -112,7 +112,7 @@ namespace cabme.web.Account
 
         public override string[] GetUsersInRole(string roleName)
         {
-            using (Data.securityDataContext context = new Data.securityDataContext())
+            using (Data.contentDataContext context = new Data.contentDataContext())
             {
                 return (from role in context.Roles
                         join userRole in context.UserRoles on role.Id equals userRole.RoleId
@@ -124,7 +124,7 @@ namespace cabme.web.Account
 
         public override bool IsUserInRole(string username, string roleName)
         {
-            using (Data.securityDataContext context = new Data.securityDataContext())
+            using (Data.contentDataContext context = new Data.contentDataContext())
             {
                 return (from user in context.Users
                         join userRole in context.UserRoles on user.Id equals userRole.UserId
@@ -137,7 +137,7 @@ namespace cabme.web.Account
 
         public override void RemoveUsersFromRoles(string[] usernames, string[] roleNames)
         {
-            using (Data.securityDataContext context = new Data.securityDataContext())
+            using (Data.contentDataContext context = new Data.contentDataContext())
             {
                 var list = from user in context.Users
                            join name in usernames on user.Name equals name
@@ -152,7 +152,7 @@ namespace cabme.web.Account
 
         public override bool RoleExists(string roleName)
         {
-            using (Data.securityDataContext context = new Data.securityDataContext())
+            using (Data.contentDataContext context = new Data.contentDataContext())
             {
                 return context.Roles.Where(p => p.Name == roleName).Count() > 0;
             }

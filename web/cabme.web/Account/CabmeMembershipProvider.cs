@@ -65,7 +65,7 @@ namespace cabme.web.Account
 
         public override bool ChangePassword(string username, string oldPassword, string newPassword)
         {
-            using (Data.securityDataContext context = new Data.securityDataContext())
+            using (Data.contentDataContext context = new Data.contentDataContext())
             {
                 var user = context.Users.Where(p => p.Name == username).SingleOrDefault();
                 if (user == null)
@@ -93,7 +93,7 @@ namespace cabme.web.Account
 
         public override MembershipUser CreateUser(string username, string password, string email, string passwordQuestion, string passwordAnswer, bool isApproved, object providerUserKey, out MembershipCreateStatus status)
         {
-            using (Data.securityDataContext context = new Data.securityDataContext())
+            using (Data.contentDataContext context = new Data.contentDataContext())
             {
                 try
                 {
@@ -122,7 +122,7 @@ namespace cabme.web.Account
 
         public override bool DeleteUser(string username, bool deleteAllRelatedData)
         {
-            using (Data.securityDataContext context = new Data.securityDataContext())
+            using (Data.contentDataContext context = new Data.contentDataContext())
             {
                 var user = context.Users.Where(p => p.Name == username).SingleOrDefault();
                 if (user != null)
@@ -243,7 +243,7 @@ namespace cabme.web.Account
 
         public override bool ValidateUser(string username, string password)
         {
-            using (Data.securityDataContext context = new Data.securityDataContext())
+            using (Data.contentDataContext context = new Data.contentDataContext())
             {
                 var user = context.Users.Where(p => p.Name == username).SingleOrDefault();
                 if (user == null)
