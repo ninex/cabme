@@ -218,16 +218,22 @@ namespace cabme.web.Service.Entities
                 }
             }
         }
-        public static Bookings GetAllBookingsForUser(string userName)
+        public static Bookings GetAllActiveBookingsForUser(string userName)
         {
-            /*
             using (Data.contentDataContext context = new Data.contentDataContext())
             {
-                var id = (from user in context.Users
-                          where user.Name == userName
+                var number = (from user in context.Users
+                          where user.Name == userName && user.PhoneNumber != null
                           select user.PhoneNumber).SingleOrDefault();
-            }*/
-            throw new NotImplementedException();
+                if (!string.IsNullOrEmpty(number))
+                {
+                    return GetAllBookingsByNumber(number, true);
+                }
+                else
+                {
+                    return null;
+                }
+            }
         }
 
         public static Booking Confirm(string hash)

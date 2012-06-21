@@ -35,7 +35,7 @@ namespace cabme.web
                     }
                     else
                     {
-                        bookings = Service.Entities.Booking.GetAllBookingsForUser(User.Identity.Name);
+                        bookings = Service.Entities.Booking.GetAllActiveBookingsForUser(User.Identity.Name);
                     }
                 }
 

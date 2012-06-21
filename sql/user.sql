@@ -17,7 +17,8 @@ CREATE TABLE [dbo].[User](
 	[Email] [varchar](50) NOT NULL,
 	[Created] [datetime] NOT NULL,
 	[LastModified] [datetime] NOT NULL,
-	[LastAccess] [datetime] NOT NULL
+	[LastAccess] [datetime] NOT NULL,
+	[PhoneNumber] varchar(20) NULL
  CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

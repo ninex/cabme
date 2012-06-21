@@ -33,12 +33,6 @@
         <elementListCompartment Id="1cd6d52d-1bc7-4acd-addb-841105fb03ba" absoluteBounds="1.0150000000000001, 1.585, 1.9700000000000002, 3.903116861979167" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="f0a8c3c7-606e-402d-ac5b-59316684db8f" absoluteBounds="6.375, 4.25, 2, 2.1554996744791666">
-      <DataClassMoniker Name="/contentDataContext/User" />
-      <nestedChildShapes>
-        <elementListCompartment Id="21dcf834-0661-48a9-a762-c6cd30d95156" absoluteBounds="6.3900000000000006, 4.7100000000000009, 1.9700000000000002, 1.5954996744791665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
-      </nestedChildShapes>
-    </classShape>
     <classShape Id="99884884-2ea0-4cc5-8e4b-f96d1427fe1b" absoluteBounds="6.25, 2.625, 2, 1.193992513020834">
       <DataClassMoniker Name="/contentDataContext/UserTaxi" />
       <nestedChildShapes>
@@ -49,13 +43,6 @@
       <AssociationMoniker Name="/contentDataContext/Taxi/Taxi_UserTaxi" />
       <nodes>
         <classShapeMoniker Id="78aa0b06-4db1-485e-87b1-718ba81e6eb2" />
-        <classShapeMoniker Id="99884884-2ea0-4cc5-8e4b-f96d1427fe1b" />
-      </nodes>
-    </associationConnector>
-    <associationConnector edgePoints="[(7.3125 : 4.25); (7.3125 : 3.81899251302083)]" fixedFrom="NotFixed" fixedTo="NotFixed">
-      <AssociationMoniker Name="/contentDataContext/User/User_UserTaxi" />
-      <nodes>
-        <classShapeMoniker Id="f0a8c3c7-606e-402d-ac5b-59316684db8f" />
         <classShapeMoniker Id="99884884-2ea0-4cc5-8e4b-f96d1427fe1b" />
       </nodes>
     </associationConnector>
@@ -71,17 +58,30 @@
         <elementListCompartment Id="2ac8a268-283c-415c-9018-b7c37cf11aa1" absoluteBounds="9.14, 5.21, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(8.375 : 8.34699625651042); (10.125 : 8.34699625651042); (10.125 : 5.94399251302083)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(8.375 : 8.34699625651042); (10.125 : 8.34699625651042); (10.125 : 5.94399251302083)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/contentDataContext/Role/Role_UserRole" />
       <nodes>
         <classShapeMoniker Id="2c674084-d22c-4bdd-a893-380e908620f3" />
         <classShapeMoniker Id="56832637-48cb-4593-8858-50eba09e7495" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(8.375 : 5.34699625651042); (9.125 : 5.34699625651042)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <classShape Id="131d719b-a50e-4a6d-82b9-825a04a8b2d8" absoluteBounds="6.5, 4.625, 2, 2.3478011067708335">
+      <DataClassMoniker Name="/contentDataContext/User" />
+      <nestedChildShapes>
+        <elementListCompartment Id="92e58721-4f57-47de-be37-b3bb9ffcd1cd" absoluteBounds="6.515, 5.085, 1.9700000000000002, 1.7878011067708335" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(7.375 : 4.625); (7.375 : 3.81899251302083)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/contentDataContext/User/User_UserTaxi" />
+      <nodes>
+        <classShapeMoniker Id="131d719b-a50e-4a6d-82b9-825a04a8b2d8" />
+        <classShapeMoniker Id="99884884-2ea0-4cc5-8e4b-f96d1427fe1b" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(8.5 : 5.34699625651042); (9.125 : 5.34699625651042)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/contentDataContext/User/User_UserRole" />
       <nodes>
-        <classShapeMoniker Id="f0a8c3c7-606e-402d-ac5b-59316684db8f" />
+        <classShapeMoniker Id="131d719b-a50e-4a6d-82b9-825a04a8b2d8" />
         <classShapeMoniker Id="56832637-48cb-4593-8858-50eba09e7495" />
       </nodes>
     </associationConnector>
