@@ -14,18 +14,62 @@ namespace cabme.web
         {
             if (!IsPostBack)
             {
-                if (User.IsInRole("Taxi") && User.Identity.IsAuthenticated)
+                BindData();
+            }
+        }
+
+        private void BindData()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                Service.Entities.Bookings bookings;
+                if (User.IsInRole("Taxi"))
                 {
-                    var bookings = Service.Entities.Booking.GetAllTaxiBookingsForUser(User.Identity.Name);
-                    if (bookings != null)
+                    bookings = Service.Entities.Booking.GetAllTaxiBookingsForUser(User.Identity.Name);
+                }
+                else
+                {
+                    if (User.IsInRole("Admin"))
                     {
-                        pl.InnerHtml = "<p>Number of bookings: " + bookings.Count() + "</p>";
+                        bookings = Service.Entities.Booking.GetAllBookings();
                     }
                     else
                     {
-                        pl.InnerHtml = "No bookings";
+                        bookings = Service.Entities.Booking.GetAllBookingsForUser(User.Identity.Name);
                     }
                 }
+
+                if (bookings != null)
+                {
+                    listBookings.DataSource = bookings;
+                    listBookings.DataBind();
+                }
+            }
+        }
+
+        protected bool ShowConfirm(bool confirmed)
+        {
+            return (User.IsInRole("Taxi") && !confirmed);
+        }
+
+        protected string AllowedToDisplay(string input, bool confirmed)
+        {
+            if (confirmed || !User.IsInRole("Taxi"))
+            {
+                return input;
+            }
+            else
+            {
+                return "Booking not confirmed";
+            }
+        }
+
+        protected void btnConfirm_Click(object sender, EventArgs e)
+        {
+            Button btn = sender as Button;
+            if (Service.Entities.Booking.Confirm(btn.CommandArgument) != null)
+            {
+                BindData();
             }
         }
     }

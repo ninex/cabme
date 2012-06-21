@@ -210,13 +210,24 @@ namespace cabme.web.Service.Entities
                          select userTaxi.TaxiId).SingleOrDefault();
                 if (id > 0)
                 {
-                    return new Bookings(AllQueryableBookings(context).Where(p => p.TaxiId == id).ToList());
+                    return new Bookings(AllQueryableBookings(context).Where(p => p.TaxiId == id && p.Active).ToList());
                 }
                 else
                 {
                     return null;
                 }
             }
+        }
+        public static Bookings GetAllBookingsForUser(string userName)
+        {
+            /*
+            using (Data.contentDataContext context = new Data.contentDataContext())
+            {
+                var id = (from user in context.Users
+                          where user.Name == userName
+                          select user.PhoneNumber).SingleOrDefault();
+            }*/
+            throw new NotImplementedException();
         }
 
         public static Booking Confirm(string hash)

@@ -13,12 +13,12 @@ namespace cabme.web {
     public partial class BookingPage {
         
         /// <summary>
-        /// pl control.
+        /// listBookings control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl pl;
+        protected global::System.Web.UI.WebControls.Repeater listBookings;
     }
 }

@@ -289,11 +289,11 @@ nav ul ul
 	width: 100%;
 	position: absolute;
 	left: -1px;
-	background: #ffd800;	
-	border-top:1px dashed #000;
-	border-right:1px solid #000;
-	border-left:1px solid #000;
-	border-bottom:1px solid #000;
+	background: #ffd800;
+	border-top: 1px dashed #000;
+	border-right: 1px solid #000;
+	border-left: 1px solid #000;
+	border-bottom: 1px solid #000;
 	border-radius: 0px 0px 5px 5px;
 	-moz-border-radius: 0px 0px 5px 5px;
 	-webkit-border-radius: 0px 0px 5px 5px;
@@ -304,5 +304,29 @@ nav ul ul li
 }
 nav ul ul a:hover
 {
-	background-color: #DBBE1A;	
+	background-color: #DBBE1A;
+}
+
+.table
+{
+	border: 1px solid #000;
+	border-radius: 15px;
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
+	margin: 10px;
+	padding: 15px;
+	display: table;
+}
+.row
+{
+	display: table-row;
+}
+.cell
+{
+	display: table-cell;
+	padding-right: 20px;
+}
+.lastCell
+{
+	width: 80%;
 }
