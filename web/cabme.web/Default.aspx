@@ -5,9 +5,7 @@
 </asp:Content>
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">
     <% if (IsMobile)
-       { %>
-    <p>
-        Disclaimer: This is a beta form and doesn't book a taxi.</p>
+       { %>    
     <div id="book">
         <h2>
             Book taxi</h2>
@@ -57,6 +55,8 @@
                 Booking sent to server for confirmation.</p>
         </div>
     </div>
+    <p>
+        Disclaimer: This is a beta form and doesn't book a taxi.</p>
     <script type="text/javascript" src="assets/js/book.js"></script>
     <%}
        else

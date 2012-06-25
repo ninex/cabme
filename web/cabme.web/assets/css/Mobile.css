@@ -1,34 +1,58 @@
-﻿body 
+﻿body
 {
 }
 .page
 {
-    width: 100%;
-    min-width:100%;
-    background-color: #fff;
-    margin: 20px auto 0px auto;
-    border: 1px solid #000;
-    border-radius: 15px;
-    -moz-border-radius: 15px;
-    -webkit-border-radius: 15px;
+	width: 100%;
+	min-width: 100%;
+	background-color: #fff;
+	margin: 0px auto 0px auto;
+	border: 1px solid #000;
+	border-radius: 15px;
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
 }
 .main
 {
-    padding: 0px ;
+	padding: 0px;	
+	margin: 0px 8px 8px 8px;
+}
+h2
+{
+	font-size: 2.0em;
+	margin: 0px;
 }
 #book
 {
 }
-#book input,select
+#book input, select
 {
-	width:100%;
+	width: 100%;
 }
 #book input[type=button]
 {
 	margin-top: 5px;
-	width:100%;
+	width: 100%;
 	height: 60px;
-	font-size:large;
+	font-size: large;
 	background-color: #ffd800;
 }
-	
+label
+{
+	font-size: 1.5em;
+}
+label input, select
+{
+	font-size: 1.5em;
+}
+@media screen and (max-width:300px)
+{
+	label
+	{
+		font-size: 1.1em;
+	}
+	label input, select
+	{
+		font-size: 1.1em;
+	}
+}
