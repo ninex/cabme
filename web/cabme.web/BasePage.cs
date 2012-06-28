@@ -7,9 +7,10 @@ using System.Text.RegularExpressions;
 
 namespace cabme.web
 {
-    public class BasePage : Page
+    public class BasePage : Page, IPostBackEventHandler
     {
         public bool IsMobile { get; set; }
+        public bool NeedNumber { get; set; }
 
         public BasePage()
         {
@@ -46,6 +47,43 @@ namespace cabme.web
                 {
                     this.MasterPageFile = "~/Site.Master";
                     IsMobile = false;
+                }
+            }
+            if (!IsPostBack)
+            {
+                NeedNumber = (User.Identity != null && User.Identity.IsAuthenticated && !User.IsInRole("Taxi") && (Session["PhoneNumber"] == null || ((string)Session["PhoneNumber"]).Equals(String.Empty)));
+            }
+        }
+
+        protected override void OnInit(EventArgs e)
+        {
+            base.OnInit(e);
+            if (NeedNumber)
+            {
+
+                this.Controls.Add(new LiteralControl("<div id='pop' class='popContainer'><div class='pop'><h1>User info needed</h1><p><label>Phone Number&nbsp;<input type='tel' id='popPhoneNumber' /></label></p><input type='button' value='OK' onclick='Number();' /><input type='button' value='Not now' onclick='notNow();' /></div></div>"));
+                this.Controls.Add(new LiteralControl("<script type='text/javascript' >function Number(){__doPostBack('" + Page.ClientID + "', '#PHONE#' + $('#popPhoneNumber').val());}function notNow(){$('#pop').remove();}</script>"));
+            }
+        }
+
+        public void RaisePostBackEvent(string eventArgument)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                if (!string.IsNullOrEmpty(eventArgument) && eventArgument.StartsWith("#PHONE#"))
+                {
+                    string number = eventArgument.Replace("#PHONE#", "");                    
+                    using (cabme.data.contentDataContext context = new data.contentDataContext())
+                    {
+                        var user = context.Users.Where(p => p.Name == User.Identity.Name).SingleOrDefault();
+                        if (user != null)
+                        {
+                            user.PhoneNumber = number;
+                            context.SubmitChanges();
+                            Session["PhoneNumber"] = number;
+                            NeedNumber = false;
+                        }
+                    }
                 }
             }
         }

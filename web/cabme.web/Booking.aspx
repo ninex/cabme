@@ -11,7 +11,7 @@
             <div style="height: 100%">
         </HeaderTemplate>
         <ItemTemplate>
-            <div class="table">
+            <div class="table" runat="server">
                 <div class="row">
                     <div class="cell">
                         <b>Phone Number: </b>
