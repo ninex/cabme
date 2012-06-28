@@ -28,11 +28,15 @@ namespace cabme.web.Service.Entities
 
         [DataMember]
         public string PickupTime { get; set; }
+
+        private DateTime _dPickupTime;
         public DateTime dPickupTime
         {
+            get { return _dPickupTime; }
             set
             {
                 PickupTime = value.ToString("yyyy-MM-dd hh:mm:ss");
+                _dPickupTime = value;
             }
         }
 

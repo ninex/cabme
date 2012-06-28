@@ -72,5 +72,25 @@ namespace cabme.web
                 BindData();
             }
         }
+
+        protected void listBookings_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        {
+            var booking = e.Item.DataItem as Service.Entities.Booking;
+            Panel ctrl = e.Item.FindControl("booking") as Panel;
+            if (ctrl != null)
+            {
+                if (booking.dPickupTime.AddMinutes(10) < DateTime.Now)
+                {
+                    if (booking.dPickupTime.AddMinutes(30) < DateTime.Now)
+                    {
+                        ctrl.CssClass = "table verylate";
+                    }
+                    else
+                    {
+                        ctrl.CssClass = "table late";
+                    }
+                }
+            }
+        }
     }
 }

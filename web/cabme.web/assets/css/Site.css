@@ -310,12 +310,24 @@ nav ul ul a:hover
 .table
 {
 	border: 1px solid #000;
-	border-radius: 15px;
-	-moz-border-radius: 15px;
-	-webkit-border-radius: 15px;
+	-moz-box-shadow: 10px 10px 5px #888;
+	-webkit-box-shadow: 10px 10px 5px #888;
+	box-shadow: 10px 10px 5px #888;
 	margin: 10px;
 	padding: 15px;
 	display: table;
+}
+.late
+{
+	-moz-box-shadow: 10px 10px 5px #FFB969;
+	-webkit-box-shadow: 10px 10px 5px #FFB969;
+	box-shadow: 10px 10px 5px #FFB969;
+}
+.verylate
+{
+	-moz-box-shadow: 10px 10px 5px #FF6969;
+	-webkit-box-shadow: 10px 10px 5px #FF6969;
+	box-shadow: 10px 10px 5px #FF6969;
 }
 .row
 {

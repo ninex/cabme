@@ -6,12 +6,13 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <h2>
         Active Bookings</h2>
-    <asp:Repeater runat="server" ID="listBookings">
+    <asp:Repeater runat="server" ID="listBookings" 
+        onitemdatabound="listBookings_ItemDataBound">
         <HeaderTemplate>
             <div style="height: 100%">
         </HeaderTemplate>
         <ItemTemplate>
-            <div class="table" runat="server">
+            <asp:Panel class="table" runat="server" id="booking">
                 <div class="row">
                     <div class="cell">
                         <b>Phone Number: </b>
@@ -51,7 +52,7 @@
                     <asp:Button runat="server" ID="btnConfirm" Text="Confirm" CommandArgument='<%#Eval("Hash") %>'
                         Visible='<%# ShowConfirm((bool)Eval("Confirmed")) %>' OnClick="btnConfirm_Click" />
                 </div>
-            </div>
+            </asp:Panel>
         </ItemTemplate>
         <FooterTemplate>
             </div>
