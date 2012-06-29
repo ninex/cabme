@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Text.RegularExpressions;
+using System.Web.Security;
 
 namespace cabme.web
 {
@@ -49,9 +50,10 @@ namespace cabme.web
                     IsMobile = false;
                 }
             }
-            if (!IsPostBack)
+            if (!IsPostBack && User.Identity != null && User.Identity.IsAuthenticated && !User.IsInRole("Taxi"))
             {
-                NeedNumber = (User.Identity != null && User.Identity.IsAuthenticated && !User.IsInRole("Taxi") && (Session["PhoneNumber"] == null || ((string)Session["PhoneNumber"]).Equals(String.Empty)));
+                Account.CabMeUser user = (new Account.CabmeMembershipProvider()).GetUser(User.Identity.Name, true) as Account.CabMeUser;
+                NeedNumber = user != null && string.IsNullOrEmpty(user.PhoneNumber);
             }
         }
 
@@ -80,7 +82,11 @@ namespace cabme.web
                         {
                             user.PhoneNumber = number;
                             context.SubmitChanges();
-                            Session["PhoneNumber"] = number;
+                            var cabUser = HttpContext.Current.Cache.Get(user.Name) as Account.CabMeUser;
+                            cabUser.PhoneNumber = user.PhoneNumber;
+                            HttpContext.Current.Cache.Add(cabUser.UserName, cabUser, null,
+                                System.Web.Caching.Cache.NoAbsoluteExpiration, FormsAuthentication.Timeout,
+                                System.Web.Caching.CacheItemPriority.Default, null);
                             NeedNumber = false;
                         }
                     }

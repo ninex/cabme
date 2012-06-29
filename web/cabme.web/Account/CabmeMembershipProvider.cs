@@ -109,7 +109,11 @@ namespace cabme.web.Account
                     context.Users.InsertOnSubmit(user);
                     context.SubmitChanges();
                     status = MembershipCreateStatus.Success;
-                    return GetUser(user);
+                    var cabUser = GetUser(user);
+                    HttpContext.Current.Cache.Add(cabUser.UserName, cabUser, null,
+                        System.Web.Caching.Cache.NoAbsoluteExpiration, FormsAuthentication.Timeout,
+                        System.Web.Caching.CacheItemPriority.Default, null);
+                    return cabUser;
                 }
                 catch (Exception ex)
                 {
@@ -173,7 +177,7 @@ namespace cabme.web.Account
 
         public override MembershipUser GetUser(string username, bool userIsOnline)
         {
-            throw new NotImplementedException();
+            return HttpContext.Current.Cache.Get(username) as CabMeUser;
         }
 
         public override MembershipUser GetUser(object providerUserKey, bool userIsOnline)
@@ -258,15 +262,18 @@ namespace cabme.web.Account
                         user.LastAccess = DateTime.Now;
                         context.SubmitChanges();
                     }
-                    HttpContext.Current.Session["PhoneNumber"] = user.PhoneNumber;
+                    var cabUser = GetUser(user);
+                    HttpContext.Current.Cache.Add(cabUser.UserName, cabUser, null,
+                        System.Web.Caching.Cache.NoAbsoluteExpiration, FormsAuthentication.Timeout,
+                        System.Web.Caching.CacheItemPriority.Default, null);
                     return valid;
                 }
             }
         }
 
-        private MembershipUser GetUser(Data.User user)
+        public MembershipUser GetUser(Data.User user)
         {
-            return new MembershipUser(mProviderName,
+            return new CabMeUser(mProviderName,
                 user.Name,
                 null,
                 user.Email,
@@ -278,7 +285,8 @@ namespace cabme.web.Account
                 user.LastAccess.HasValue ? user.LastAccess.Value : user.Created,
                 user.LastAccess.HasValue ? user.LastAccess.Value : user.Created,
                 user.LastModified,
-                DateTime.MinValue);
+                DateTime.MinValue,
+                user.PhoneNumber);
         }
 
         private string GetConfigValue(string configValue, string defaultValue)
@@ -287,6 +295,31 @@ namespace cabme.web.Account
                 return defaultValue;
 
             return configValue;
+        }
+    }
+    public class CabMeUser : MembershipUser
+    {
+        public string PhoneNumber { get; set; }
+
+        public CabMeUser(string providername,
+                                  string username,
+                                  object providerUserKey,
+                                  string email,
+                                  string passwordQuestion,
+                                  string comment,
+                                  bool isApproved,
+                                  bool isLockedOut,
+                                  DateTime creationDate,
+                                  DateTime lastLoginDate,
+                                  DateTime lastActivityDate,
+                                  DateTime lastPasswordChangedDate,
+                                  DateTime lastLockedOutDate,
+                                  string PhoneNumber) :
+            base(providername, username, providerUserKey, email, passwordQuestion, comment,
+                                       isApproved, isLockedOut, creationDate, lastLoginDate,
+                                       lastActivityDate, lastPasswordChangedDate, lastLockedOutDate)
+        {
+            this.PhoneNumber = PhoneNumber;
         }
     }
 }
