@@ -342,3 +342,45 @@ nav ul ul a:hover
 {
 	width: 80%;
 }
+.tabs
+{
+	position: relative;
+	margin-top: 2.5em;
+	border: 1px solid #eee;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+}
+.tabs h3
+{
+	position: absolute;
+	font-size: 1em;
+	font-weight: normal;
+	width: 120px;
+	height: 20px;
+	top: -21px;
+	left: 10px;
+	padding: 0;
+	margin: 0;
+	color: #999;
+	cursor: pointer;
+	text-align: center;
+	background-color: #eee;
+	border-radius: 5px 5px 0 0;
+	-moz-border-radius: 5px 5px 0 0;
+	-webkit-border-radius: 5px 5px 0 0;
+}
+article h3:nth-child(2)
+{
+	left: 132px;
+}
+article h3:nth-child(3)
+{
+	left: 254px;
+}
+.tabs h3.current
+{
+	background-color: #ffd800;
+	color: #000;
+	border-bottom: none;
+}

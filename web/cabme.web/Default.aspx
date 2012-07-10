@@ -56,8 +56,7 @@
         </div>
     </div>
     <p>
-        Disclaimer: This is a beta form and doesn't book a taxi.</p>
-    <script type="text/javascript" src="assets/js/book.js"></script>
+        Disclaimer: This is a beta form and doesn't book a taxi.</p>    
     <%}
        else
        {  %>
@@ -71,4 +70,7 @@
         Mobile web development has also started.
     </p>
     <%} %>
+</asp:Content>
+<asp:Content ContentPlaceHolderID="Scripts" runat="server" ID="Scripts" >   
+    <script type="text/javascript" src="assets/js/book.js"></script>
 </asp:Content>

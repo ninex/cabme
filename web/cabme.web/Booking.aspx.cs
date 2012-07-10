@@ -41,8 +41,14 @@ namespace cabme.web
 
                 if (bookings != null)
                 {
-                    listBookings.DataSource = bookings;
-                    listBookings.DataBind();
+                    ActiveBookings.DataSource = bookings.Where(p => !p.Confirmed && p.dPickupTime.AddMinutes(30) > DateTime.Now);
+                    ActiveBookings.DataBind();
+
+                    CompletedBookings.DataSource = bookings.Where(p => p.Confirmed);
+                    CompletedBookings.DataBind();
+
+                    IncompleteBookings.DataSource = bookings.Where(p => !p.Confirmed && p.dPickupTime.AddMinutes(30) < DateTime.Now);
+                    IncompleteBookings.DataBind();
                 }
             }
         }
@@ -75,11 +81,12 @@ namespace cabme.web
 
         protected void listBookings_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
+
             var booking = e.Item.DataItem as Service.Entities.Booking;
             Panel ctrl = e.Item.FindControl("booking") as Panel;
             if (ctrl != null)
             {
-                if (booking.dPickupTime.AddMinutes(10) < DateTime.Now)
+                if (!booking.Confirmed && booking.dPickupTime.AddMinutes(10) < DateTime.Now)
                 {
                     if (booking.dPickupTime.AddMinutes(30) < DateTime.Now)
                     {
@@ -88,6 +95,18 @@ namespace cabme.web
                     else
                     {
                         ctrl.CssClass = "table late";
+                    }
+                }
+            }
+
+            if (e.Item.ItemType == ListItemType.Footer)
+            {
+                if (((Repeater)sender).Items.Count <= 0)
+                {
+                    Panel pnlNoData = (Panel)e.Item.FindControl("NoData");
+                    if (pnlNoData != null)
+                    {
+                        pnlNoData.Visible = true;
                     }
                 }
             }
