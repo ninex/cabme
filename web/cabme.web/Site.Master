@@ -27,7 +27,7 @@
 
     </script>--%>
 </head>
-<body class="no-js">
+<body class="no-js">    
     <form runat="server">
     <div class="loginDisplay">
         <nav id="topNav">
@@ -98,10 +98,11 @@
         </div>
     </div>
     <div class="footer">
-        <a href="mailto:cabmeinfo@abrie.net">Contact Us</a></div>
+        <a class="contact" href="mailto:cabmeinfo@abrie.net">Contact Us</a>
+    </div>
     </form>
     <script src="Scripts/jquery-1.7.2.min.js" type="text/javascript"></script>
-    <script src="Scripts/modernizr-2.5.3.js" type="text/javascript"></script>
+    <script src="Scripts/modernizr-2.5.3.js" type="text/javascript"></script>    
     <asp:ContentPlaceHolder ID="Scripts" runat="server" />
 </body>
 </html>
