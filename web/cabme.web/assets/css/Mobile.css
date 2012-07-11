@@ -43,7 +43,8 @@ label
 }
 label input, select
 {
-	font-size: 1.5em;
+	font-size: 1.2em;	
+	color: #555;
 }
 @media screen and (max-width:300px)
 {
