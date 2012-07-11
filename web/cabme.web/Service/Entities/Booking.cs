@@ -244,7 +244,7 @@ namespace cabme.web.Service.Entities
         {
             using (Data.contentDataContext context = new Data.contentDataContext())
             {
-                var booking = AllQueryableBookings(context).Where(p => p.Hash == hash && !p.Confirmed).SingleOrDefault();
+                var booking = AllQueryableBookings(context).Where(p => p.Hash == hash && !p.Confirmed && p.dPickupTime.AddMinutes(30) > DateTime.Now).SingleOrDefault();
                 if (booking != null)
                 {
                     var dbBooking = context.Bookings.Where(p => p.Id == booking.Id).SingleOrDefault();
