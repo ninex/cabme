@@ -14,6 +14,7 @@
       <Column Name="FleetSize" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" />
       <Association Name="Taxi_ContactDetail" Member="ContactDetails" ThisKey="Id" OtherKey="TaxiId" Type="ContactDetail" />
       <Association Name="Taxi_UserTaxi" Member="UserTaxis" ThisKey="Id" OtherKey="TaxiId" Type="UserTaxi" />
+      <Association Name="Taxi_Review" Member="Reviews" ThisKey="Id" OtherKey="TaxiId" Type="Review" />
     </Type>
   </Table>
   <Table Name="dbo.ContactDetail" Member="ContactDetails">
@@ -56,6 +57,7 @@
       <Column Name="LastModified" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="Created" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="Hash" Type="System.String" DbType="VarChar(128)" CanBeNull="true" />
+      <Association Name="Booking_Review" Member="Reviews" ThisKey="Id" OtherKey="BookingId" Type="Review" />
     </Type>
   </Table>
   <Table Name="dbo.UserTaxi" Member="UserTaxis">
@@ -93,6 +95,23 @@
       <Column Name="PhoneNumber" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
       <Association Name="User_UserTaxi" Member="UserTaxis" ThisKey="Id" OtherKey="UserId" Type="UserTaxi" />
       <Association Name="User_UserRole" Member="UserRoles" ThisKey="Id" OtherKey="UserId" Type="UserRole" />
+      <Association Name="User_Review" Member="Reviews" ThisKey="Id" OtherKey="UserId" Type="Review" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Review" Member="Reviews">
+    <Type Name="Review">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="UserId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="BookingId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="TaxiId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Rating" Type="System.Byte" DbType="TinyInt NOT NULL" CanBeNull="false" />
+      <Column Name="Comment" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
+      <Column Name="DateCreated" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="DateLastModified" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="Active" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="Booking_Review" Member="Booking" ThisKey="BookingId" OtherKey="Id" Type="Booking" IsForeignKey="true" />
+      <Association Name="Taxi_Review" Member="Taxi" ThisKey="TaxiId" OtherKey="Id" Type="Taxi" IsForeignKey="true" />
+      <Association Name="User_Review" Member="User" ThisKey="UserId" OtherKey="Id" Type="User" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>

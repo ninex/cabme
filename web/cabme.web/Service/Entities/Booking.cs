@@ -84,7 +84,7 @@ namespace cabme.web.Service.Entities
 
         public static Booking MakeBooking(Booking booking)
         {
-            if (booking == null | booking.NumberOfPeople <= 0 || string.IsNullOrEmpty(booking.AddrFrom) || string.IsNullOrEmpty(booking.AddrTo) ||
+            if (booking == null || booking.NumberOfPeople <= 0 || string.IsNullOrEmpty(booking.AddrFrom) || string.IsNullOrEmpty(booking.AddrTo) ||
                 booking.TaxiId <= 0 || string.IsNullOrEmpty(booking.PhoneNumber))
             {
                 WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.BadRequest;
@@ -237,6 +237,14 @@ namespace cabme.web.Service.Entities
                 {
                     return null;
                 }
+            }
+        }
+        public static Booking GetBookingByHash(string hash)
+        {
+            using (Data.contentDataContext context = new Data.contentDataContext())
+            {
+                var booking = AllQueryableBookings(context).Where(p => p.Hash == hash).SingleOrDefault();
+                return booking;
             }
         }
 

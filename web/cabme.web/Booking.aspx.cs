@@ -58,6 +58,11 @@ namespace cabme.web
             return (User.IsInRole("Taxi") && !confirmed);
         }
 
+        protected bool ShowReview()
+        {
+            return (!User.IsInRole("Taxi"));
+        }
+
         protected string AllowedToDisplay(string input, bool confirmed)
         {
             if (confirmed || !User.IsInRole("Taxi"))
@@ -77,6 +82,12 @@ namespace cabme.web
             {
                 BindData();
             }
+        }
+
+        protected void btnReview_Click(object sender, EventArgs e)
+        {
+            Button btn = sender as Button;
+            Response.Redirect("~/Review.aspx?hash=" + btn.CommandArgument);
         }
 
         protected void listBookings_ItemDataBound(object sender, RepeaterItemEventArgs e)

@@ -71,6 +71,8 @@
     <Content Include="assets\js\booking.js" />
     <Content Include="Booking.aspx" />
     <Content Include="Confirm.aspx" />
+    <Content Include="Review.aspx" />
+    <Content Include="Reviews.aspx" />
     <Content Include="Scripts\jquery-1.7.2-vsdoc.js" />
     <Content Include="Scripts\jquery-1.7.2.js" />
     <Content Include="Scripts\jquery-1.7.2.min.js" />
@@ -164,9 +166,24 @@
       <DependentUpon>MobileSite.Master</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Review.aspx.cs">
+      <DependentUpon>Review.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Review.aspx.designer.cs">
+      <DependentUpon>Review.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Reviews.aspx.cs">
+      <DependentUpon>Reviews.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reviews.aspx.designer.cs">
+      <DependentUpon>Reviews.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Service\CabmeService.svc.cs">
       <DependentUpon>CabmeService.svc</DependentUpon>
     </Compile>
+    <Compile Include="Service\Entities\Review.cs" />
     <Compile Include="Service\Entities\Suburb.cs" />
     <Compile Include="Service\Entities\Taxi.cs" />
     <Compile Include="Service\ICabmeService.cs" />

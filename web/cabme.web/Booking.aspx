@@ -110,6 +110,10 @@
                             </div>
                             <div class="cell lastCell">
                                 <%# AllowedToDisplay(((string)Eval("AddrTo")).Replace(",", ",<br/>"), (bool)Eval("Confirmed")) %></p></div>
+                        </div>                        
+                        <div class="row">
+                            <asp:Button runat="server" ID="btnReview" Text="Review" OnClick="btnReview_Click" CommandArgument='<% #Eval("Hash") %>'
+                                Visible='<%# ShowReview() %>' />
                         </div>
                     </asp:Panel>
                 </ItemTemplate>
