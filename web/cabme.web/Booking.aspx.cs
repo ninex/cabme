@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Service = cabme.web.Service;
+using cabme.web.Service.Hubs;
 
 namespace cabme.web
 {
@@ -78,7 +79,8 @@ namespace cabme.web
         protected void btnConfirm_Click(object sender, EventArgs e)
         {
             Button btn = sender as Button;
-            if (Service.Entities.Booking.Confirm(btn.CommandArgument) != null)
+            var booking = Service.Entities.Booking.Confirm(btn.CommandArgument);
+            if (booking != null)
             {
                 BookHub.SendClientMessage(booking.PhoneNumber, "Booking confirmed. Thank you for using cabme.");
 
