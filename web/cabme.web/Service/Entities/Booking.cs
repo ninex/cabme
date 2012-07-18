@@ -149,14 +149,12 @@ namespace cabme.web.Service.Entities
                 context.SubmitChanges();
                 booking.Id = dataBooking.Id;
 
-                BookHub.SendClientMessage(booking.PhoneNumber, "Booking is being sent to taxi company.");
+                BookHub.SendClientMessage(booking.PhoneNumber, "Booking is being sent to " + booking.SelectedTaxi.Name + ".");
 #if DEBUG
                 string url = "http://www.cabme.co.za/confirm.aspx?hash=" + dataBooking.Hash;
 #else
                 string url = "http://" + OperationContext.Current.RequestContext.RequestMessage.Headers.To.Host + "/confirm.aspx?hash=" + dataBooking.Hash;
 #endif
-
-
                 //Load contact details for taxi
                 var contactDetails = context.ContactDetails.Where(p => p.TaxiId == booking.TaxiId).SingleOrDefault();
                 //Is the contact details valid
@@ -170,7 +168,7 @@ namespace cabme.web.Service.Entities
                         //Send confirm booking email
                         Mail.SendMail(contactDetails.BookingEmail, "cabme@abrie.net", "Test booking email", mailBody);
 
-                        BookHub.SendClientMessage(booking.PhoneNumber, "Waiting for taxi company to confirm.");
+                        BookHub.SendClientMessage(booking.PhoneNumber, "Waiting for " + booking.SelectedTaxi.Name + " to confirm.");
                     }
                     else
                     {
@@ -215,9 +213,9 @@ namespace cabme.web.Service.Entities
             using (Data.contentDataContext context = new Data.contentDataContext())
             {
                 var id = (from user in context.Users
-                         join userTaxi in context.UserTaxis on user.Id equals userTaxi.UserId
-                         where user.Name == userName
-                         select userTaxi.TaxiId).SingleOrDefault();
+                          join userTaxi in context.UserTaxis on user.Id equals userTaxi.UserId
+                          where user.Name == userName
+                          select userTaxi.TaxiId).SingleOrDefault();
                 if (id > 0)
                 {
                     return new Bookings(AllQueryableBookings(context).Where(p => p.TaxiId == id && p.Active).ToList());
@@ -233,8 +231,8 @@ namespace cabme.web.Service.Entities
             using (Data.contentDataContext context = new Data.contentDataContext())
             {
                 var number = (from user in context.Users
-                          where user.Name == userName && user.PhoneNumber != null
-                          select user.PhoneNumber).SingleOrDefault();
+                              where user.Name == userName && user.PhoneNumber != null
+                              select user.PhoneNumber).SingleOrDefault();
                 if (!string.IsNullOrEmpty(number))
                 {
                     return GetAllBookingsByNumber(number, true);
