@@ -28,7 +28,7 @@ namespace cabme.web
                     {
                         status.InnerHtml = "Booking from " + booking.AddrFrom + " confirmed. ";
                         
-                        BookHub.SendClientMessage(booking.PhoneNumber, "Booking confirmed. Thanks for using cabme.co.za");
+                        BookHub.SendClientMessage(booking.PhoneNumber, "Booking confirmed. Thank you for using cabme.");
 
                         string mailBody = string.Format("Booking received from {0}<br/>People:{4}<br/>Pickup time: {1}<br/>From:{2}<br/>To:{3}<br/>",
                             booking.PhoneNumber, booking.PickupTime, booking.AddrFrom, booking.AddrTo, booking.NumberOfPeople);

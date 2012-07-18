@@ -7,7 +7,6 @@ $(document).ready(function () {
     bookHub.showMessage = function (message) {
         $('#msgStatus').append('<p>' + message + '</p>');
     };
-    $.connection.hub.start();
 
     $('#step2').hide();
     var now = new Date();
@@ -97,6 +96,7 @@ function step1() {
     origin += ', ' + $('#fromSuburb').attr('selected', true).val();
     destination += ', ' + $('#toSuburb').attr('selected', true).val();
 
+    logHub.log("Getting distance for " + origin + " to " + destination);
     service.getDistanceMatrix(
 			  {
 			      origins: [origin],
@@ -201,10 +201,12 @@ function distanceResults(response, status) {
         } else {
             $('#loading').hide();
             popup('Check Address', 'Can not find both addresses. Please double check.');
+            logHub.log("Can not find both addresses.");
         }
     } else {
         $('#loading').hide();
         popup('Server problem', 'We are having problems accessing the Google Maps service');
+        logHub.log("We are having problems accessing the Google Maps service");
     }
 
 }

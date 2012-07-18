@@ -205,6 +205,7 @@
     <Compile Include="Service\Entities\Suburb.cs" />
     <Compile Include="Service\Entities\Taxi.cs" />
     <Compile Include="Service\Hubs\BookHub.cs" />
+    <Compile Include="Service\Hubs\LogHub.cs" />
     <Compile Include="Service\ICabmeService.cs" />
     <Compile Include="Service\Mail.cs" />
     <Compile Include="Site.Master.cs">

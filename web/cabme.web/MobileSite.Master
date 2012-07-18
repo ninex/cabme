@@ -43,6 +43,15 @@
     </div>
     </form>    
     <script src="Scripts/jquery-1.7.2.min.js" type="text/javascript"></script>
+    <script src="Scripts/jquery.signalR-0.5.2.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/signalr/hubs"></script>
+    <script type="text/javascript">
+        var logHub;
+        $(document).ready(function () {
+            logHub = $.connection.logHub;
+            $.connection.hub.start();
+        });
+    </script>
     <asp:ContentPlaceHolder ID="Scripts" runat="server" />
 </body>
 </html>

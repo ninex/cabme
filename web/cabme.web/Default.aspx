@@ -72,7 +72,5 @@
     <%} %>
 </asp:Content>
 <asp:Content ContentPlaceHolderID="Scripts" runat="server" ID="Scripts">
-    <script src="Scripts/jquery.signalR-0.5.2.min.js" type="text/javascript"></script>
-    <script type="text/javascript" src="/signalr/hubs"></script>
     <script type="text/javascript" src="assets/js/book.js"></script>
 </asp:Content>
