@@ -80,6 +80,8 @@ namespace cabme.web
             Button btn = sender as Button;
             if (Service.Entities.Booking.Confirm(btn.CommandArgument) != null)
             {
+                BookHub.SendClientMessage(booking.PhoneNumber, "Booking confirmed. Thank you for using cabme.");
+
                 BindData();
             }
         }
