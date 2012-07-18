@@ -1,7 +1,14 @@
 ﻿var computedDistance = 0;
 var service, geocoder, directionsService;
+var bookHub;
 
 $(document).ready(function () {
+    bookHub = $.connection.bookHub;
+    bookHub.showMessage = function (message) {
+        $('#msgStatus').append('<p>' + message + '</p>');
+    };
+    $.connection.hub.start();
+
     $('#step2').hide();
     var now = new Date();
     var today = now.getFullYear() + '-' + (now.getMonth() + 1).padLeft(2, '0') + '-' + now.getDate().padLeft(2, '0');
@@ -126,18 +133,20 @@ function step2() {
         "Confirmed": false,
         "TaxiId": taxiId
     };
+
+    $('#step3').show();
+    $('#loading').hide();
+
+    bookHub.announce($('#txtPhone').val());
     $.ajax({
         type: "POST",
         contentType: 'application/json',
         url: '/service/cabmeservice.svc/booking',
         data: JSON.stringify(data),
         success: function (msg) {
-            $('#step3').show();
-            $('#loading').hide();
         },
         error: function (jqXHR, textStatus, errorThrown) {
             console.log(errorThrown);
-            $('#loading').hide();
             popup('Server error', 'The booking can not be created due to a server problem.');
         }
     });

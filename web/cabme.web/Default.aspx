@@ -5,7 +5,7 @@
 </asp:Content>
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">
     <% if (IsMobile)
-       { %>    
+       { %>
     <div id="book">
         <h2>
             Book taxi</h2>
@@ -15,7 +15,7 @@
         <div id="step1">
             <label>
                 City
-                <select id="city" onchange="cityChanged();" >
+                <select id="city" onchange="cityChanged();">
                     <option selected value="Cape Town">Cape Town</option>
                     <option value="Johannesburg">Johannesburg</option>
                 </select></label>
@@ -50,13 +50,13 @@
             </div>
             <input type="button" id="btnBook" value="Book" onclick="step2();" />
         </div>
-        <div id="step3" style="display: none;">
-            <p>
-                Booking sent to server for confirmation.</p>
+        <div id="step3" style="display: none;border:1px solid #000; margin: 5px;padding: 5px;">
+            <p id="msgStatus">
+                Booking sent to server.</p>
         </div>
     </div>
     <p>
-        Disclaimer: This is a beta form and doesn't book a taxi.</p>    
+        Disclaimer: This is a beta form and doesn't book a taxi.</p>
     <%}
        else
        {  %>
@@ -71,6 +71,8 @@
     </p>
     <%} %>
 </asp:Content>
-<asp:Content ContentPlaceHolderID="Scripts" runat="server" ID="Scripts" >   
+<asp:Content ContentPlaceHolderID="Scripts" runat="server" ID="Scripts">
+    <script src="Scripts/jquery.signalR-0.5.2.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/signalr/hubs"></script>
     <script type="text/javascript" src="assets/js/book.js"></script>
 </asp:Content>

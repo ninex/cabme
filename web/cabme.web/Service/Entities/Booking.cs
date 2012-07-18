@@ -8,6 +8,7 @@ using System.Net;
 using System.Web;
 using System.Web.Routing;
 using System.ServiceModel;
+using cabme.web.Service.Hubs;
 
 namespace cabme.web.Service.Entities
 {
@@ -90,6 +91,7 @@ namespace cabme.web.Service.Entities
                 WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.BadRequest;
                 return null;
             }
+            BookHub.SendClientMessage(booking.PhoneNumber, "Booking has been received by server.");
             using (Data.contentDataContext context = new Data.contentDataContext())
             {
                 Data.Booking dataBooking;
@@ -146,6 +148,8 @@ namespace cabme.web.Service.Entities
                 //Store booking to database
                 context.SubmitChanges();
                 booking.Id = dataBooking.Id;
+
+                BookHub.SendClientMessage(booking.PhoneNumber, "Booking is being sent to taxi company.");
 #if DEBUG
                 string url = "http://www.cabme.co.za/confirm.aspx?hash=" + dataBooking.Hash;
 #else
@@ -165,6 +169,8 @@ namespace cabme.web.Service.Entities
                         string mailBody = string.Format("Booking received from 'insert suburb here'<br/><a href=\"{0}\">Click here to confirm</a>", url);
                         //Send confirm booking email
                         Mail.SendMail(contactDetails.BookingEmail, "cabme@abrie.net", "Test booking email", mailBody);
+
+                        BookHub.SendClientMessage(booking.PhoneNumber, "Waiting for taxi company to confirm.");
                     }
                     else
                     {
