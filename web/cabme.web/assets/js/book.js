@@ -17,8 +17,11 @@ $(document).ready(function () {
     if (supports_html5_storage()) {
         $('#from').val(localStorage["from"]);
         $('#txtPhone').val(localStorage["phone"]);
-        $('#city').val(localStorage["city"]);
+        if (localStorage["city"]) {
+            $('#city').val(localStorage["city"]);
+        }
     }
+    loadSuburbs();
 });
 
 function loadMapScript() {
@@ -33,9 +36,9 @@ function mapsLoaded() {
     geocoder = new google.maps.Geocoder();
     service = new google.maps.DistanceMatrixService();
     directionsService = new google.maps.DirectionsService();
-    loadSuburbs();
     $('#loading').hide();
 }
+
 function cityChanged() {
     loadSuburbs();
 }
@@ -173,19 +176,6 @@ function distanceResults(response, status) {
                 $('#ddlTaxi').html(options);
                 $('#step1').slideUp();
                 $('#step2').show();
-                var myOptions = {
-                    zoom: 14,
-                    mapTypeId: google.maps.MapTypeId.ROADMAP
-                }
-                map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-                geocoder = new google.maps.Geocoder();
-                geocoder.geocode({ 'address': from }, function (results, status) {
-                    if (status == google.maps.GeocoderStatus.OK) {
-                        map.setCenter(results[0].geometry.location);
-                    }
-                });
-                var directionsDisplay = new google.maps.DirectionsRenderer();
-                directionsDisplay.setMap(map);
                 var request = {
                     origin: $('#from').val() + ', ' + $('#fromSuburb').attr('selected', true).val(),
                     destination: $('#to').val() + ', ' + $('#toSuburb').attr('selected', true).val(),
@@ -193,7 +183,11 @@ function distanceResults(response, status) {
                 };
                 directionsService.route(request, function (result, status) {
                     if (status == google.maps.DirectionsStatus.OK) {
-                        directionsDisplay.setDirections(result);
+                        var width = $(document).width();
+                        if (width > 480){
+                            width = 480;
+                        }
+                        $('#map').html('<img src="http://maps.googleapis.com/maps/api/staticmap?size='+width+'x400&sensor=false&path=weight:5|color:blue|enc:' + result.routes[0].overview_polyline.points + '&markers=label:A|' + from + '&markers=label:B|' + to + '" />');
                     }
                 });
                 $('#loading').hide();

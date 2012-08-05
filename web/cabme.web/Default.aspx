@@ -46,11 +46,11 @@
                 Taxi<select id="ddlTaxi"></select></label>
             <label>
                 Estimated route</label>
-            <div id="map_canvas" style="width: 100%; height: 200px">
-            </div>
+            <div id="map" style="overflow:hidden">
+            </div>            
             <input type="button" id="btnBook" value="Book" onclick="step2();" />
         </div>
-        <div id="step3" style="display: none;border:1px solid #000; margin: 5px;padding: 5px;">
+        <div id="step3" style="display: none; border: 1px solid #000; margin: 5px; padding: 5px;">
             <p id="msgStatus">
                 Booking sent to server.</p>
         </div>
