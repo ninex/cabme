@@ -94,6 +94,11 @@ namespace cabme.web
             Response.Redirect("~/Review.aspx?hash=" + btn.CommandArgument);
         }
 
+        protected void btnRefresh_Click(object sender, EventArgs e)
+        {
+            BindData();
+        }
+
         protected void listBookings_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
 

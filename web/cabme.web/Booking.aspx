@@ -1,11 +1,12 @@
 ﻿<%@ Page Title="View Bookings" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true"
-    CodeBehind="Booking.aspx.cs" Inherits="cabme.web.BookingPage" %>
+    CodeBehind="Booking.aspx.cs" Inherits="cabme.web.BookingPage" ClientIDMode="Static" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <h2>
         Bookings</h2>
+        <asp:Button runat="server" ID="btnRefresh" Text="Refresh" OnClick="btnRefresh_Click"/>
     <article class="tabs">
         <h3 id="htab1">
             Active</h3>
@@ -182,7 +183,7 @@
          $(document).ready(function () {
              taxiHub = $.connection.taxiHub;
              taxiHub.showMessage = function (message) {
-                    
+                    $('#btnRefresh').click();
                 };
          });
          <%} %>
