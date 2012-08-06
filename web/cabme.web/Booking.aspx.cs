@@ -79,10 +79,21 @@ namespace cabme.web
         protected void btnConfirm_Click(object sender, EventArgs e)
         {
             Button btn = sender as Button;
+            TextBox txtArrival = btn.Parent.FindControl("txtArrival") as TextBox;
+            int minutes = 0;
+            string msg;
+            if (txtArrival != null && int.TryParse(txtArrival.Text, out minutes))
+            {
+                msg = "Booking confirmed. Taxi will arrive in " + minutes + " min. Thank you for using cabme.";
+            }
+            else
+            {
+                msg = "Booking confirmed. Thank you for using cabme.";
+            }
             var booking = Service.Entities.Booking.Confirm(btn.CommandArgument);
             if (booking != null)
             {
-                BookHub.SendClientMessage(booking.PhoneNumber, "Booking confirmed. Thank you for using cabme.");
+                BookHub.SendClientMessage(booking.PhoneNumber, msg);
 
                 BindData();
             }
