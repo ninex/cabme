@@ -28,16 +28,16 @@
                     <input type="tel" id="txtPhone" /></label>
             </div>
             <div>
-                <label full>
+                <label full style="display: none">
                     <img src="assets/images/calendar.png" alt="Pickup date" />
                     <input id="pickupDate" type="date" /></label>
             </div>
             <div>
-                <label full>
+                <label full style="display: none">
                     <input id="pickupTime" type="time" class="noImg" /></label>
             </div>
             <div>
-                <label full>
+                <label full style="display: none">
                     <img src="assets/images/people.png" alt="Number of people" />
                     <input type="number" id="number" value="1" /></label>
             </div>
@@ -54,13 +54,13 @@
                 </label>
             </div>
             <div>
-                <label full>
+                <label full style="display: none">
                     <img src="assets/images/drop.png" alt="Drop Off" />
                     <input type="text" id="to" />
                 </label>
             </div>
             <div>
-                <label full>
+                <label full style="display: none">
                     <select id="toSuburb" onchange="suburbChanged();" class="noImg">
                     </select>
                 </label>
@@ -73,7 +73,7 @@
                 </label>
             </div>
             <input type="button" id="btnBookMin" value="Book" onclick="step1Min();" />
-            <input full type="button" id="btnConfirm" value="Next" onclick="step1();" />
+            <input full style="display: none" type="button" id="btnConfirm" value="Next" onclick="step1();" />
         </div>
         <div id="step2" style="display: none">
             <div>
