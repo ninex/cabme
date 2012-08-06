@@ -62,8 +62,9 @@
                     </asp:Panel>
                 </ItemTemplate>
                 <FooterTemplate>
-                    <asp:Panel runat="server" id="NoData" Visible="false" >
-                        <p>No active bookings</p>
+                    <asp:Panel runat="server" ID="NoData" Visible="false">
+                        <p>
+                            No active bookings</p>
                     </asp:Panel>
                     </div>
                 </FooterTemplate>
@@ -110,17 +111,18 @@
                             </div>
                             <div class="cell lastCell">
                                 <%# AllowedToDisplay(((string)Eval("AddrTo")), (bool)Eval("Confirmed")).Replace(",", ",<br/>")%></p></div>
-                        </div>                        
+                        </div>
                         <div class="row">
-                            <asp:Button runat="server" ID="btnReview" Text="Review" OnClick="btnReview_Click" CommandArgument='<% #Eval("Hash") %>'
-                                Visible='<%# ShowReview() %>' />
+                            <asp:Button runat="server" ID="btnReview" Text="Review" OnClick="btnReview_Click"
+                                CommandArgument='<% #Eval("Hash") %>' Visible='<%# ShowReview() %>' />
                         </div>
                     </asp:Panel>
                 </ItemTemplate>
                 <FooterTemplate>
                     </div>
                 </FooterTemplate>
-            </asp:Repeater></div>
+            </asp:Repeater>
+        </div>
         <div id="tab3" style="display: none">
             <asp:Repeater runat="server" ID="IncompleteBookings" OnItemDataBound="listBookings_ItemDataBound">
                 <HeaderTemplate>
@@ -168,9 +170,21 @@
                 <FooterTemplate>
                     </div>
                 </FooterTemplate>
-            </asp:Repeater></div>
+            </asp:Repeater>
+        </div>
     </article>
 </asp:Content>
 <asp:Content ContentPlaceHolderID="Scripts" runat="server" ID="Scripts">
     <script type="text/javascript" src="assets/js/booking.js"></script>
+    <script type="text/javascript">
+     <% if (User.IsInRole("Taxi")){ %>
+         var taxiHub;
+         $(document).ready(function () {
+             taxiHub = $.connection.taxiHub;
+             taxiHub.showMessage = function (message) {
+                    
+                };
+         });
+         <%} %>
+    </script>
 </asp:Content>

@@ -109,6 +109,17 @@ namespace cabme.web.Service.Entities
             }
         }
 
+        public static int GetTaxiIdForUser(string userName)
+        {
+            using (Data.contentDataContext context = new Data.contentDataContext())
+            {
+                return (from user in context.Users
+                        join userTaxi in context.UserTaxis on user.Id equals userTaxi.UserId
+                        where user.Name == userName
+                        select userTaxi.TaxiId).SingleOrDefault();
+            }
+        }
+
         public int GetPriceEstimate(int distance)
         {
             if (distance > 0)

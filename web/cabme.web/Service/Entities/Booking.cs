@@ -173,7 +173,7 @@ namespace cabme.web.Service.Entities
                         string mailBody = string.Format("Booking received from 'insert suburb here'<br/><a href=\"{0}\">Click here to confirm</a>", url);
                         //Send confirm booking email
                         Mail.SendMail(contactDetails.BookingEmail, "cabme@abrie.net", "Test booking email", mailBody);
-
+                        TaxiHub.SendTaxiMessage(booking.SelectedTaxi.Id, "Test");
                         BookHub.SendClientMessage(booking.PhoneNumber, "Waiting for " + booking.SelectedTaxi.Name + " to confirm.");
                     }
                     else
