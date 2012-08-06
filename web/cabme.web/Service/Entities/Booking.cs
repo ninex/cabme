@@ -85,7 +85,7 @@ namespace cabme.web.Service.Entities
 
         public static Booking MakeBooking(Booking booking)
         {
-            if (booking == null || booking.NumberOfPeople <= 0 || string.IsNullOrEmpty(booking.AddrFrom) || string.IsNullOrEmpty(booking.AddrTo) ||
+            if (booking == null || booking.NumberOfPeople <= 0 || string.IsNullOrEmpty(booking.AddrFrom) || //string.IsNullOrEmpty(booking.AddrTo) ||
                 booking.TaxiId <= 0 || string.IsNullOrEmpty(booking.PhoneNumber))
             {
                 WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.BadRequest;
@@ -113,18 +113,24 @@ namespace cabme.web.Service.Entities
                         return null;
                     }
                 }
-                if (booking.EstimatedPrice == 0 && booking.ComputedDistance > 0)
+                if (booking.SelectedTaxi == null)
                 {
-                    if (booking.SelectedTaxi == null)
-                    {
-                        booking.SelectedTaxi = Taxi.GetTaxi(booking.TaxiId);
-                    }
+                    booking.SelectedTaxi = Taxi.GetTaxi(booking.TaxiId);
+                }
+                if (booking.EstimatedPrice == 0 && booking.ComputedDistance > 0)
+                {                    
                     dataBooking.EstimatedPrice = booking.SelectedTaxi.GetPriceEstimate(booking.ComputedDistance);
                 }
                 else
                 {
                     dataBooking.EstimatedPrice = booking.EstimatedPrice;
                 }
+
+                if (string.IsNullOrEmpty(booking.PickupTime))
+                {
+                    booking.PickupTime = DateTime.Now.AddMinutes(1).ToString("yyyy-MM-dd HH:mm:ss");
+                }
+
                 dataBooking.Name = booking.Name;
                 dataBooking.PhoneNumber = booking.PhoneNumber;
                 dataBooking.NumberOfPeople = booking.NumberOfPeople;

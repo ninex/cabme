@@ -1,13 +1,14 @@
 ﻿var computedDistance = 0;
 var service, geocoder, directionsService;
 var bookHub;
+var isFull = false;
 
 $(document).ready(function () {
     bookHub = $.connection.bookHub;
     bookHub.showMessage = function (message) {
         $('#msgStatus').append('<p>' + message + '</p>');
     };
-
+    $('[full]').hide();
     $('#step2').hide();
     var now = new Date();
     var today = now.getFullYear() + '-' + (now.getMonth() + 1).padLeft(2, '0') + '-' + now.getDate().padLeft(2, '0');
@@ -21,6 +22,7 @@ $(document).ready(function () {
             $('#city').val(localStorage["city"]);
         }
     }
+    loadQuickTaxis();
     loadSuburbs();
 });
 
@@ -65,6 +67,31 @@ function loadSuburbs() {
         $('#toSuburb option[value*="' + suburb + '"]').attr('selected', 'selected');
     });
 }
+function loadQuickTaxis() {
+    $.getJSON('/service/cabmeservice.svc/taxis', function (json) {
+        var options = '';
+        $.each(json, function (index, taxi) {
+            options += '<option value="' + taxi.Id + '">' + taxi.Name + '</option>';
+        });
+        $('#ddlQuickTaxi').html(options);
+    });
+}
+
+function makeFull() {
+    if (!isFull) {
+        $('[full]').show();
+        $('#lblQuickTaxi').hide();
+        $('#btnBookMin').hide();
+        $('#btnMakeFull').html('Press here to switch to quick booking.');
+        isFull = true;
+    } else {
+        $('[full]').hide();
+        $('#lblQuickTaxi').show();
+        $('#btnBookMin').show();
+        $('#btnMakeFull').html('Press here to switch to detailed booking.');
+        isFull = false;
+    }
+}
 
 function step1() {
     var pickupDate = $('#pickupDate').val();
@@ -89,11 +116,16 @@ function step1() {
     if (origin.length <= 0 || destination.length <= 0) {
         msg += "Please provide an address from and to.<br/>";
     }
+    if (!regNum.test($('#txtPhone').val())) {
+        msg += 'Invalid phone number.<br/>';
+        return;
+    }
     if (msg.length > 0) {
         popup('Error', msg);
         return;
     }
 
+    bookHub.announce($('#txtPhone').val());
     $('#loading').show();
 
     origin += ', ' + $('#fromSuburb').attr('selected', true).val();
@@ -110,12 +142,64 @@ function step1() {
 			  }, distanceResults);
 }
 
-function step2() {
+function step1Min() {
+    var origin = $('#from').val();
+    var phoneNum = $('#txtPhone').val();
+    var msg = "";
     var regNum = /^[0-9]+$/;
-    if (!regNum.test($('#txtPhone').val())) {
-        popup('Error', 'Invalid phone number.');
+    if (!regNum.test(phoneNum)) {
+        msg += 'Invalid phone number.<br/>';
         return;
     }
+    if (origin.length <= 0) {
+        msg += "Please provide a pickup address.<br/>";
+    }
+    if (msg.length > 0) {
+        popup('Error', msg);
+        return;
+    }
+
+    if (supports_html5_storage()) {
+        localStorage["from"] = $('#from').val();
+        localStorage["phone"] = $('#txtPhone').val();
+    }
+    $('#step1').slideUp();
+
+    origin += ', ' + $('#fromSuburb').attr('selected', true).val();
+
+    logHub.log("Quick Booking from " + origin + "for number:" + phoneNum);
+
+    $('#loading').show();
+    var taxiId = $('#ddlTaxi').attr('selected', true).val();
+    var data = {
+        "PhoneNumber": phoneNum,
+        "NumberOfPeople": 1,
+        "AddrFrom": origin,
+        "ComputedDistance": 0,
+        "Active": true,
+        "Confirmed": false,
+        "TaxiId": $('#ddlQuickTaxi').attr('selected', true).val()
+    };
+
+    $('#step3').show();
+    $('#loading').hide();
+
+    bookHub.announce($('#txtPhone').val());
+    $.ajax({
+        type: "POST",
+        contentType: 'application/json',
+        url: '/service/cabmeservice.svc/booking',
+        data: JSON.stringify(data),
+        success: function (msg) {
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+            popup('Server error', 'The booking can not be created due to a server problem.');
+        }
+    });
+}
+
+function step2() {
 
     $('#step2').slideUp();
     if (supports_html5_storage()) {
@@ -140,7 +224,6 @@ function step2() {
     $('#step3').show();
     $('#loading').hide();
 
-    bookHub.announce($('#txtPhone').val());
     $.ajax({
         type: "POST",
         contentType: 'application/json',
@@ -154,6 +237,7 @@ function step2() {
         }
     });
 }
+
 function distanceResults(response, status) {
     if (status == google.maps.DistanceMatrixStatus.OK) {
         var origins = response.originAddresses;
@@ -184,10 +268,10 @@ function distanceResults(response, status) {
                 directionsService.route(request, function (result, status) {
                     if (status == google.maps.DirectionsStatus.OK) {
                         var width = $(document).width();
-                        if (width > 480){
+                        if (width > 480) {
                             width = 480;
                         }
-                        $('#map').html('<img src="http://maps.googleapis.com/maps/api/staticmap?size='+width+'x400&sensor=false&path=weight:5|color:blue|enc:' + result.routes[0].overview_polyline.points + '&markers=label:A|' + from + '&markers=label:B|' + to + '" />');
+                        $('#map').html('<img src="http://maps.googleapis.com/maps/api/staticmap?size=' + width + 'x400&sensor=false&path=weight:5|color:blue|enc:' + result.routes[0].overview_polyline.points + '&markers=label:A|' + from + '&markers=label:B|' + to + '" />');
                     }
                 });
                 $('#loading').hide();

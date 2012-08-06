@@ -22,6 +22,11 @@ h2
 	font-size: 2.0em;
 	margin: 0px;
 }
+h3
+{
+	font-size: 1.5em;
+	margin: 0px;
+}
 #book
 {
 }
@@ -45,6 +50,15 @@ label input, select
 {
 	font-size: 1.2em;	
 	color: #555;
+}
+.status
+{
+	font-size: 1.1em;
+}
+.clickMe
+{
+	cursor:pointer;
+	text-decoration: underline;
 }
 @media screen and (max-width:300px)
 {

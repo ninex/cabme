@@ -11,8 +11,9 @@
             Book taxi</h2>
         <div id="loading" class="loading">
             <img src="assets/images/loader.gif" alt="loading" />
-        </div>
+        </div>        
         <div id="step1">
+            <p id="btnMakeFull" onclick="makeFull();" class="clickMe" >Press here to switch to detailed booking.</p>
             <label>
                 City
                 <select id="city" onchange="cityChanged();">
@@ -20,24 +21,27 @@
                     <option value="Johannesburg">Johannesburg</option>
                 </select></label>
             <label>
+                Phone number<input type="tel" id="txtPhone" /></label>
+            <label full>
                 Pickup date<input id="pickupDate" type="date" /></label>
-            <label>
+            <label full>
                 Pickup time<input id="pickupTime" type="time" /></label>
-            <label>
+            <label full>
                 Number of people<input type="number" id="number" value="1" /></label>
             <label>
-                Address from<input type="text" id="from" />
+                Pickup from<input type="text" id="from" />
                 <select id="fromSuburb" onchange="suburbChanged();">
                 </select></label>
-            <label>
-                Address to<input type="text" id="to" />
+            <label full>
+                Drop off<input type="text" id="to" />
                 <select id="toSuburb" onchange="suburbChanged();">
                 </select></label>
-            <input type="button" id="btnConfirm" value="Next" onclick="step1();" />
+            <label id="lblQuickTaxi">
+                Taxi<select id="ddlQuickTaxi"></select></label>
+            <input type="button" id="btnBookMin" value="Book" onclick="step1Min();" />
+            <input full type="button" id="btnConfirm" value="Next" onclick="step1();" />
         </div>
-        <div id="step2" style="display: none">
-            <label>
-                Phone number<input type="tel" id="txtPhone" /></label>
+        <div id="step2" style="display: none">            
             <label>
                 Distance<p id="txtDistance">
                 </p>
@@ -51,7 +55,8 @@
             <input type="button" id="btnBook" value="Book" onclick="step2();" />
         </div>
         <div id="step3" style="display: none; border: 1px solid #000; margin: 5px; padding: 5px;">
-            <p id="msgStatus">
+            <h3>Booking status</h3>
+            <p id="msgStatus" class="status">
                 Booking sent to server.</p>
         </div>
     </div>
