@@ -53,7 +53,7 @@
                                 <b>To: </b>
                             </div>
                             <div class="cell lastCell">
-                                <%# AllowedToDisplay(((string)Eval("AddrTo")).Replace(",", ",<br/>"), (bool)Eval("Confirmed")) %></p></div>
+                                <%# AllowedToDisplay(((string)Eval("AddrTo")), (bool)Eval("Confirmed")).Replace(",", ",<br/>")%></p></div>
                         </div>
                         <div class="row">
                             <asp:Button runat="server" ID="btnConfirm" Text="Confirm" CommandArgument='<%#Eval("Hash") %>'
@@ -109,7 +109,7 @@
                                 <b>To: </b>
                             </div>
                             <div class="cell lastCell">
-                                <%# AllowedToDisplay(((string)Eval("AddrTo")).Replace(",", ",<br/>"), (bool)Eval("Confirmed")) %></p></div>
+                                <%# AllowedToDisplay(((string)Eval("AddrTo")), (bool)Eval("Confirmed")).Replace(",", ",<br/>")%></p></div>
                         </div>                        
                         <div class="row">
                             <asp:Button runat="server" ID="btnReview" Text="Review" OnClick="btnReview_Click" CommandArgument='<% #Eval("Hash") %>'
@@ -161,7 +161,7 @@
                                 <b>To: </b>
                             </div>
                             <div class="cell lastCell">
-                                <%# AllowedToDisplay(((string)Eval("AddrTo")).Replace(",", ",<br/>"), (bool)Eval("Confirmed")) %></p></div>
+                                <%# AllowedToDisplay(((string)Eval("AddrTo")), (bool)Eval("Confirmed")).Replace(",", ",<br/>")%></p></div>
                         </div>
                     </asp:Panel>
                 </ItemTemplate>

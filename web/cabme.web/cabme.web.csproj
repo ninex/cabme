@@ -81,8 +81,14 @@
     <Content Include="Account\ChangePasswordSuccess.aspx" />
     <Content Include="Account\Login.aspx" />
     <Content Include="Account\Register.aspx" />
+    <Content Include="assets\images\calendar.png" />
+    <Content Include="assets\images\city.png" />
+    <Content Include="assets\images\drop.png" />
     <Content Include="assets\images\loader.gif" />
     <Content Include="assets\images\logo.png" />
+    <Content Include="assets\images\people.png" />
+    <Content Include="assets\images\phone.png" />
+    <Content Include="assets\images\pickup.png" />
     <Content Include="assets\js\book.js" />
     <Content Include="assets\js\booking.js" />
     <Content Include="Booking.aspx" />

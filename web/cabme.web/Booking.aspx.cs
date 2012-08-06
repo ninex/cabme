@@ -68,7 +68,7 @@ namespace cabme.web
         {
             if (confirmed || !User.IsInRole("Taxi"))
             {
-                return input;
+                return string.IsNullOrEmpty(input) ? "" : input;
             }
             else
             {
