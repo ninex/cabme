@@ -8,7 +8,7 @@
         Bookings</h2>
     <div style="float:right">
         <asp:ImageButton runat="server" ID="btnRefresh" Text="Refresh" OnClick="btnRefresh_Click"
-            ImageUrl="assets/images/refresh.png" CssClass="refresh" />
+            ImageUrl="assets/images/refresh.png" CssClass="refresh" OnClientClick="$('#pendingBookings').hide();" />
     </div>
     <article class="tabs">
         <h3 id="htab1">
@@ -21,6 +21,9 @@
             <asp:Repeater runat="server" ID="ActiveBookings" OnItemDataBound="listBookings_ItemDataBound">
                 <HeaderTemplate>
                     <div style="height: 100%">
+                    <div id="pendingBookings" style="display:none">
+                        <p>You have new bookings awaiting confirmation. Refresh to view.</p>
+                    </div>
                 </HeaderTemplate>
                 <ItemTemplate>
                     <asp:Panel class="table" runat="server" ID="booking">
@@ -191,8 +194,8 @@
          var taxiHub;
          $(document).ready(function () {
              taxiHub = $.connection.taxiHub;
-             taxiHub.showMessage = function (message) {
-                    $('#btnRefresh').click();
+             taxiHub.pendingBooking = function () {
+                    $('#pendingBookings').slideDown();
                 };
          });
          <%} %>

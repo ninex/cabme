@@ -400,6 +400,14 @@ article h3:nth-child(3)
 	color: #000;
 	border-bottom: none;
 }
+#pendingBookings
+{
+	width: 95%;
+	background-color: rgba(171,196,255,0.5);
+	text-align: center;
+	margin: 5px auto;
+	padding: 2px;
+}
 .refresh:hover
 {
 	animation: rotate 1s infinite;

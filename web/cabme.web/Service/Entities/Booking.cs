@@ -171,7 +171,7 @@ namespace cabme.web.Service.Entities
                     if (contactDetails.UseEmail && !string.IsNullOrEmpty(contactDetails.BookingEmail))
                     {
 
-                        TaxiHub.SendTaxiMessage(booking.SelectedTaxi.Id, "Test");
+                        TaxiHub.SendTaxiPendingBooking(booking.SelectedTaxi.Id);
                         BookHub.SendClientMessage(booking.PhoneNumber, "Waiting for " + booking.SelectedTaxi.Name + " to confirm.");
                         string mailBody = string.Format("Booking received from 'insert suburb here'<br/><a href=\"{0}\">Click here to confirm</a>", url);
                         //Send confirm booking email

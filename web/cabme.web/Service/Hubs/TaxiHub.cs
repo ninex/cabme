@@ -26,7 +26,7 @@ namespace cabme.web.Service.Hubs
                 }
             }
         }
-        public static void SendTaxiMessage(int taxiId, string message)
+        public static void SendTaxiPendingBooking(int taxiId)
         {
             var hubContext = SignalR.GlobalHost.ConnectionManager.GetHubContext<TaxiHub>();
             if (Connections.ContainsKey(taxiId))
@@ -38,7 +38,7 @@ namespace cabme.web.Service.Hubs
                     {
                         if (!string.IsNullOrEmpty(id))
                         {
-                            hubContext.Clients[id].showMessage(message);
+                            hubContext.Clients[id].pendingBooking();
                         }
                     }
                 }
