@@ -7,7 +7,7 @@ var lstOfsuburbs = {};
 $(document).ready(function () {
     bookHub = $.connection.bookHub;
     bookHub.showMessage = function (message) {
-        $('#msgStatus').append('<p>' + message + '</p>');
+        $('#msgStatus').append('<p class="status">' + message + '</p>');
     };
     $('[full]').hide();
     $('#step2').hide();
@@ -275,7 +275,7 @@ function distanceResults(response, status) {
                         if (width > 480) {
                             width = 480;
                         }
-                        $('#map').html('<img src="http://maps.googleapis.com/maps/api/staticmap?size=' + width + 'x400&sensor=false&path=weight:5|color:blue|enc:' + result.routes[0].overview_polyline.points + '&markers=label:A|' + from + '&markers=label:B|' + to + '" />');
+                        $('#map').html('<img style="max-width:100%;max-height:100%;" src="http://maps.googleapis.com/maps/api/staticmap?size=' + width + 'x400&sensor=false&path=weight:5|color:blue|enc:' + result.routes[0].overview_polyline.points + '&markers=label:A|' + from + '&markers=label:B|' + to + '" />');
                     }
                 });
                 $('#loading').hide();

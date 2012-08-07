@@ -29,12 +29,14 @@ h3
 }
 #book
 {
+	font-size: 1.5em;
 }
 #book div
 {
 }
 #book input, select
-{	
+{	font-size: 1.0em;
+	color: #555;
 	width: 100%;
 }
 #book input[type=button]
@@ -46,27 +48,19 @@ h3
 	font-size: large;
 	background-color: #ffd800;
 }
-label
-{
-	font-size: 1.5em;
-	width: 100%;
-}
-label input, select
-{
-	font-size: 1.0em;
-	color: #555;
-	max-width: 220px;
-	margin-left: 4px;
-}
-label img
+#book img
 {
 	max-height: 24px;
 	max-width: 24px;
 	margin: -5px auto;
 }
+#book .cell
+{
+	width: 28px;
+}
 .status
 {
-	font-size: 1.1em;
+	font-size: 1em;
 }
 .clickMe
 {
@@ -79,11 +73,7 @@ label img
 }
 @media screen and (max-width:300px)
 {
-	label
-	{
-		font-size: 1.1em;
-	}
-	label input, select
+	#book
 	{
 		font-size: 1.1em;
 	}
