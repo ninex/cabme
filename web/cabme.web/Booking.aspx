@@ -61,7 +61,7 @@
                                 <b>Minutes to arrival: </b>
                             </div>
                             <div class="cell lastCell">
-                            <asp:TextBox runat="server" ID="txtArrival" ></asp:TextBox>
+                            <asp:TextBox runat="server" ID="txtArrival" Columns="2" MaxLength="2" ></asp:TextBox>
                                 <asp:Button runat="server" ID="btnConfirm" Text="Confirm" CommandArgument='<%#Eval("Hash") %>'
                                     Visible='<%# ShowConfirm((bool)Eval("Confirmed")) %>' OnClick="btnConfirm_Click" />
                             </div>
