@@ -2,6 +2,7 @@
 var service, geocoder, directionsService;
 var bookHub;
 var isFull = false;
+var lstOfsuburbs = {};
 
 $(document).ready(function () {
     bookHub = $.connection.bookHub;
@@ -58,6 +59,7 @@ function loadSuburbs() {
         $.each(json, function (index, suburb) {
             var val = suburb.Name + ', ' + suburb.City + ', ' + suburb.PostalCode;
             options += '<option value="' + val + '">' + suburb.Name + '</option>';
+            lstOfsuburbs[val] = suburb.Id;
         });
         $('#fromSuburb').html(options);
         $('#toSuburb').html(options);
@@ -178,7 +180,8 @@ function step1Min() {
         "ComputedDistance": 0,
         "Active": true,
         "Confirmed": false,
-        "TaxiId": $('#ddlQuickTaxi').attr('selected', true).val()
+        "TaxiId": $('#ddlQuickTaxi').attr('selected', true).val(),
+        "SuburbFromId": lstOfsuburbs[$('#fromSuburb').attr('selected', true).val()]
     };
 
     $('#step3').show();
@@ -218,7 +221,8 @@ function step2() {
         "ComputedDistance": computedDistance,
         "Active": true,
         "Confirmed": false,
-        "TaxiId": taxiId
+        "TaxiId": taxiId,
+        "SuburbFromId": lstOfsuburbs[$('#fromSuburb').attr('selected', true).val()]
     };
 
     $('#step3').show();

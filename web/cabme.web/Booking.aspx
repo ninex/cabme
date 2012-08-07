@@ -47,6 +47,13 @@
                             </div>
                             <div class="cell lastCell">
                                 <%# Eval("PickupTime")%></p></div>
+                        </div>                                          
+                        <div class="row">
+                            <div class="cell">
+                                <b>Suburb: </b>
+                            </div>
+                            <div class="cell lastCell">
+                                <%# GetSuburb(((string)Eval("AddrFrom")), (cabme.web.Service.Entities.Suburb)Eval("SuburbFrom")) %></p></div>
                         </div>
                         <div class="row">
                             <div class="cell">
@@ -54,7 +61,7 @@
                             </div>
                             <div class="cell lastCell">
                                 <%# AllowedToDisplay(((string)Eval("AddrFrom")).Replace(",", ",<br/>"), (bool)Eval("Confirmed")) %></p></div>
-                        </div>
+                        </div>   
                         <div class="row">
                             <div class="cell">
                                 <b>To: </b>
@@ -163,7 +170,7 @@
                             </div>
                             <div class="cell lastCell">
                                 <%# Eval("PickupTime")%></p></div>
-                        </div>
+                        </div>   
                         <div class="row">
                             <div class="cell">
                                 <b>From: </b>

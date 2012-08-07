@@ -75,6 +75,17 @@ namespace cabme.web
                 return "Booking not confirmed";
             }
         }
+        protected string GetSuburb(string AddrFrom, Service.Entities.Suburb suburb)
+        {
+            if (suburb == null || string.IsNullOrEmpty(suburb.Name))
+            {
+                return "No suburb information available.";
+            }
+            else
+            {
+                return suburb.Name;
+            }
+        }
 
         protected void btnConfirm_Click(object sender, EventArgs e)
         {

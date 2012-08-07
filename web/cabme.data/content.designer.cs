@@ -39,9 +39,6 @@ namespace cabme.data
     partial void InsertSuburb(Suburb instance);
     partial void UpdateSuburb(Suburb instance);
     partial void DeleteSuburb(Suburb instance);
-    partial void InsertBooking(Booking instance);
-    partial void UpdateBooking(Booking instance);
-    partial void DeleteBooking(Booking instance);
     partial void InsertRole(Role instance);
     partial void UpdateRole(Role instance);
     partial void DeleteRole(Role instance);
@@ -51,6 +48,9 @@ namespace cabme.data
     partial void InsertReview(Review instance);
     partial void UpdateReview(Review instance);
     partial void DeleteReview(Review instance);
+    partial void InsertBooking(Booking instance);
+    partial void UpdateBooking(Booking instance);
+    partial void DeleteBooking(Booking instance);
     #endregion
 		
 		public contentDataContext() : 
@@ -107,14 +107,6 @@ namespace cabme.data
 			}
 		}
 		
-		public System.Data.Linq.Table<Booking> Bookings
-		{
-			get
-			{
-				return this.GetTable<Booking>();
-			}
-		}
-		
 		public System.Data.Linq.Table<UserTaxi> UserTaxis
 		{
 			get
@@ -152,6 +144,14 @@ namespace cabme.data
 			get
 			{
 				return this.GetTable<Review>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Booking> Bookings
+		{
+			get
+			{
+				return this.GetTable<Booking>();
 			}
 		}
 	}
@@ -847,528 +847,6 @@ namespace cabme.data
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Booking")]
-	public partial class Booking : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _Id;
-		
-		private string _Name;
-		
-		private string _PhoneNumber;
-		
-		private short _NumberOfPeople;
-		
-		private System.DateTime _PickupTime;
-		
-		private string _AddrFrom;
-		
-		private System.Nullable<int> _LatitudeFrom;
-		
-		private System.Nullable<int> _LongitudeFrom;
-		
-		private string _AddrTo;
-		
-		private System.Nullable<int> _LatitudeTo;
-		
-		private System.Nullable<int> _LongitudeTo;
-		
-		private int _ComputedDistance;
-		
-		private int _EstimatedPrice;
-		
-		private bool _Active;
-		
-		private bool _Confirmed;
-		
-		private System.Nullable<int> _TaxiId;
-		
-		private System.DateTime _LastModified;
-		
-		private System.DateTime _Created;
-		
-		private string _Hash;
-		
-		private EntitySet<Review> _Reviews;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnIdChanging(int value);
-    partial void OnIdChanged();
-    partial void OnNameChanging(string value);
-    partial void OnNameChanged();
-    partial void OnPhoneNumberChanging(string value);
-    partial void OnPhoneNumberChanged();
-    partial void OnNumberOfPeopleChanging(short value);
-    partial void OnNumberOfPeopleChanged();
-    partial void OnPickupTimeChanging(System.DateTime value);
-    partial void OnPickupTimeChanged();
-    partial void OnAddrFromChanging(string value);
-    partial void OnAddrFromChanged();
-    partial void OnLatitudeFromChanging(System.Nullable<int> value);
-    partial void OnLatitudeFromChanged();
-    partial void OnLongitudeFromChanging(System.Nullable<int> value);
-    partial void OnLongitudeFromChanged();
-    partial void OnAddrToChanging(string value);
-    partial void OnAddrToChanged();
-    partial void OnLatitudeToChanging(System.Nullable<int> value);
-    partial void OnLatitudeToChanged();
-    partial void OnLongitudeToChanging(System.Nullable<int> value);
-    partial void OnLongitudeToChanged();
-    partial void OnComputedDistanceChanging(int value);
-    partial void OnComputedDistanceChanged();
-    partial void OnEstimatedPriceChanging(int value);
-    partial void OnEstimatedPriceChanged();
-    partial void OnActiveChanging(bool value);
-    partial void OnActiveChanged();
-    partial void OnConfirmedChanging(bool value);
-    partial void OnConfirmedChanged();
-    partial void OnTaxiIdChanging(System.Nullable<int> value);
-    partial void OnTaxiIdChanged();
-    partial void OnLastModifiedChanging(System.DateTime value);
-    partial void OnLastModifiedChanged();
-    partial void OnCreatedChanging(System.DateTime value);
-    partial void OnCreatedChanged();
-    partial void OnHashChanging(string value);
-    partial void OnHashChanged();
-    #endregion
-		
-		public Booking()
-		{
-			this._Reviews = new EntitySet<Review>(new Action<Review>(this.attach_Reviews), new Action<Review>(this.detach_Reviews));
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int Id
-		{
-			get
-			{
-				return this._Id;
-			}
-			set
-			{
-				if ((this._Id != value))
-				{
-					this.OnIdChanging(value);
-					this.SendPropertyChanging();
-					this._Id = value;
-					this.SendPropertyChanged("Id");
-					this.OnIdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="VarChar(60)")]
-		public string Name
-		{
-			get
-			{
-				return this._Name;
-			}
-			set
-			{
-				if ((this._Name != value))
-				{
-					this.OnNameChanging(value);
-					this.SendPropertyChanging();
-					this._Name = value;
-					this.SendPropertyChanged("Name");
-					this.OnNameChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PhoneNumber", DbType="VarChar(20) NOT NULL", CanBeNull=false)]
-		public string PhoneNumber
-		{
-			get
-			{
-				return this._PhoneNumber;
-			}
-			set
-			{
-				if ((this._PhoneNumber != value))
-				{
-					this.OnPhoneNumberChanging(value);
-					this.SendPropertyChanging();
-					this._PhoneNumber = value;
-					this.SendPropertyChanged("PhoneNumber");
-					this.OnPhoneNumberChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NumberOfPeople", DbType="SmallInt NOT NULL")]
-		public short NumberOfPeople
-		{
-			get
-			{
-				return this._NumberOfPeople;
-			}
-			set
-			{
-				if ((this._NumberOfPeople != value))
-				{
-					this.OnNumberOfPeopleChanging(value);
-					this.SendPropertyChanging();
-					this._NumberOfPeople = value;
-					this.SendPropertyChanged("NumberOfPeople");
-					this.OnNumberOfPeopleChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PickupTime", DbType="DateTime NOT NULL")]
-		public System.DateTime PickupTime
-		{
-			get
-			{
-				return this._PickupTime;
-			}
-			set
-			{
-				if ((this._PickupTime != value))
-				{
-					this.OnPickupTimeChanging(value);
-					this.SendPropertyChanging();
-					this._PickupTime = value;
-					this.SendPropertyChanged("PickupTime");
-					this.OnPickupTimeChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AddrFrom", DbType="VarChar(400) NOT NULL", CanBeNull=false)]
-		public string AddrFrom
-		{
-			get
-			{
-				return this._AddrFrom;
-			}
-			set
-			{
-				if ((this._AddrFrom != value))
-				{
-					this.OnAddrFromChanging(value);
-					this.SendPropertyChanging();
-					this._AddrFrom = value;
-					this.SendPropertyChanged("AddrFrom");
-					this.OnAddrFromChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LatitudeFrom", DbType="Int")]
-		public System.Nullable<int> LatitudeFrom
-		{
-			get
-			{
-				return this._LatitudeFrom;
-			}
-			set
-			{
-				if ((this._LatitudeFrom != value))
-				{
-					this.OnLatitudeFromChanging(value);
-					this.SendPropertyChanging();
-					this._LatitudeFrom = value;
-					this.SendPropertyChanged("LatitudeFrom");
-					this.OnLatitudeFromChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LongitudeFrom", DbType="Int")]
-		public System.Nullable<int> LongitudeFrom
-		{
-			get
-			{
-				return this._LongitudeFrom;
-			}
-			set
-			{
-				if ((this._LongitudeFrom != value))
-				{
-					this.OnLongitudeFromChanging(value);
-					this.SendPropertyChanging();
-					this._LongitudeFrom = value;
-					this.SendPropertyChanged("LongitudeFrom");
-					this.OnLongitudeFromChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AddrTo", DbType="VarChar(400)")]
-		public string AddrTo
-		{
-			get
-			{
-				return this._AddrTo;
-			}
-			set
-			{
-				if ((this._AddrTo != value))
-				{
-					this.OnAddrToChanging(value);
-					this.SendPropertyChanging();
-					this._AddrTo = value;
-					this.SendPropertyChanged("AddrTo");
-					this.OnAddrToChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LatitudeTo", DbType="Int")]
-		public System.Nullable<int> LatitudeTo
-		{
-			get
-			{
-				return this._LatitudeTo;
-			}
-			set
-			{
-				if ((this._LatitudeTo != value))
-				{
-					this.OnLatitudeToChanging(value);
-					this.SendPropertyChanging();
-					this._LatitudeTo = value;
-					this.SendPropertyChanged("LatitudeTo");
-					this.OnLatitudeToChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LongitudeTo", DbType="Int")]
-		public System.Nullable<int> LongitudeTo
-		{
-			get
-			{
-				return this._LongitudeTo;
-			}
-			set
-			{
-				if ((this._LongitudeTo != value))
-				{
-					this.OnLongitudeToChanging(value);
-					this.SendPropertyChanging();
-					this._LongitudeTo = value;
-					this.SendPropertyChanged("LongitudeTo");
-					this.OnLongitudeToChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ComputedDistance", DbType="Int NOT NULL")]
-		public int ComputedDistance
-		{
-			get
-			{
-				return this._ComputedDistance;
-			}
-			set
-			{
-				if ((this._ComputedDistance != value))
-				{
-					this.OnComputedDistanceChanging(value);
-					this.SendPropertyChanging();
-					this._ComputedDistance = value;
-					this.SendPropertyChanged("ComputedDistance");
-					this.OnComputedDistanceChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EstimatedPrice", DbType="Int NOT NULL")]
-		public int EstimatedPrice
-		{
-			get
-			{
-				return this._EstimatedPrice;
-			}
-			set
-			{
-				if ((this._EstimatedPrice != value))
-				{
-					this.OnEstimatedPriceChanging(value);
-					this.SendPropertyChanging();
-					this._EstimatedPrice = value;
-					this.SendPropertyChanged("EstimatedPrice");
-					this.OnEstimatedPriceChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Active", DbType="Bit NOT NULL")]
-		public bool Active
-		{
-			get
-			{
-				return this._Active;
-			}
-			set
-			{
-				if ((this._Active != value))
-				{
-					this.OnActiveChanging(value);
-					this.SendPropertyChanging();
-					this._Active = value;
-					this.SendPropertyChanged("Active");
-					this.OnActiveChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Confirmed", DbType="Bit NOT NULL")]
-		public bool Confirmed
-		{
-			get
-			{
-				return this._Confirmed;
-			}
-			set
-			{
-				if ((this._Confirmed != value))
-				{
-					this.OnConfirmedChanging(value);
-					this.SendPropertyChanging();
-					this._Confirmed = value;
-					this.SendPropertyChanged("Confirmed");
-					this.OnConfirmedChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TaxiId", DbType="Int")]
-		public System.Nullable<int> TaxiId
-		{
-			get
-			{
-				return this._TaxiId;
-			}
-			set
-			{
-				if ((this._TaxiId != value))
-				{
-					this.OnTaxiIdChanging(value);
-					this.SendPropertyChanging();
-					this._TaxiId = value;
-					this.SendPropertyChanged("TaxiId");
-					this.OnTaxiIdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastModified", DbType="DateTime NOT NULL")]
-		public System.DateTime LastModified
-		{
-			get
-			{
-				return this._LastModified;
-			}
-			set
-			{
-				if ((this._LastModified != value))
-				{
-					this.OnLastModifiedChanging(value);
-					this.SendPropertyChanging();
-					this._LastModified = value;
-					this.SendPropertyChanged("LastModified");
-					this.OnLastModifiedChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Created", DbType="DateTime NOT NULL")]
-		public System.DateTime Created
-		{
-			get
-			{
-				return this._Created;
-			}
-			set
-			{
-				if ((this._Created != value))
-				{
-					this.OnCreatedChanging(value);
-					this.SendPropertyChanging();
-					this._Created = value;
-					this.SendPropertyChanged("Created");
-					this.OnCreatedChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Hash", DbType="VarChar(128)")]
-		public string Hash
-		{
-			get
-			{
-				return this._Hash;
-			}
-			set
-			{
-				if ((this._Hash != value))
-				{
-					this.OnHashChanging(value);
-					this.SendPropertyChanging();
-					this._Hash = value;
-					this.SendPropertyChanged("Hash");
-					this.OnHashChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Booking_Review", Storage="_Reviews", ThisKey="Id", OtherKey="BookingId")]
-		public EntitySet<Review> Reviews
-		{
-			get
-			{
-				return this._Reviews;
-			}
-			set
-			{
-				this._Reviews.Assign(value);
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		
-		private void attach_Reviews(Review entity)
-		{
-			this.SendPropertyChanging();
-			entity.Booking = this;
-		}
-		
-		private void detach_Reviews(Review entity)
-		{
-			this.SendPropertyChanging();
-			entity.Booking = null;
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.UserTaxi")]
 	public partial class UserTaxi
 	{
@@ -1827,11 +1305,11 @@ namespace cabme.data
 		
 		private bool _Active;
 		
-		private EntityRef<Booking> _Booking;
-		
 		private EntityRef<Taxi> _Taxi;
 		
 		private EntityRef<User> _User;
+		
+		private EntityRef<Booking> _Booking;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -1859,9 +1337,9 @@ namespace cabme.data
 		
 		public Review()
 		{
-			this._Booking = default(EntityRef<Booking>);
 			this._Taxi = default(EntityRef<Taxi>);
 			this._User = default(EntityRef<User>);
+			this._Booking = default(EntityRef<Booking>);
 			OnCreated();
 		}
 		
@@ -2057,40 +1535,6 @@ namespace cabme.data
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Booking_Review", Storage="_Booking", ThisKey="BookingId", OtherKey="Id", IsForeignKey=true)]
-		public Booking Booking
-		{
-			get
-			{
-				return this._Booking.Entity;
-			}
-			set
-			{
-				Booking previousValue = this._Booking.Entity;
-				if (((previousValue != value) 
-							|| (this._Booking.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Booking.Entity = null;
-						previousValue.Reviews.Remove(this);
-					}
-					this._Booking.Entity = value;
-					if ((value != null))
-					{
-						value.Reviews.Add(this);
-						this._BookingId = value.Id;
-					}
-					else
-					{
-						this._BookingId = default(int);
-					}
-					this.SendPropertyChanged("Booking");
-				}
-			}
-		}
-		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Taxi_Review", Storage="_Taxi", ThisKey="TaxiId", OtherKey="Id", IsForeignKey=true)]
 		public Taxi Taxi
 		{
@@ -2159,6 +1603,40 @@ namespace cabme.data
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Booking_Review", Storage="_Booking", ThisKey="BookingId", OtherKey="Id", IsForeignKey=true)]
+		public Booking Booking
+		{
+			get
+			{
+				return this._Booking.Entity;
+			}
+			set
+			{
+				Booking previousValue = this._Booking.Entity;
+				if (((previousValue != value) 
+							|| (this._Booking.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Booking.Entity = null;
+						previousValue.Reviews.Remove(this);
+					}
+					this._Booking.Entity = value;
+					if ((value != null))
+					{
+						value.Reviews.Add(this);
+						this._BookingId = value.Id;
+					}
+					else
+					{
+						this._BookingId = default(int);
+					}
+					this.SendPropertyChanged("Booking");
+				}
+			}
+		}
+		
 		public event PropertyChangingEventHandler PropertyChanging;
 		
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -2177,6 +1655,552 @@ namespace cabme.data
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Booking")]
+	public partial class Booking : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _Id;
+		
+		private string _Name;
+		
+		private string _PhoneNumber;
+		
+		private short _NumberOfPeople;
+		
+		private System.DateTime _PickupTime;
+		
+		private string _AddrFrom;
+		
+		private System.Nullable<int> _LatitudeFrom;
+		
+		private System.Nullable<int> _LongitudeFrom;
+		
+		private string _AddrTo;
+		
+		private System.Nullable<int> _LatitudeTo;
+		
+		private System.Nullable<int> _LongitudeTo;
+		
+		private int _ComputedDistance;
+		
+		private int _EstimatedPrice;
+		
+		private bool _Active;
+		
+		private bool _Confirmed;
+		
+		private System.Nullable<int> _TaxiId;
+		
+		private System.DateTime _LastModified;
+		
+		private System.DateTime _Created;
+		
+		private string _Hash;
+		
+		private System.Nullable<int> _SuburbFromId;
+		
+		private EntitySet<Review> _Reviews;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
+    partial void OnPhoneNumberChanging(string value);
+    partial void OnPhoneNumberChanged();
+    partial void OnNumberOfPeopleChanging(short value);
+    partial void OnNumberOfPeopleChanged();
+    partial void OnPickupTimeChanging(System.DateTime value);
+    partial void OnPickupTimeChanged();
+    partial void OnAddrFromChanging(string value);
+    partial void OnAddrFromChanged();
+    partial void OnLatitudeFromChanging(System.Nullable<int> value);
+    partial void OnLatitudeFromChanged();
+    partial void OnLongitudeFromChanging(System.Nullable<int> value);
+    partial void OnLongitudeFromChanged();
+    partial void OnAddrToChanging(string value);
+    partial void OnAddrToChanged();
+    partial void OnLatitudeToChanging(System.Nullable<int> value);
+    partial void OnLatitudeToChanged();
+    partial void OnLongitudeToChanging(System.Nullable<int> value);
+    partial void OnLongitudeToChanged();
+    partial void OnComputedDistanceChanging(int value);
+    partial void OnComputedDistanceChanged();
+    partial void OnEstimatedPriceChanging(int value);
+    partial void OnEstimatedPriceChanged();
+    partial void OnActiveChanging(bool value);
+    partial void OnActiveChanged();
+    partial void OnConfirmedChanging(bool value);
+    partial void OnConfirmedChanged();
+    partial void OnTaxiIdChanging(System.Nullable<int> value);
+    partial void OnTaxiIdChanged();
+    partial void OnLastModifiedChanging(System.DateTime value);
+    partial void OnLastModifiedChanged();
+    partial void OnCreatedChanging(System.DateTime value);
+    partial void OnCreatedChanged();
+    partial void OnHashChanging(string value);
+    partial void OnHashChanged();
+    partial void OnSuburbFromIdChanging(System.Nullable<int> value);
+    partial void OnSuburbFromIdChanged();
+    #endregion
+		
+		public Booking()
+		{
+			this._Reviews = new EntitySet<Review>(new Action<Review>(this.attach_Reviews), new Action<Review>(this.detach_Reviews));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int Id
+		{
+			get
+			{
+				return this._Id;
+			}
+			set
+			{
+				if ((this._Id != value))
+				{
+					this.OnIdChanging(value);
+					this.SendPropertyChanging();
+					this._Id = value;
+					this.SendPropertyChanged("Id");
+					this.OnIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="VarChar(60)")]
+		public string Name
+		{
+			get
+			{
+				return this._Name;
+			}
+			set
+			{
+				if ((this._Name != value))
+				{
+					this.OnNameChanging(value);
+					this.SendPropertyChanging();
+					this._Name = value;
+					this.SendPropertyChanged("Name");
+					this.OnNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PhoneNumber", DbType="VarChar(20) NOT NULL", CanBeNull=false)]
+		public string PhoneNumber
+		{
+			get
+			{
+				return this._PhoneNumber;
+			}
+			set
+			{
+				if ((this._PhoneNumber != value))
+				{
+					this.OnPhoneNumberChanging(value);
+					this.SendPropertyChanging();
+					this._PhoneNumber = value;
+					this.SendPropertyChanged("PhoneNumber");
+					this.OnPhoneNumberChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NumberOfPeople", DbType="SmallInt NOT NULL")]
+		public short NumberOfPeople
+		{
+			get
+			{
+				return this._NumberOfPeople;
+			}
+			set
+			{
+				if ((this._NumberOfPeople != value))
+				{
+					this.OnNumberOfPeopleChanging(value);
+					this.SendPropertyChanging();
+					this._NumberOfPeople = value;
+					this.SendPropertyChanged("NumberOfPeople");
+					this.OnNumberOfPeopleChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PickupTime", DbType="DateTime NOT NULL")]
+		public System.DateTime PickupTime
+		{
+			get
+			{
+				return this._PickupTime;
+			}
+			set
+			{
+				if ((this._PickupTime != value))
+				{
+					this.OnPickupTimeChanging(value);
+					this.SendPropertyChanging();
+					this._PickupTime = value;
+					this.SendPropertyChanged("PickupTime");
+					this.OnPickupTimeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AddrFrom", DbType="VarChar(400) NOT NULL", CanBeNull=false)]
+		public string AddrFrom
+		{
+			get
+			{
+				return this._AddrFrom;
+			}
+			set
+			{
+				if ((this._AddrFrom != value))
+				{
+					this.OnAddrFromChanging(value);
+					this.SendPropertyChanging();
+					this._AddrFrom = value;
+					this.SendPropertyChanged("AddrFrom");
+					this.OnAddrFromChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LatitudeFrom", DbType="Int")]
+		public System.Nullable<int> LatitudeFrom
+		{
+			get
+			{
+				return this._LatitudeFrom;
+			}
+			set
+			{
+				if ((this._LatitudeFrom != value))
+				{
+					this.OnLatitudeFromChanging(value);
+					this.SendPropertyChanging();
+					this._LatitudeFrom = value;
+					this.SendPropertyChanged("LatitudeFrom");
+					this.OnLatitudeFromChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LongitudeFrom", DbType="Int")]
+		public System.Nullable<int> LongitudeFrom
+		{
+			get
+			{
+				return this._LongitudeFrom;
+			}
+			set
+			{
+				if ((this._LongitudeFrom != value))
+				{
+					this.OnLongitudeFromChanging(value);
+					this.SendPropertyChanging();
+					this._LongitudeFrom = value;
+					this.SendPropertyChanged("LongitudeFrom");
+					this.OnLongitudeFromChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AddrTo", DbType="VarChar(400)")]
+		public string AddrTo
+		{
+			get
+			{
+				return this._AddrTo;
+			}
+			set
+			{
+				if ((this._AddrTo != value))
+				{
+					this.OnAddrToChanging(value);
+					this.SendPropertyChanging();
+					this._AddrTo = value;
+					this.SendPropertyChanged("AddrTo");
+					this.OnAddrToChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LatitudeTo", DbType="Int")]
+		public System.Nullable<int> LatitudeTo
+		{
+			get
+			{
+				return this._LatitudeTo;
+			}
+			set
+			{
+				if ((this._LatitudeTo != value))
+				{
+					this.OnLatitudeToChanging(value);
+					this.SendPropertyChanging();
+					this._LatitudeTo = value;
+					this.SendPropertyChanged("LatitudeTo");
+					this.OnLatitudeToChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LongitudeTo", DbType="Int")]
+		public System.Nullable<int> LongitudeTo
+		{
+			get
+			{
+				return this._LongitudeTo;
+			}
+			set
+			{
+				if ((this._LongitudeTo != value))
+				{
+					this.OnLongitudeToChanging(value);
+					this.SendPropertyChanging();
+					this._LongitudeTo = value;
+					this.SendPropertyChanged("LongitudeTo");
+					this.OnLongitudeToChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ComputedDistance", DbType="Int NOT NULL")]
+		public int ComputedDistance
+		{
+			get
+			{
+				return this._ComputedDistance;
+			}
+			set
+			{
+				if ((this._ComputedDistance != value))
+				{
+					this.OnComputedDistanceChanging(value);
+					this.SendPropertyChanging();
+					this._ComputedDistance = value;
+					this.SendPropertyChanged("ComputedDistance");
+					this.OnComputedDistanceChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EstimatedPrice", DbType="Int NOT NULL")]
+		public int EstimatedPrice
+		{
+			get
+			{
+				return this._EstimatedPrice;
+			}
+			set
+			{
+				if ((this._EstimatedPrice != value))
+				{
+					this.OnEstimatedPriceChanging(value);
+					this.SendPropertyChanging();
+					this._EstimatedPrice = value;
+					this.SendPropertyChanged("EstimatedPrice");
+					this.OnEstimatedPriceChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Active", DbType="Bit NOT NULL")]
+		public bool Active
+		{
+			get
+			{
+				return this._Active;
+			}
+			set
+			{
+				if ((this._Active != value))
+				{
+					this.OnActiveChanging(value);
+					this.SendPropertyChanging();
+					this._Active = value;
+					this.SendPropertyChanged("Active");
+					this.OnActiveChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Confirmed", DbType="Bit NOT NULL")]
+		public bool Confirmed
+		{
+			get
+			{
+				return this._Confirmed;
+			}
+			set
+			{
+				if ((this._Confirmed != value))
+				{
+					this.OnConfirmedChanging(value);
+					this.SendPropertyChanging();
+					this._Confirmed = value;
+					this.SendPropertyChanged("Confirmed");
+					this.OnConfirmedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TaxiId", DbType="Int")]
+		public System.Nullable<int> TaxiId
+		{
+			get
+			{
+				return this._TaxiId;
+			}
+			set
+			{
+				if ((this._TaxiId != value))
+				{
+					this.OnTaxiIdChanging(value);
+					this.SendPropertyChanging();
+					this._TaxiId = value;
+					this.SendPropertyChanged("TaxiId");
+					this.OnTaxiIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastModified", DbType="DateTime NOT NULL")]
+		public System.DateTime LastModified
+		{
+			get
+			{
+				return this._LastModified;
+			}
+			set
+			{
+				if ((this._LastModified != value))
+				{
+					this.OnLastModifiedChanging(value);
+					this.SendPropertyChanging();
+					this._LastModified = value;
+					this.SendPropertyChanged("LastModified");
+					this.OnLastModifiedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Created", DbType="DateTime NOT NULL")]
+		public System.DateTime Created
+		{
+			get
+			{
+				return this._Created;
+			}
+			set
+			{
+				if ((this._Created != value))
+				{
+					this.OnCreatedChanging(value);
+					this.SendPropertyChanging();
+					this._Created = value;
+					this.SendPropertyChanged("Created");
+					this.OnCreatedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Hash", DbType="VarChar(128)")]
+		public string Hash
+		{
+			get
+			{
+				return this._Hash;
+			}
+			set
+			{
+				if ((this._Hash != value))
+				{
+					this.OnHashChanging(value);
+					this.SendPropertyChanging();
+					this._Hash = value;
+					this.SendPropertyChanged("Hash");
+					this.OnHashChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SuburbFromId", DbType="Int")]
+		public System.Nullable<int> SuburbFromId
+		{
+			get
+			{
+				return this._SuburbFromId;
+			}
+			set
+			{
+				if ((this._SuburbFromId != value))
+				{
+					this.OnSuburbFromIdChanging(value);
+					this.SendPropertyChanging();
+					this._SuburbFromId = value;
+					this.SendPropertyChanged("SuburbFromId");
+					this.OnSuburbFromIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Booking_Review", Storage="_Reviews", ThisKey="Id", OtherKey="BookingId")]
+		public EntitySet<Review> Reviews
+		{
+			get
+			{
+				return this._Reviews;
+			}
+			set
+			{
+				this._Reviews.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Reviews(Review entity)
+		{
+			this.SendPropertyChanging();
+			entity.Booking = this;
+		}
+		
+		private void detach_Reviews(Review entity)
+		{
+			this.SendPropertyChanging();
+			entity.Booking = null;
 		}
 	}
 }

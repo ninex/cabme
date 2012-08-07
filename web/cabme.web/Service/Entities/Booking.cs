@@ -81,6 +81,12 @@ namespace cabme.web.Service.Entities
         public string Hash { get; set; }
 
         [DataMember]
+        public int SuburbFromId { get; set; }
+
+        [DataMember]
+        public Suburb SuburbFrom { get; set; }
+
+        [DataMember]
         public Taxi SelectedTaxi { get; set; }
 
         public static Booking MakeBooking(Booking booking)
@@ -118,7 +124,7 @@ namespace cabme.web.Service.Entities
                     booking.SelectedTaxi = Taxi.GetTaxi(booking.TaxiId);
                 }
                 if (booking.EstimatedPrice == 0 && booking.ComputedDistance > 0)
-                {                    
+                {
                     dataBooking.EstimatedPrice = booking.SelectedTaxi.GetPriceEstimate(booking.ComputedDistance);
                 }
                 else
@@ -129,6 +135,16 @@ namespace cabme.web.Service.Entities
                 if (string.IsNullOrEmpty(booking.PickupTime))
                 {
                     booking.PickupTime = DateTime.Now.AddMinutes(1).ToString("yyyy-MM-dd HH:mm:ss");
+                }
+                if (booking.SuburbFromId > 0)
+                {
+                    booking.SuburbFrom = context.Suburbs.Where(p => p.Id == booking.SuburbFromId).Select(p => new Suburb
+                    {
+                        Id = p.Id,
+                        City = p.City,
+                        Name = p.Name,
+                        PostalCode = p.PostalCode
+                    }).SingleOrDefault();
                 }
 
                 dataBooking.Name = booking.Name;
@@ -147,6 +163,7 @@ namespace cabme.web.Service.Entities
                 dataBooking.TaxiId = booking.TaxiId;
                 dataBooking.LastModified = DateTime.Now;
                 dataBooking.Hash = Account.Hash.HashPassword(booking.PickupTime + booking.PhoneNumber);
+                dataBooking.SuburbFromId = booking.SuburbFromId > 0 ? (int?)booking.SuburbFromId : null;
                 if (dataBooking.Id == 0)
                 {
                     context.Bookings.InsertOnSubmit(dataBooking);
@@ -173,7 +190,15 @@ namespace cabme.web.Service.Entities
 
                         TaxiHub.SendTaxiPendingBooking(booking.SelectedTaxi.Id);
                         BookHub.SendClientMessage(booking.PhoneNumber, "Waiting for " + booking.SelectedTaxi.Name + " to confirm.");
-                        string mailBody = string.Format("Booking received from 'insert suburb here'<br/><a href=\"{0}\">Click here to confirm</a>", url);
+                        string mailBody;
+                        if (booking.SuburbFrom != null)
+                        {
+                            mailBody = string.Format("Booking received from " + booking.SuburbFrom.Name + "<br/><a href=\"{0}\">Click here to confirm</a>", url);
+                        }
+                        else
+                        {
+                            mailBody = string.Format("Booking received.<br/><a href=\"{0}\">Click here to confirm</a>", url);
+                        }
                         //Send confirm booking email
                         Mail.SendMail(contactDetails.BookingEmail, "cabme@abrie.net", "Test booking email", mailBody);
                     }
@@ -279,7 +304,9 @@ namespace cabme.web.Service.Entities
         {
             return from booking in context.Bookings
                    join taxi in context.Taxis on booking.TaxiId equals taxi.Id into outer
+                   join suburb in context.Suburbs on booking.SuburbFromId equals suburb.Id into outerSuburb
                    from taxi in outer.DefaultIfEmpty()
+                   from suburb in outerSuburb.DefaultIfEmpty()
                    orderby booking.LastModified descending
                    select new Booking
                    {
@@ -314,6 +341,13 @@ namespace cabme.web.Service.Entities
                            dEndOfService = taxi.EndOfService,
                            Is24HService = taxi.Is24HService,
                            FleetSize = taxi.FleetSize
+                       },
+                       SuburbFromId = booking.SuburbFromId.HasValue ? booking.SuburbFromId.Value : 0,
+                       SuburbFrom = new Suburb
+                       {
+                           City = suburb.City,
+                           Name = suburb.Name,
+                           PostalCode = suburb.PostalCode
                        }
                    };
         }

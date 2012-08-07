@@ -36,30 +36,6 @@
       <Column Name="PostalCode" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
     </Type>
   </Table>
-  <Table Name="dbo.Booking" Member="Bookings">
-    <Type Name="Booking">
-      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Name" Type="System.String" DbType="VarChar(60)" CanBeNull="true" />
-      <Column Name="PhoneNumber" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
-      <Column Name="NumberOfPeople" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" />
-      <Column Name="PickupTime" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Column Name="AddrFrom" Type="System.String" DbType="VarChar(400) NOT NULL" CanBeNull="false" />
-      <Column Name="LatitudeFrom" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="LongitudeFrom" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="AddrTo" Type="System.String" DbType="VarChar(400)" CanBeNull="true" />
-      <Column Name="LatitudeTo" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="LongitudeTo" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="ComputedDistance" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="EstimatedPrice" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Active" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="Confirmed" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="TaxiId" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="LastModified" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Column Name="Created" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Column Name="Hash" Type="System.String" DbType="VarChar(128)" CanBeNull="true" />
-      <Association Name="Booking_Review" Member="Reviews" ThisKey="Id" OtherKey="BookingId" Type="Review" />
-    </Type>
-  </Table>
   <Table Name="dbo.UserTaxi" Member="UserTaxis">
     <Type Name="UserTaxi">
       <Column Name="UserId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
@@ -109,9 +85,34 @@
       <Column Name="DateCreated" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="DateLastModified" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="Active" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Association Name="Booking_Review" Member="Booking" ThisKey="BookingId" OtherKey="Id" Type="Booking" IsForeignKey="true" />
       <Association Name="Taxi_Review" Member="Taxi" ThisKey="TaxiId" OtherKey="Id" Type="Taxi" IsForeignKey="true" />
       <Association Name="User_Review" Member="User" ThisKey="UserId" OtherKey="Id" Type="User" IsForeignKey="true" />
+      <Association Name="Booking_Review" Member="Booking" ThisKey="BookingId" OtherKey="Id" Type="Booking" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Booking" Member="Bookings">
+    <Type Name="Booking">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="VarChar(60)" CanBeNull="true" />
+      <Column Name="PhoneNumber" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="NumberOfPeople" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" />
+      <Column Name="PickupTime" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="AddrFrom" Type="System.String" DbType="VarChar(400) NOT NULL" CanBeNull="false" />
+      <Column Name="LatitudeFrom" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="LongitudeFrom" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="AddrTo" Type="System.String" DbType="VarChar(400)" CanBeNull="true" />
+      <Column Name="LatitudeTo" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="LongitudeTo" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ComputedDistance" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="EstimatedPrice" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Active" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="Confirmed" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="TaxiId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="LastModified" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="Created" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="Hash" Type="System.String" DbType="VarChar(128)" CanBeNull="true" />
+      <Column Name="SuburbFromId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Booking_Review" Member="Reviews" ThisKey="Id" OtherKey="BookingId" Type="Review" />
     </Type>
   </Table>
 </Database>

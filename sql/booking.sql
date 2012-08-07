@@ -31,7 +31,8 @@ CREATE TABLE [dbo].[Booking](
 	[TaxiId] [int] NULL,
 	[LastModified] [datetime] NOT NULL,
 	[Created] [datetime] NOT NULL,
-	[Hash] varchar(128) 
+	[Hash] varchar(128) ,
+	[SuburbFromId] int NULL
  CONSTRAINT [PK_Booking] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
