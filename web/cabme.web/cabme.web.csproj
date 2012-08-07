@@ -89,6 +89,7 @@
     <Content Include="assets\images\people.png" />
     <Content Include="assets\images\phone.png" />
     <Content Include="assets\images\pickup.png" />
+    <Content Include="assets\images\refresh.png" />
     <Content Include="assets\js\book.js" />
     <Content Include="assets\js\booking.js" />
     <Content Include="Booking.aspx" />

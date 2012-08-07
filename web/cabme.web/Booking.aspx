@@ -6,7 +6,10 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <h2>
         Bookings</h2>
-    <asp:Button runat="server" ID="btnRefresh" Text="Refresh" OnClick="btnRefresh_Click" />
+    <div style="float:right">
+        <asp:ImageButton runat="server" ID="btnRefresh" Text="Refresh" OnClick="btnRefresh_Click"
+            ImageUrl="assets/images/refresh.png" CssClass="refresh" />
+    </div>
     <article class="tabs">
         <h3 id="htab1">
             Active</h3>
@@ -56,12 +59,12 @@
                             <div class="cell lastCell">
                                 <%# AllowedToDisplay(((string)Eval("AddrTo")), (bool)Eval("Confirmed")).Replace(",", ",<br/>")%></p></div>
                         </div>
-                        <asp:Panel class="row" runat="server" Visible='<%# ShowConfirm((bool)Eval("Confirmed")) %>' >
+                        <asp:Panel class="row" runat="server" Visible='<%# ShowConfirm((bool)Eval("Confirmed")) %>'>
                             <div class="cell">
                                 <b>Minutes to arrival: </b>
                             </div>
                             <div class="cell lastCell">
-                            <asp:TextBox runat="server" ID="txtArrival" Columns="2" MaxLength="2" ></asp:TextBox>
+                                <asp:TextBox runat="server" ID="txtArrival" Columns="2" MaxLength="2"></asp:TextBox>
                                 <asp:Button runat="server" ID="btnConfirm" Text="Confirm" CommandArgument='<%#Eval("Hash") %>'
                                     Visible='<%# ShowConfirm((bool)Eval("Confirmed")) %>' OnClick="btnConfirm_Click" />
                             </div>
