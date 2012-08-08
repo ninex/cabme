@@ -5,6 +5,10 @@ var isFull = false;
 var lstOfsuburbs = {};
 
 $(document).ready(function () {
+    window.hubReady.done(function () {
+        $('#btnMakeFull').fadeIn();
+        $('#btnBookMin').fadeIn();
+    });
     bookHub = $.connection.bookHub;
     bookHub.showMessage = function (message) {
         $('#msgStatus').append('<p class="status">' + message + '</p>');

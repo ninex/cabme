@@ -13,8 +13,8 @@
             <img src="assets/images/loader.gif" alt="loading" />
         </div>
         <div id="step1">
-            <p id="btnMakeFull" onclick="makeFull();" class="clickMe">
-                Press here to switch to detailed booking.</p>
+            <p id="btnMakeFull" onclick="makeFull();" class="clickMe" style="display:none;">
+                Switch to detailed booking.</p>
             <div style="display: table; width: 100%;">
                 <div class="row">
                     <div class="cell">
@@ -96,7 +96,7 @@
                     </div>
                 </div>
             </div>
-            <input type="button" id="btnBookMin" value="Book" onclick="step1Min();" />
+            <input type="button" id="btnBookMin" value="Book" onclick="step1Min();" style="display:none;" />
             <input full style="display: none" type="button" id="btnConfirm" value="Next" onclick="step1();" />
         </div>
         <div id="step2" style="display: none">
