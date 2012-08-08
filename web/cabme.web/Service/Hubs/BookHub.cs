@@ -20,21 +20,23 @@ namespace cabme.web.Service.Hubs
         }
 
         public static void SendClientMessage(string number, string message)
-        {            
-            var hubContext = SignalR.GlobalHost.ConnectionManager.GetHubContext<BookHub>();
-            if (Connections.ContainsKey(number))
+        {
+            try
             {
-                string id = Connections[number];
-                if (!string.IsNullOrEmpty(id))
+                var hubContext = SignalR.GlobalHost.ConnectionManager.GetHubContext<BookHub>();
+                if (Connections.ContainsKey(number))
                 {
-                    hubContext.Clients[id].showMessage(message);
+                    string id = Connections[number];
+                    if (!string.IsNullOrEmpty(id))
+                    {
+                        hubContext.Clients[id].showMessage(message);
+                    }
                 }
             }
-        }
-
-        public void Ping(string number, string message)
-        {
-            SendClientMessage(number, message);
+            catch (Exception ex)
+            {
+                Elmah.ErrorLog.GetDefault(null).Log(new Elmah.Error(ex));
+            }
         }
     }
 }

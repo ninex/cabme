@@ -13,35 +13,49 @@ namespace cabme.web.Service.Hubs
 
         public void Announce(string userName)
         {
-            if (!string.IsNullOrEmpty(userName))
+            try
             {
-                int taxiId = Entities.Taxi.GetTaxiIdForUser(userName);
-                if (taxiId > 0)
+                if (!string.IsNullOrEmpty(userName))
                 {
-                    if (!Connections.ContainsKey(taxiId) || Connections[taxiId] == null)
+                    int taxiId = Entities.Taxi.GetTaxiIdForUser(userName);
+                    if (taxiId > 0)
                     {
-                        Connections[taxiId] = new Dictionary<string, string>();
+                        if (!Connections.ContainsKey(taxiId) || Connections[taxiId] == null)
+                        {
+                            Connections[taxiId] = new Dictionary<string, string>();
+                        }
+                        Connections[taxiId][userName] = Context.ConnectionId;
                     }
-                    Connections[taxiId][userName] = Context.ConnectionId;
                 }
+            }
+            catch (Exception ex)
+            {
+                Elmah.ErrorLog.GetDefault(null).Log(new Elmah.Error(ex));
             }
         }
         public static void SendTaxiPendingBooking(int taxiId)
         {
-            var hubContext = SignalR.GlobalHost.ConnectionManager.GetHubContext<TaxiHub>();
-            if (Connections.ContainsKey(taxiId))
+            try
             {
-                Dictionary<string,string> users = Connections[taxiId];
-                if (users != null)
+                var hubContext = SignalR.GlobalHost.ConnectionManager.GetHubContext<TaxiHub>();
+                if (Connections.ContainsKey(taxiId))
                 {
-                    foreach (string id in users.Values)
+                    Dictionary<string, string> users = Connections[taxiId];
+                    if (users != null)
                     {
-                        if (!string.IsNullOrEmpty(id))
+                        foreach (string id in users.Values)
                         {
-                            hubContext.Clients[id].pendingBooking();
+                            if (!string.IsNullOrEmpty(id))
+                            {
+                                hubContext.Clients[id].pendingBooking();
+                            }
                         }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                Elmah.ErrorLog.GetDefault(null).Log(new Elmah.Error(ex));
             }
         }
     }
