@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Routing;
 using System.ServiceModel;
 using cabme.web.Service.Hubs;
+using System.Threading.Tasks;
 
 namespace cabme.web.Service.Entities
 {
@@ -178,42 +179,52 @@ namespace cabme.web.Service.Entities
 #else
                 string url = "http://" + OperationContext.Current.RequestContext.RequestMessage.Headers.To.Host + "/confirm.aspx?hash=" + dataBooking.Hash;
 #endif
+
                 //Load contact details for taxi
                 var contactDetails = context.ContactDetails.Where(p => p.TaxiId == booking.TaxiId).SingleOrDefault();
-                //Is the contact details valid
-                if (contactDetails != null && (
-                    (contactDetails.UseEmail && !string.IsNullOrEmpty(contactDetails.BookingEmail)) ||
-                    (!contactDetails.UseEmail && !string.IsNullOrEmpty(contactDetails.BookingSMS))))
+                Task t = new Task(() =>
                 {
-                    if (contactDetails.UseEmail && !string.IsNullOrEmpty(contactDetails.BookingEmail))
+                    //Is the contact details valid
+                    if (contactDetails != null && (
+                        (contactDetails.UseEmail && !string.IsNullOrEmpty(contactDetails.BookingEmail)) ||
+                        (!contactDetails.UseEmail && !string.IsNullOrEmpty(contactDetails.BookingSMS))))
                     {
-
-                        TaxiHub.SendTaxiPendingBooking(booking.SelectedTaxi.Id);
-                        BookHub.SendClientMessage(booking.PhoneNumber, "Waiting for " + booking.SelectedTaxi.Name + " to confirm.");
-                        string mailBody;
-                        if (booking.SuburbFrom != null)
+                        if (contactDetails.UseEmail && !string.IsNullOrEmpty(contactDetails.BookingEmail))
                         {
-                            mailBody = string.Format("Booking received from " + booking.SuburbFrom.Name + "<br/><a href=\"{0}\">Click here to confirm</a>", url);
+                            string mailBody;
+                            if (booking.SuburbFrom != null)
+                            {
+                                mailBody = string.Format("Booking received from " + booking.SuburbFrom.Name + "<br/><a href=\"{0}\">Click here to confirm</a>", url);
+                            }
+                            else
+                            {
+                                mailBody = string.Format("Booking received.<br/><a href=\"{0}\">Click here to confirm</a>", url);
+                            }
+                            //Send confirm booking email
+                            Mail.SendMail(contactDetails.BookingEmail, "cabme@abrie.net", "Test booking email", mailBody);
+                            TaxiHub.SendTaxiPendingBooking(booking.SelectedTaxi.Id);
+                            BookHub.SendClientMessage(booking.PhoneNumber, "Waiting for " + booking.SelectedTaxi.Name + " to confirm.");
                         }
                         else
                         {
-                            mailBody = string.Format("Booking received.<br/><a href=\"{0}\">Click here to confirm</a>", url);
+                            //TODO: SMS service
                         }
-                        //Send confirm booking email
-                        Mail.SendMail(contactDetails.BookingEmail, "cabme@abrie.net", "Test booking email", mailBody);
                     }
                     else
                     {
-                        //TODO: SMS service
+                        //TODO: Problem that has to be addressed
+                        Elmah.ErrorLog.GetDefault(null).Log(new Elmah.Error(new Exception("No contact details found for taxi:" + booking.TaxiId)));
                     }
-                }
-                else
+                });
+                try
                 {
-                    //TODO: Problem that has to be addressed
-                    Elmah.ErrorLog.GetDefault(null).Log(new Elmah.Error(new Exception("No contact details found for taxi:" + booking.TaxiId)));
+                    t.Start();
+                }
+                catch (AggregateException aggEx)
+                {
+                    Elmah.ErrorLog.GetDefault(null).Log(new Elmah.Error(aggEx));
                 }
             }
-
             return booking;
         }
 
