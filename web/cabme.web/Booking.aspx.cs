@@ -95,11 +95,11 @@ namespace cabme.web
             string msg;
             if (txtArrival != null && int.TryParse(txtArrival.Text, out minutes))
             {
-                msg = "Booking confirmed. Taxi will arrive in " + minutes + " min. Thank you for using cabme.";
+                msg = "Booking confirmed. Taxi will arrive in " + minutes + " min.";
             }
             else
             {
-                msg = "Booking confirmed. Thank you for using cabme.";
+                msg = "Booking confirmed.";
             }
             var booking = Service.Entities.Booking.Confirm(btn.CommandArgument);
             if (booking != null)
