@@ -184,18 +184,19 @@ function step1Min() {
     $('#step3').show();
     $('#loading').hide();
 
-    bookHub.announce($('#txtPhone').val());
-    $.ajax({
-        type: "POST",
-        contentType: 'application/json',
-        url: '/service/cabmeservice.svc/booking',
-        data: JSON.stringify(data),
-        success: function (msg) {
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            console.log(errorThrown);
-            popup('Server error', 'The booking can not be created due to a server problem.');
-        }
+    bookHub.announce($('#txtPhone').val()).done(function () {
+        $.ajax({
+            type: "POST",
+            contentType: 'application/json',
+            url: '/service/cabmeservice.svc/booking',
+            data: JSON.stringify(data),
+            success: function (msg) {
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(errorThrown);
+                popup('Server error', 'The booking can not be created due to a server problem.');
+            }
+        });
     });
 }
 
