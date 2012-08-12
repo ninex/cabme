@@ -204,6 +204,11 @@
              taxiHub.pendingBooking = function () {
                     $('#pendingBookings').slideDown();
                 };
+            window.hubReady.done(function () {
+                <% if (Page.User.IsInRole("Taxi")){ %>
+                    taxiHub.announce('<% =Page.User.Identity.Name %>');
+                <%} %>
+            });
          });
          <%} %>
     </script>

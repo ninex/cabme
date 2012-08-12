@@ -5,6 +5,10 @@ var isFull = false;
 var lstOfsuburbs = {};
 
 $(document).ready(function () {
+    window.hubReady.done(function () {
+        $('#btnMakeFull').fadeIn();
+        $('#btnBookMin').fadeIn();
+    });
     bookHub = $.connection.bookHub;
     bookHub.showMessage = function (message) {
         $('#msgStatus').append('<p class="status">' + message + '</p>');
@@ -133,7 +137,6 @@ function step1() {
     origin += ', ' + $('#fromSuburb').attr('selected', true).val();
     destination += ', ' + $('#toSuburb').attr('selected', true).val();
 
-    logHub.log("Getting distance for " + origin + " to " + destination);
     service.getDistanceMatrix(
 			  {
 			      origins: [origin],
@@ -169,8 +172,6 @@ function step1Min() {
 
     origin += ', ' + $('#fromSuburb').attr('selected', true).val();
 
-    logHub.log("Quick Booking from " + origin + "for number:" + phoneNum);
-
     $('#loading').show();
     var taxiId = $('#ddlTaxi').attr('selected', true).val();
     var data = {
@@ -187,18 +188,19 @@ function step1Min() {
     $('#step3').show();
     $('#loading').hide();
 
-    bookHub.announce($('#txtPhone').val());
-    $.ajax({
-        type: "POST",
-        contentType: 'application/json',
-        url: '/service/cabmeservice.svc/booking',
-        data: JSON.stringify(data),
-        success: function (msg) {
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            console.log(errorThrown);
-            popup('Server error', 'The booking can not be created due to a server problem.');
-        }
+    bookHub.announce($('#txtPhone').val()).done(function () {
+        $.ajax({
+            type: "POST",
+            contentType: 'application/json',
+            url: '/service/cabmeservice.svc/booking',
+            data: JSON.stringify(data),
+            success: function (msg) {
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(errorThrown);
+                popup('Server error', 'The booking can not be created due to a server problem.');
+            }
+        });
     });
 }
 
@@ -283,12 +285,10 @@ function distanceResults(response, status) {
         } else {
             $('#loading').hide();
             popup('Check Address', 'Can not find both addresses. Please double check.');
-            logHub.log("Can not find both addresses.");
         }
     } else {
         $('#loading').hide();
         popup('Server problem', 'We are having problems accessing the Google Maps service');
-        logHub.log("We are having problems accessing the Google Maps service");
     }
 
 }

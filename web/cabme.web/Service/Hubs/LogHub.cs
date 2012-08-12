@@ -11,7 +11,11 @@ namespace cabme.web.Service.Hubs
     {
         public void Log(string message)
         {
-            Elmah.ErrorLog.GetDefault(null).Log(new Elmah.Error(new Exception("Connection:" + Context.ConnectionId + "\r\nHeaders:" + Context.Headers + "\r\nMsg:" + message)));
+            try
+            {
+                Elmah.ErrorLog.GetDefault(null).Log(new Elmah.Error(new Exception("Msg:" + message + "\r\nConnection:" + Context.ConnectionId + "\r\nHeaders:" + Context.Headers + "\r\n")));
+            }
+            catch { }
         }
     }
 }
