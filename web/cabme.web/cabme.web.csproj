@@ -33,6 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DeployIisAppPath>cabme.co.za</DeployIisAppPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Elmah">
