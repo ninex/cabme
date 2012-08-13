@@ -129,7 +129,7 @@
             <h3>
                 Booking status</h3>
             <div id="msgStatus" class="status">
-                <p>
+                <p class="status">
                     Booking sent to server.</p>
             </div>
         </div>

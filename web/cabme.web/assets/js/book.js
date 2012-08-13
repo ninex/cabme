@@ -23,7 +23,7 @@ $(document).ready(function () {
     if (supports_html5_storage()) {
         $('#from').val(localStorage["from"]);
         $('#txtPhone').val(localStorage["phone"]);
-        if (localStorage["city"]) {
+        if (localStorage["city"] && localStorage["city"] != "null") {
             $('#city').val(localStorage["city"]);
         }
     }
