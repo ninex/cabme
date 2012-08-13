@@ -1,7 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <DeployServiceUrl>41.76.209.156</DeployServiceUrl>
+  </PropertyGroup>
   <Target Name="Build" >
     <MSBuild Projects="$(MSBuildProjectDirectory)\..\cabme.sln"
-             Properties="Configuration=Release" />
+             Properties="Configuration=Release;
+                         DeployOnBuild=true;
+                         DeployTarget=MSDeployPublish;
+                         CreatePackageOnPublish=True;
+                         AllowUntrustedCertificate=True;
+                         MSDeployPublishMethod=MsDepSVC;
+                         MsDeployServiceUrl=$(DeployServiceUrl);
+                         SkipExtraFilesOnServer=True;
+                         UserName=ROCKETHOST\cabmeKaF;
+                         Password=cabme123#;" />
   </Target>
 </Project>
