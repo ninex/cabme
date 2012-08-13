@@ -47,7 +47,7 @@
     <script src='<%= ResolveUrl("~/signalr/hubs") %>' type="text/javascript" ></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            window.hubReady = $.connection.hub.start();
+            window.hubReady = $.connection.hub.start({ transport: ['longPolling', 'webSockets'] });
         });
     </script>
     <asp:ContentPlaceHolder ID="Scripts" runat="server" />
