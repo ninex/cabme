@@ -47,6 +47,7 @@ function mapsLoaded() {
 }
 
 function cityChanged() {
+    localStorage.removeItem($('#city').attr('selected', true).val() + "suburbStamp");
     loadSuburbs();
 }
 function suburbChanged() {
@@ -55,23 +56,44 @@ function suburbChanged() {
     localStorage[city + 'suburbTo'] = $('#toSuburb').attr('selected', true).val();
 }
 function loadSuburbs() {
+    var refresh = true;
     var city = $('#city').attr('selected', true).val();
-    var url = '/service/cabmeservice.svc/suburbs?city=' + city;
     localStorage['city'] = city;
-    $.getJSON(url, function (json) {
-        var options = '';
-        $.each(json, function (index, suburb) {
-            var val = suburb.Name + ', ' + suburb.City + ', ' + suburb.PostalCode;
-            options += '<option value="' + val + '">' + suburb.Name + '</option>';
-            lstOfsuburbs[val] = suburb.Id;
+    if (localStorage[city + "suburbStamp"] && localStorage[city + "suburbStamp"] != "null" && localStorage[city + "suburbList"] && localStorage[city + "suburbList"] != "null") {
+        var orig = new Date().setTime(localStorage[city + "suburbStamp"]);
+        var now = +new Date();
+        days = Math.round((now - orig) / (1000 * 60 * 60 * 24));
+        refresh = days > 30;
+    }
+    if (refresh) {
+        var url = '/service/cabmeservice.svc/suburbs?city=' + city;
+        $.getJSON(url, function (json) {
+            parseSuburbs(city, json);
+            setPrevSuburbs(city);
         });
-        $('#fromSuburb').html(options);
-        $('#toSuburb').html(options);
-        var suburb = localStorage[city + 'suburbFrom'];
-        $('#fromSuburb option[value*="' + suburb + '"]').attr('selected', 'selected');
-        suburb = localStorage[city + 'suburbTo'];
-        $('#toSuburb option[value*="' + suburb + '"]').attr('selected', 'selected');
+    } else {
+        $('#fromSuburb').html(localStorage[city + "suburbList"]);
+        $('#toSuburb').html(localStorage[city + "suburbList"]);
+        setPrevSuburbs(city);
+    }
+}
+function parseSuburbs(city, lst) {
+    var options = '';
+    $.each(lst, function (index, suburb) {
+        var val = suburb.Name + ', ' + suburb.City + ', ' + suburb.PostalCode;
+        options += '<option value="' + val + '">' + suburb.Name + '</option>';
+        lstOfsuburbs[val] = suburb.Id;
     });
+    localStorage[city + "suburbList"] = options;
+    localStorage[city + "suburbStamp"] = +new Date();
+    $('#fromSuburb').html(options);
+    $('#toSuburb').html(options);
+}
+function setPrevSuburbs(city) {
+    var suburb = localStorage[city + 'suburbFrom'];
+    $('#fromSuburb option[value*="' + suburb + '"]').attr('selected', 'selected');
+    suburb = localStorage[city + 'suburbTo'];
+    $('#toSuburb option[value*="' + suburb + '"]').attr('selected', 'selected');
 }
 function loadQuickTaxis() {
     $.getJSON('/service/cabmeservice.svc/taxis', function (json) {
