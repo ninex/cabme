@@ -23,7 +23,10 @@
                 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
             })();
         }
-    </script>
+    </script>    
+    <!--[if lt IE 8]>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
+    <![endif]-->
 </head>
 <body>
     <form runat="server">

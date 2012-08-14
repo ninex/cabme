@@ -69,12 +69,9 @@ function loadSuburbs() {
         var url = '/service/cabmeservice.svc/suburbs?city=' + city;
         $.getJSON(url, function (json) {
             parseSuburbs(city, json);
-            setPrevSuburbs(city);
         });
     } else {
-        $('#fromSuburb').html(localStorage[city + "suburbList"]);
-        $('#toSuburb').html(localStorage[city + "suburbList"]);
-        setPrevSuburbs(city);
+        parseSuburbs(city, $.parseJSON(localStorage[city + "suburbList"]));
     }
 }
 function parseSuburbs(city, lst) {
@@ -84,10 +81,11 @@ function parseSuburbs(city, lst) {
         options += '<option value="' + val + '">' + suburb.Name + '</option>';
         lstOfsuburbs[val] = suburb.Id;
     });
-    localStorage[city + "suburbList"] = options;
+    localStorage[city + "suburbList"] = JSON.stringify(lst);
     localStorage[city + "suburbStamp"] = +new Date();
     $('#fromSuburb').html(options);
     $('#toSuburb').html(options);
+    setPrevSuburbs(city);
 }
 function setPrevSuburbs(city) {
     var suburb = localStorage[city + 'suburbFrom'];
