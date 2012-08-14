@@ -6,24 +6,12 @@
   <Target Name="Build" >
     <MSBuild Projects="$(MSBuildProjectDirectory)\..\cabme.sln"
              Properties="Configuration=Release;
+                         DeployTarget=Publish;
                          DeployOnBuild=true;
-                         DeployTarget=Package;
-                         CreatePackageOnPublish=True;
-                         AllowUntrustedCertificate=True;
-                         MSDeployPublishMethod=wmsvc;
-                         MsDeployServiceUrl=$(DeployServiceUrl);
-                         DeployIisAppPath=cabme.co.za;
-                         DeployAsIisApp=False;
-                         SkipExtraFilesOnServer=True;
-                         deleteExistingFiles=False;
-                         replaceMatchingFiles=True;
-                         UseMsDeployExe=True;
-                         UserName=ROCKETHOST\cabmeKaF;
-                         Password=cabme123#;
-                         IncludeIisSettingsOnPublish=False;
-                         RemoteSitePhysicalPath=;
-                         Site=cabme.co.za;
-                         IncludeSetAclProviderOnDestination=False;
+                         CreatePackageOnPublish=False;
+                         PackageTempRootDir=$(MSBuildProjectDirectory)\..\_publish\;
+                         DeployTarget=PipelinePreDeployCopyAllFilesToOneFolder;
+                         AutoParameterizationWebConfigConnectionStrings=false;
                          " />
   </Target>
 </Project>
