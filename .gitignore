@@ -31,6 +31,7 @@ ipch/
 obj/
 deploy/
 publish/
+_publish/
 [Bb]in
 [Dd]ebug*/
 [Rr]elease*/
