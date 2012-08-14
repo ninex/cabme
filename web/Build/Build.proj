@@ -7,13 +7,23 @@
     <MSBuild Projects="$(MSBuildProjectDirectory)\..\cabme.sln"
              Properties="Configuration=Release;
                          DeployOnBuild=true;
-                         DeployTarget=MSDeployPublish;
+                         DeployTarget=Package;
                          CreatePackageOnPublish=True;
                          AllowUntrustedCertificate=True;
-                         MSDeployPublishMethod=MsDepSVC;
+                         MSDeployPublishMethod=wmsvc;
                          MsDeployServiceUrl=$(DeployServiceUrl);
+                         DeployIisAppPath=cabme.co.za;
+                         DeployAsIisApp=False;
                          SkipExtraFilesOnServer=True;
+                         deleteExistingFiles=False;
+                         replaceMatchingFiles=True;
+                         UseMsDeployExe=True;
                          UserName=ROCKETHOST\cabmeKaF;
-                         Password=cabme123#;" />
+                         Password=cabme123#;
+                         IncludeIisSettingsOnPublish=False;
+                         RemoteSitePhysicalPath=;
+                         Site=cabme.co.za;
+                         IncludeSetAclProviderOnDestination=False;
+                         " />
   </Target>
 </Project>
