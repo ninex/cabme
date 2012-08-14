@@ -96,8 +96,8 @@
                     </div>
                 </div>
             </div>
-            <input type="button" id="btnBookMin" value="Book" onclick="step1Min();" style="display:none;" />
-            <input full style="display: none" type="button" id="btnConfirm" value="Next" onclick="step1();" />
+            <input type="button" id="btnBookMin" value="Book" onclick="step1Min();" style="display:none;" class="button" />
+            <input full style="display: none" type="button" id="btnConfirm" value="Next" onclick="step1();" class="button"/>
         </div>
         <div id="step2" style="display: none">
             <div style="display: table; width: 100%">
@@ -123,7 +123,7 @@
             </p>
             <div id="map" style="overflow: hidden;">
             </div>
-            <input type="button" id="btnBook" value="Book" onclick="step2();" />
+            <input type="button" id="btnBook" value="Book" onclick="step2();" class="button" />
         </div>
         <div id="step3" style="display: none; border: 1px solid #000; margin: 5px; padding: 5px;">
             <h3>

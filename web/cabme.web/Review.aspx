@@ -88,7 +88,7 @@
                 <div class="cell">
                 </div>
                 <div class="cell lastCell">
-                    <asp:Button runat="server" ID="btnSubmit" Text="Send" OnClick="btnSubmit_Click" /></div>
+                    <asp:Button runat="server" ID="btnSubmit" Text="Send" OnClick="btnSubmit_Click"  CssClass="button"/></div>
             </div>
         </div>
     </asp:Panel>

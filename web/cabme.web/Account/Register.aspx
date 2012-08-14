@@ -63,7 +63,7 @@
                         </fieldset>
                         <p class="submitButton">
                             <asp:Button ID="CreateUserButton" runat="server" CommandName="MoveNext" Text="Create User" 
-                                 ValidationGroup="RegisterUserValidationGroup"/>
+                                 ValidationGroup="RegisterUserValidationGroup" CssClass="button"/>
                         </p>
                     </div>
                 </ContentTemplate>

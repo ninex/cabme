@@ -6,7 +6,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <h2>
         Bookings</h2>
-    <div style="float:right">
+    <div style="float: right">
         <asp:ImageButton runat="server" ID="btnRefresh" Text="Refresh" OnClick="btnRefresh_Click"
             ImageUrl="assets/images/refresh.png" CssClass="refresh" OnClientClick="$('#pendingBookings').hide();" />
     </div>
@@ -21,9 +21,10 @@
             <asp:Repeater runat="server" ID="ActiveBookings" OnItemDataBound="listBookings_ItemDataBound">
                 <HeaderTemplate>
                     <div style="height: 100%">
-                    <div id="pendingBookings" style="display:none">
-                        <p>You have new bookings awaiting confirmation. Refresh to view.</p>
-                    </div>
+                        <div id="pendingBookings" style="display: none">
+                            <p>
+                                You have new bookings awaiting confirmation. Refresh to view.</p>
+                        </div>
                 </HeaderTemplate>
                 <ItemTemplate>
                     <asp:Panel class="table" runat="server" ID="booking">
@@ -47,7 +48,7 @@
                             </div>
                             <div class="cell lastCell">
                                 <%# Eval("PickupTime")%></p></div>
-                        </div>                                          
+                        </div>
                         <div class="row">
                             <div class="cell">
                                 <b>Suburb: </b>
@@ -61,7 +62,7 @@
                             </div>
                             <div class="cell lastCell">
                                 <%# AllowedToDisplay(((string)Eval("AddrFrom")).Replace(",", ",<br/>"), (bool)Eval("Confirmed")) %></p></div>
-                        </div>   
+                        </div>
                         <div class="row">
                             <div class="cell">
                                 <b>To: </b>
@@ -83,9 +84,16 @@
                             </div>
                             <div class="cell lastCell">
                                 <asp:TextBox runat="server" ID="txtArrival" Columns="2" MaxLength="2"></asp:TextBox>
-                                <asp:Button runat="server" ID="btnConfirm" Text="Confirm" CommandArgument='<%#Eval("Hash") %>'
-                                    Visible='<%# ShowConfirm((bool)Eval("Confirmed")) %>' OnClick="btnConfirm_Click" />                                    
-                                <asp:Button runat="server" ID="btnIndependent" Text="Send Independent" CommandArgument='<%#Eval("Hash") %>' OnClick="btnIndependent_Click" />
+                            </div>
+                        </asp:Panel>
+                        <asp:Panel ID="Panel1" class="row" runat="server" Visible='<%# ShowConfirm((bool)Eval("Confirmed")) %>'>
+                            <div class="cell">
+                            </div>
+                            <div class="cell lastCell">
+                                <asp:Button runat="server" ID="btnConfirm" CssClass="button" Text="Confirm" CommandArgument='<%#Eval("Hash") %>'
+                                    OnClick="btnConfirm_Click" />
+                                <asp:Button runat="server" ID="btnIndependent" CssClass="button" Text="Independent"
+                                    CommandArgument='<%#Eval("Hash") %>' OnClick="btnIndependent_Click" />
                             </div>
                         </asp:Panel>
                     </asp:Panel>
@@ -143,7 +151,7 @@
                         </div>
                         <div class="row">
                             <asp:Button runat="server" ID="btnReview" Text="Review" OnClick="btnReview_Click"
-                                CommandArgument='<% #Eval("Hash") %>' Visible='<%# ShowReview() %>' />
+                                CssClass="button" CommandArgument='<% #Eval("Hash") %>' Visible='<%# ShowReview() %>' />
                         </div>
                     </asp:Panel>
                 </ItemTemplate>
@@ -179,7 +187,7 @@
                             </div>
                             <div class="cell lastCell">
                                 <%# Eval("PickupTime")%></p></div>
-                        </div>   
+                        </div>
                         <div class="row">
                             <div class="cell">
                                 <b>From: </b>

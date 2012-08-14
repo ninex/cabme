@@ -52,7 +52,7 @@
                 <p class="submitButton">
                     <asp:Button ID="CancelPushButton" runat="server" CausesValidation="False" CommandName="Cancel" Text="Cancel"/>
                     <asp:Button ID="ChangePasswordPushButton" runat="server" CommandName="ChangePassword" Text="Change Password" 
-                         ValidationGroup="ChangeUserPasswordValidationGroup"/>
+                         ValidationGroup="ChangeUserPasswordValidationGroup" CssClass="button" CssClass="button"/>
                 </p>
             </div>
         </ChangePasswordTemplate>

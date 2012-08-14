@@ -27,26 +27,20 @@ h3
 	font-size: 1.5em;
 	margin: 0px;
 }
+.button
+{
+	margin: 5px auto;
+	max-width: 270px;
+	height: 60px;
+}
 #book
 {
 	font-size: 1.5em;
-}
-#book div
-{
 }
 #book input, select
 {	font-size: 1.0em;
 	color: #555;
 	width: 98%;
-}
-#book input[type=button]
-{
-	margin-top: 5px;
-	width: 100%;
-	max-width: 300px;
-	height: 60px;
-	font-size: large;
-	background-color: #ffd800;
 }
 #book img
 {
