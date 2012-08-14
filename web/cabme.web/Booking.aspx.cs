@@ -110,6 +110,10 @@ namespace cabme.web
             }
         }
 
+        protected void btnIndependent_Click(object sender, EventArgs e)
+        {
+        }
+
         protected void btnReview_Click(object sender, EventArgs e)
         {
             Button btn = sender as Button;

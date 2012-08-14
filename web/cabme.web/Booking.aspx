@@ -69,6 +69,14 @@
                             <div class="cell lastCell">
                                 <%# AllowedToDisplay(((string)Eval("AddrTo")), (bool)Eval("Confirmed")).Replace(",", ",<br/>")%></p></div>
                         </div>
+                        <asp:Panel ID="pnlRef" class="row" runat="server" Visible='<%# ShowConfirm((bool)Eval("Confirmed")) %>'>
+                            <div class="cell">
+                                <b>Driver Code: </b>
+                            </div>
+                            <div class="cell lastCell">
+                                <asp:TextBox runat="server" ID="txtRefCode" Columns="2" MaxLength="8"></asp:TextBox>
+                            </div>
+                        </asp:Panel>
                         <asp:Panel class="row" runat="server" Visible='<%# ShowConfirm((bool)Eval("Confirmed")) %>'>
                             <div class="cell">
                                 <b>Minutes to arrival: </b>
@@ -76,7 +84,8 @@
                             <div class="cell lastCell">
                                 <asp:TextBox runat="server" ID="txtArrival" Columns="2" MaxLength="2"></asp:TextBox>
                                 <asp:Button runat="server" ID="btnConfirm" Text="Confirm" CommandArgument='<%#Eval("Hash") %>'
-                                    Visible='<%# ShowConfirm((bool)Eval("Confirmed")) %>' OnClick="btnConfirm_Click" />
+                                    Visible='<%# ShowConfirm((bool)Eval("Confirmed")) %>' OnClick="btnConfirm_Click" />                                    
+                                <asp:Button runat="server" ID="btnIndependent" Text="Send Independent" CommandArgument='<%#Eval("Hash") %>' OnClick="btnIndependent_Click" />
                             </div>
                         </asp:Panel>
                     </asp:Panel>
