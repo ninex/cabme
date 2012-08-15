@@ -237,17 +237,41 @@ namespace cabme.web.Service.Entities
             }
         }
 
-        public static Bookings GetAllBookingsByNumber(string number, bool? active)
+        public static Bookings GetAllBookingsByNumber(string userName, bool? active, bool? confirmed, bool? open)
         {
             using (Data.contentDataContext context = new Data.contentDataContext())
             {
-                if (active.HasValue)
+                var number = (from user in context.Users
+                              where user.Name == userName && user.PhoneNumber != null
+                              select user.PhoneNumber).SingleOrDefault();
+                if (!string.IsNullOrEmpty(number))
                 {
-                    return new Bookings(AllQueryableBookings(context).Where(p => p.PhoneNumber == number && p.Active == active).ToList());
+                    if (active.HasValue)
+                    {
+                        if (confirmed.HasValue && confirmed.Value)
+                        {
+                            return new Bookings(AllQueryableBookings(context).Where(p => p.PhoneNumber == number && p.Active == active && p.Confirmed).OrderBy(p => p.LastModified).ToList());
+                        }
+                        else
+                        {
+                            if (open.HasValue && open.Value)
+                            {
+                                return new Bookings(AllQueryableBookings(context).Where(p => p.PhoneNumber == number && p.Active == active && !p.Confirmed && p.dPickupTime.AddMinutes(30) > DateTime.Now).OrderBy(p => p.LastModified).ToList());
+                            }
+                            else
+                            {
+                                return new Bookings(AllQueryableBookings(context).Where(p => p.PhoneNumber == number && p.Active == active && !p.Confirmed && p.dPickupTime.AddMinutes(30) < DateTime.Now).OrderBy(p => p.LastModified).ToList());
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return new Bookings(AllQueryableBookings(context).Where(p => p.PhoneNumber == number).ToList());
+                    }
                 }
                 else
                 {
-                    return new Bookings(AllQueryableBookings(context).Where(p => p.PhoneNumber == number).ToList());
+                    return null;
                 }
             }
         }
@@ -293,7 +317,7 @@ namespace cabme.web.Service.Entities
                               select user.PhoneNumber).SingleOrDefault();
                 if (!string.IsNullOrEmpty(number))
                 {
-                    return GetAllBookingsByNumber(number, true);
+                    return GetAllBookingsByNumber(number, true, null, null);
                 }
                 else
                 {

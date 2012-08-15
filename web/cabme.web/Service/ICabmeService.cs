@@ -42,6 +42,14 @@ namespace cabme.web.Service
         [OperationContract]
         Bookings GetAllBookingsForNumber(string number, string active);
 
+        [WebInvoke(Method = "GET",
+           UriTemplate = "userbookings?user={user}&confirmed={confirmed}&open={open}",
+           RequestFormat = WebMessageFormat.Json,
+           ResponseFormat = WebMessageFormat.Json,
+           BodyStyle = WebMessageBodyStyle.Bare)]
+        [OperationContract]
+        Bookings GetAllUserBookings(string user, string confirmed, string open);
+
         [WebInvoke(Method = "POST",
           UriTemplate = "booking",
           RequestFormat = WebMessageFormat.Json,

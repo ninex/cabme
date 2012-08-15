@@ -81,6 +81,31 @@ namespace cabme.web.Service
             }
         }
 
+        public Bookings GetAllUserBookings(string userName, string confirmed, string open)
+        {
+            try
+            {
+                if (String.IsNullOrEmpty(userName))
+                {
+                    WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.BadRequest;
+                    return null;
+                }
+                bool bConfirmed = false, bOpen = false;
+                if (bool.TryParse(confirmed, out bConfirmed))
+                {
+                    bool.TryParse(open, out bOpen);
+                    return Booking.GetAllBookingsByNumber(userName, true, bConfirmed, bOpen);
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.InternalServerError;
+                Elmah.ErrorLog.GetDefault(null).Log(new Elmah.Error(ex));
+                return null;
+            }
+        }
+
         public Booking MakeBooking(Booking booking)
         {
             try
@@ -107,11 +132,11 @@ namespace cabme.web.Service
                 bool bActive = false;
                 if (bool.TryParse(active, out bActive))
                 {
-                    return Booking.GetAllBookingsByNumber(number, bActive);
+                    return Booking.GetAllBookingsByNumber(number, bActive, null, null);
                 }
                 else
                 {
-                    return Booking.GetAllBookingsByNumber(number, null);
+                    return Booking.GetAllBookingsByNumber(number, null, null, null);
                 }
             }
             catch (Exception ex)

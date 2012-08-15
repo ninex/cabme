@@ -14,57 +14,6 @@ namespace cabme.web
         protected void Page_Load(object sender, EventArgs e)
         {
         }
-        /*
-        private void BindData()
-        {
-            if (User.Identity.IsAuthenticated)
-            {
-                Service.Entities.Bookings bookings;
-                if (User.IsInRole("Taxi"))
-                {
-                    bookings = Service.Entities.Booking.GetAllTaxiBookingsForUser(User.Identity.Name);
-                }
-                else
-                {
-                    if (User.IsInRole("Admin"))
-                    {
-                        bookings = Service.Entities.Booking.GetAllBookings();
-                    }
-                    else
-                    {
-                        bookings = Service.Entities.Booking.GetAllActiveBookingsForUser(User.Identity.Name);
-                    }
-                }
-            }
-        }*/
-
-        protected bool ShowReview()
-        {
-            return (!User.IsInRole("Taxi"));
-        }
-
-        protected string AllowedToDisplay(string input, bool confirmed)
-        {
-            if (confirmed || !User.IsInRole("Taxi"))
-            {
-                return string.IsNullOrEmpty(input) ? "" : input;
-            }
-            else
-            {
-                return "Booking not confirmed";
-            }
-        }
-        protected string GetSuburb(string AddrFrom, Service.Entities.Suburb suburb)
-        {
-            if (suburb == null || string.IsNullOrEmpty(suburb.Name))
-            {
-                return "No suburb information available.";
-            }
-            else
-            {
-                return suburb.Name;
-            }
-        }
 
         protected void btnReview_Click(object sender, EventArgs e)
         {
@@ -88,18 +37,6 @@ namespace cabme.web
                     else
                     {
                         ctrl.CssClass = "table late";
-                    }
-                }
-            }
-
-            if (e.Item.ItemType == ListItemType.Footer)
-            {
-                if (((Repeater)sender).Items.Count <= 0)
-                {
-                    Panel pnlNoData = (Panel)e.Item.FindControl("NoData");
-                    if (pnlNoData != null)
-                    {
-                        pnlNoData.Visible = true;
                     }
                 }
             }

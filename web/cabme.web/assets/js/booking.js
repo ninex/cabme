@@ -3,7 +3,7 @@ $(document).ready(function () {
     setupTabs();
     ko.applyBindings(new BookingViewModel());
 });
-function Booking(id, phoneNumber, numberOfPeople, pickupTime, suburb, addrFrom, addrTo, confirmed, hash) {
+function Booking(id, phoneNumber, numberOfPeople, pickupTime, suburb, addrFrom, addrTo, confirmed, hash, taxiId) {
     var self = this;
     self.id = id;
     self.phoneNumber = phoneNumber;
@@ -16,28 +16,66 @@ function Booking(id, phoneNumber, numberOfPeople, pickupTime, suburb, addrFrom, 
     self.hash = hash;
     self.refCode = ko.observable('');
     self.arrival = ko.observable('');
+    self.isTaxi = taxiId && taxiId != null;
 }
 function BookingViewModel() {
     var self = this;
-    self.bookings = ko.observableArray();
+    var url;
+    self.openBookings = ko.observableArray();
+    self.completedBookings = ko.observableArray();
+    self.missedBookings = ko.observableArray();
     self.loadData = function () {
         if (taxiId) {
             var params = 'name=' + taxiId + '&confirmed=false&open=true';
-            if (self.bookings().length > 0) {
-                params += '&after=' + self.bookings()[0].id;
+            if (self.openBookings().length > 0) {
+                params += '&after=' + self.openBookings()[0].id;
             }
-            $.getJSON('/service/cabmeservice.svc/taxibookings?' + params, function (json) {
-                $.each(json, function (index, booking) {
-                    var suburbName = "N/A";
-                    if (booking.SuburbFrom && booking.SuburbFrom != null) {
-                        suburbName = booking.SuburbFrom.Name;
-                    }
-                    var newBooking = new Booking(booking.Id, booking.PhoneNumber, booking.NumberOfPeople, booking.PickupTime, suburbName, booking.AddrFrom, booking.AddrTo, booking.Confirmed, booking.Hash);
-                    self.bookings.unshift(newBooking);
-                });
-            });
+            url = '/service/cabmeservice.svc/taxibookings?' + params;
         } else {
+            url = '/service/cabmeservice.svc/userbookings?user=' + userID + '&confirmed=false&open=true';
         }
+        $.getJSON(url, function (json) {
+            $.each(json, function (index, booking) {
+                var suburbName = "N/A";
+                if (booking.SuburbFrom && booking.SuburbFrom != null) {
+                    suburbName = booking.SuburbFrom.Name;
+                }
+                var newBooking = new Booking(booking.Id, booking.PhoneNumber, booking.NumberOfPeople, booking.PickupTime, suburbName, booking.AddrFrom, booking.AddrTo, booking.Confirmed, booking.Hash, taxiId);
+                self.openBookings.unshift(newBooking);
+            });
+        });
+    };
+    self.loadCompletedData = function () {
+        if (taxiId) {
+            url = '/service/cabmeservice.svc/taxibookings?name=' + taxiId + '&confirmed=true';
+        } else {
+            url = '/service/cabmeservice.svc/userbookings?user=' + userID + '&confirmed=true';
+        }
+        $.getJSON(url, function (json) {
+            $.each(json, function (index, booking) {
+                var suburbName = "N/A";
+                if (booking.SuburbFrom && booking.SuburbFrom != null) {
+                    suburbName = booking.SuburbFrom.Name;
+                }
+                self.completedBookings.unshift(new Booking(booking.Id, booking.PhoneNumber, booking.NumberOfPeople, booking.PickupTime, suburbName, booking.AddrFrom, booking.AddrTo, booking.Confirmed, booking.Hash, taxiId));
+            });
+        });
+    };
+    self.loadMissedData = function () {
+        if (taxiId) {
+            url = '/service/cabmeservice.svc/taxibookings?name=' + taxiId + '&confirmed=false&open=false';
+        } else {
+            url = '/service/cabmeservice.svc/userbookings?user=' + userID + '&confirmed=false&open=false';
+        }
+        $.getJSON(url, function (json) {
+            $.each(json, function (index, booking) {
+                var suburbName = "N/A";
+                if (booking.SuburbFrom && booking.SuburbFrom != null) {
+                    suburbName = booking.SuburbFrom.Name;
+                }
+                self.missedBookings.unshift(new Booking(booking.Id, booking.PhoneNumber, booking.NumberOfPeople, booking.PickupTime, suburbName, booking.AddrFrom, booking.AddrTo, booking.Confirmed, booking.Hash, taxiId));
+            });
+        });
     };
     self.confirm = function (booking) {
         var data = {
@@ -52,7 +90,7 @@ function BookingViewModel() {
             url: '/service/cabmeservice.svc/confirmbooking',
             data: JSON.stringify(data),
             success: function (msg) {
-                self.bookings.remove(booking);
+                self.openBookings.remove(booking);
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log(errorThrown);
@@ -62,13 +100,17 @@ function BookingViewModel() {
     self.independent = function (booking) {
         alert('Send independent logic');
     };
+    self.review = function (booking) {
+        alert('Review logic');
+    };
     self.showNewBooking = function (elem) { $(elem).hide().fadeIn('slow'); };
     self.removeBooking = function (elem) { $(elem).fadeOut(); };
     self.loadData();
+    self.loadCompletedData();
+    self.loadMissedData();
 }
 function btnRefresh() {
     $('#pendingBookings').slideUp();
-
     //so that the image button doesn't postback
     return false;
 }
