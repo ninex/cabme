@@ -79,6 +79,7 @@ namespace cabme.web.Service.Entities
 
         public DateTime Created { get; set; }
 
+        [DataMember]
         public string Hash { get; set; }
 
         [DataMember]

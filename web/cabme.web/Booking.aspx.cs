@@ -13,10 +13,6 @@ namespace cabme.web
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
-            {
-                /*BindData();*/
-            }
         }
         /*
         private void BindData()
@@ -39,25 +35,8 @@ namespace cabme.web
                         bookings = Service.Entities.Booking.GetAllActiveBookingsForUser(User.Identity.Name);
                     }
                 }
-
-                if (bookings != null)
-                {
-                    ActiveBookings.DataSource = bookings.Where(p => !p.Confirmed && p.dPickupTime.AddMinutes(30) > DateTime.Now);
-                    ActiveBookings.DataBind();
-
-                    CompletedBookings.DataSource = bookings.Where(p => p.Confirmed);
-                    CompletedBookings.DataBind();
-
-                    IncompleteBookings.DataSource = bookings.Where(p => !p.Confirmed && p.dPickupTime.AddMinutes(30) < DateTime.Now);
-                    IncompleteBookings.DataBind();
-                }
             }
         }*/
-
-        protected bool ShowConfirm(bool confirmed)
-        {
-            return (User.IsInRole("Taxi") && !confirmed);
-        }
 
         protected bool ShowReview()
         {
@@ -87,42 +66,10 @@ namespace cabme.web
             }
         }
 
-        protected void btnConfirm_Click(object sender, EventArgs e)
-        {/*
-            Button btn = sender as Button;
-            TextBox txtArrival = btn.Parent.FindControl("txtArrival") as TextBox;
-            int minutes = 0;
-            string msg;
-            if (txtArrival != null && int.TryParse(txtArrival.Text, out minutes))
-            {
-                msg = "Booking confirmed. Taxi will arrive in " + minutes + " min.";
-            }
-            else
-            {
-                msg = "Booking confirmed.";
-            }
-            var booking = Service.Entities.Booking.Confirm(btn.CommandArgument);
-            if (booking != null)
-            {
-                BookHub.SendClientMessage(booking.PhoneNumber, msg);
-
-                BindData();
-            }*/
-        }
-
-        protected void btnIndependent_Click(object sender, EventArgs e)
-        {
-        }
-
         protected void btnReview_Click(object sender, EventArgs e)
         {
             Button btn = sender as Button;
             Response.Redirect("~/Review.aspx?hash=" + btn.CommandArgument);
-        }
-
-        protected void btnRefresh_Click(object sender, EventArgs e)
-        {
-            /*BindData();*/
         }
 
         protected void listBookings_ItemDataBound(object sender, RepeaterItemEventArgs e)

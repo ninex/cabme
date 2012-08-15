@@ -50,6 +50,14 @@ namespace cabme.web.Service
         [OperationContract]
         Booking MakeBooking(Booking booking);
 
+        [WebInvoke(Method = "POST",
+          UriTemplate = "confirmbooking",
+          RequestFormat = WebMessageFormat.Json,
+          ResponseFormat = WebMessageFormat.Json,
+          BodyStyle = WebMessageBodyStyle.Bare)]
+        [OperationContract]
+        void ConfirmBooking(Confirmation confirmation);
+
         #endregion
 
         #region Suburbs

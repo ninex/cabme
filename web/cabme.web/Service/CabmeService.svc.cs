@@ -136,6 +136,33 @@ namespace cabme.web.Service
             }
         }
 
+        public void ConfirmBooking(Confirmation confirmation)
+        {
+            try
+            {
+                Booking.Confirm(confirmation.Hash);
+                string msg;
+                int minutes;
+                if (confirmation.Arrival != null && int.TryParse(confirmation.Arrival, out minutes))
+                {
+                    msg = "Booking confirmed. Taxi will arrive in " + minutes + " min.";
+                }
+                else
+                {
+                    msg = "Booking confirmed.";
+                }
+                if (!string.IsNullOrEmpty(confirmation.PhoneNumber))
+                {
+                    cabme.web.Service.Hubs.BookHub.SendClientMessage(confirmation.PhoneNumber, msg);
+                }
+            }
+            catch (Exception ex)
+            {
+                WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.InternalServerError;
+                Elmah.ErrorLog.GetDefault(null).Log(new Elmah.Error(ex));
+            }
+        }
+
         #endregion
 
         #region Suburbs
