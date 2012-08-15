@@ -15,10 +15,10 @@ namespace cabme.web
         {
             if (!IsPostBack)
             {
-                BindData();
+                /*BindData();*/
             }
         }
-
+        /*
         private void BindData()
         {
             if (User.Identity.IsAuthenticated)
@@ -52,7 +52,7 @@ namespace cabme.web
                     IncompleteBookings.DataBind();
                 }
             }
-        }
+        }*/
 
         protected bool ShowConfirm(bool confirmed)
         {
@@ -88,7 +88,7 @@ namespace cabme.web
         }
 
         protected void btnConfirm_Click(object sender, EventArgs e)
-        {
+        {/*
             Button btn = sender as Button;
             TextBox txtArrival = btn.Parent.FindControl("txtArrival") as TextBox;
             int minutes = 0;
@@ -107,7 +107,7 @@ namespace cabme.web
                 BookHub.SendClientMessage(booking.PhoneNumber, msg);
 
                 BindData();
-            }
+            }*/
         }
 
         protected void btnIndependent_Click(object sender, EventArgs e)
@@ -122,7 +122,7 @@ namespace cabme.web
 
         protected void btnRefresh_Click(object sender, EventArgs e)
         {
-            BindData();
+            /*BindData();*/
         }
 
         protected void listBookings_ItemDataBound(object sender, RepeaterItemEventArgs e)

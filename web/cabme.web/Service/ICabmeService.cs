@@ -27,6 +27,14 @@ namespace cabme.web.Service
         #region Bookings
 
         [WebInvoke(Method = "GET",
+           UriTemplate = "taxibookings?name={name}&confirmed={confirmed}&open={open}&after={after}",
+           RequestFormat = WebMessageFormat.Json,
+           ResponseFormat = WebMessageFormat.Json,
+           BodyStyle = WebMessageBodyStyle.Bare)]
+        [OperationContract]
+        Bookings GetAllTaxiBookings(string name, string confirmed, string open, string after);
+
+        [WebInvoke(Method = "GET",
            UriTemplate = "bookings?number={number}&active={active}",
            RequestFormat = WebMessageFormat.Json,
            ResponseFormat = WebMessageFormat.Json,

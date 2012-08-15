@@ -1,5 +1,51 @@
 ﻿
 $(document).ready(function () {
+    setupTabs();
+    ko.applyBindings(new BookingViewModel());
+});
+function Booking(id, phoneNumber, numberOfPeople, pickupTime, suburb, addrFrom, addrTo, confirmed) {
+    var self = this;
+    self.id = id;
+    self.phoneNumber = phoneNumber;
+    self.numberOfPeople = numberOfPeople;
+    self.pickupTime = pickupTime;
+    self.suburb = suburb;
+    self.addrFrom = addrFrom;
+    self.addrTo = addrTo;
+    self.confirmed = confirmed;
+}
+function BookingViewModel() {
+    var self = this;
+    self.bookings = ko.observableArray();
+    self.loadData = function () {
+        if (taxiId) {
+            var params = 'name=' + taxiId + '&confirmed=false&open=true';
+            if (self.bookings().length > 0) {
+                params += '&after=' + self.bookings()[0].id;
+            }
+            $.getJSON('/service/cabmeservice.svc/taxibookings?' + params, function (json) {
+                $.each(json, function (index, booking) {
+                    var suburbName = "N/A";
+                    if (booking.SuburbFrom && booking.SuburbFrom != null) {
+                        suburbName = booking.SuburbFrom.Name;
+                    }
+                    var newBooking = new Booking(booking.Id, booking.PhoneNumber, booking.NumberOfPeople, booking.PickupTime, suburbName, booking.AddrFrom, booking.AddrTo, booking.Confirmed);
+                    self.bookings.unshift(newBooking);
+                });
+            });
+        } else {
+        }
+    };
+    self.loadData();
+}
+function btnRefresh() {
+    $('#pendingBookings').slideUp(); 
+
+    //so that the image button doesn't postback
+    return false;
+}
+
+function setupTabs() {
     $('#tab1').show();
     $('#tab2').hide();
     $('#tab3').hide();
@@ -26,4 +72,4 @@ $(document).ready(function () {
         $('#tab3').fadeIn();
         $('#htab3').addClass('current');
     });
-});
+}

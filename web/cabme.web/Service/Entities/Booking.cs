@@ -251,7 +251,7 @@ namespace cabme.web.Service.Entities
             }
         }
 
-        public static Bookings GetAllTaxiBookingsForUser(string userName)
+        public static Bookings GetAllTaxiBookingsForUser(string userName, bool confirmed, bool open, int afterId)
         {
             using (Data.contentDataContext context = new Data.contentDataContext())
             {
@@ -261,7 +261,21 @@ namespace cabme.web.Service.Entities
                           select userTaxi.TaxiId).SingleOrDefault();
                 if (id > 0)
                 {
-                    return new Bookings(AllQueryableBookings(context).Where(p => p.TaxiId == id && p.Active).ToList());
+                    if (confirmed)
+                    {
+                        return new Bookings(AllQueryableBookings(context).Where(p => p.TaxiId == id && p.Active && p.Confirmed && p.Id > afterId).OrderBy(p => p.LastModified).ToList());
+                    }
+                    else
+                    {
+                        if (open)
+                        {
+                            return new Bookings(AllQueryableBookings(context).Where(p => p.TaxiId == id && p.Active && !p.Confirmed && p.Id > afterId && p.dPickupTime.AddMinutes(30) > DateTime.Now).OrderBy(p => p.LastModified).ToList());
+                        }
+                        else
+                        {
+                            return new Bookings(AllQueryableBookings(context).Where(p => p.TaxiId == id && p.Active && !p.Confirmed && p.Id > afterId && p.dPickupTime.AddMinutes(30) < DateTime.Now).OrderBy(p => p.LastModified).ToList());
+                        }
+                    }
                 }
                 else
                 {

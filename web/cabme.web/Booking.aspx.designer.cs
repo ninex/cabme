@@ -13,39 +13,21 @@ namespace cabme.web {
     public partial class BookingPage {
         
         /// <summary>
-        /// btnRefresh control.
+        /// btnConfirm control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ImageButton btnRefresh;
+        protected global::System.Web.UI.WebControls.Button btnConfirm;
         
         /// <summary>
-        /// ActiveBookings control.
+        /// btnIndependent control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater ActiveBookings;
-        
-        /// <summary>
-        /// CompletedBookings control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater CompletedBookings;
-        
-        /// <summary>
-        /// IncompleteBookings control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater IncompleteBookings;
+        protected global::System.Web.UI.WebControls.Button btnIndependent;
     }
 }

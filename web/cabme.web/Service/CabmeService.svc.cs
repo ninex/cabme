@@ -51,6 +51,36 @@ namespace cabme.web.Service
 
         #region Bookings
 
+        public Bookings GetAllTaxiBookings(string name, string confirmed, string open, string after)
+        {
+            try
+            {
+                if (String.IsNullOrEmpty(name))
+                {
+                    WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.BadRequest;
+                    return null;
+                }
+                int afterId = 0;
+                if (!String.IsNullOrEmpty(after))
+                {
+                    int.TryParse(after, out afterId);
+                }
+                bool bConfirmed = false, bOpen = false;
+                if (bool.TryParse(confirmed, out bConfirmed))
+                {
+                    bool.TryParse(open, out bOpen);
+                    return Booking.GetAllTaxiBookingsForUser(name, bConfirmed, bOpen, afterId);
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.InternalServerError;
+                Elmah.ErrorLog.GetDefault(null).Log(new Elmah.Error(ex));
+                return null;
+            }
+        }
+
         public Booking MakeBooking(Booking booking)
         {
             try
