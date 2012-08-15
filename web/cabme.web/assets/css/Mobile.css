@@ -33,6 +33,12 @@ h3
 	max-width: 270px;
 	height: 60px;
 }
+.table
+{
+	margin: 0px;
+	padding: 15px;
+	display: table;
+}
 #book
 {
 	font-size: 1.5em;

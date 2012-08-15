@@ -6,8 +6,10 @@ var lstOfsuburbs = {};
 
 $(document).ready(function () {
     window.hubReady.done(function () {
-        $('#btnMakeFull').fadeIn();
-        $('#btnBookMin').fadeIn();
+        $('#loading').hide();
+        $('#btnMakeFull').show();
+        $('#btnBookMin').show();
+        $('#step1').fadeIn();
     });
     bookHub = $.connection.bookHub;
     bookHub.showMessage = function (message) {
@@ -43,7 +45,6 @@ function mapsLoaded() {
     geocoder = new google.maps.Geocoder();
     service = new google.maps.DistanceMatrixService();
     directionsService = new google.maps.DirectionsService();
-    $('#loading').hide();
 }
 
 function cityChanged() {
@@ -313,7 +314,7 @@ function distanceResults(response, status) {
 
 }
 function popup(header, msg) {
-    $('<div id="pop" class="popContainer"><div class="pop"><h1>' + header + '</h1><p>' + msg + '</p><input type="button" value="OK" onclick="removePop();" /></div></div>').insertAfter('#loading');
+    $('<div id="pop" class="popContainer"><div class="pop"><h1>' + header + '</h1><p>' + msg + '</p><input type="button" class="button" value="OK" onclick="removePop();" /></div></div>').insertAfter('#loading');
 }
 function removePop() {
     $('#pop').remove();

@@ -12,10 +12,10 @@
         <div id="loading" class="loading">
             <img src="assets/images/loader.gif" alt="loading" />
         </div>
-        <div id="step1">
-            <p id="btnMakeFull" onclick="makeFull();" class="clickMe" style="display:none;">
+        <div id="step1" style="display: none">
+            <p id="btnMakeFull" onclick="makeFull();" class="clickMe" style="display: none;">
                 Switch to detailed booking.</p>
-            <div style="display: table; width: 100%;">
+            <div style="width: 100%;" class="table">
                 <div class="row">
                     <div class="cell">
                         <img src="assets/images/city.png" alt="City" />
@@ -96,36 +96,44 @@
                     </div>
                 </div>
             </div>
-            <input type="button" id="btnBookMin" value="Book" onclick="step1Min();" style="display:none;" class="button" />
-            <input full style="display: none" type="button" id="btnConfirm" value="Next" onclick="step1();" class="button"/>
+            <div style="margin: 10px auto; width: 100%; text-align: center;">
+                <input type="button" id="btnBookMin" value="Book" onclick="step1Min();" style="display: none;"
+                    class="button" />
+                <input full style="display: none" type="button" id="btnConfirm" value="Next" onclick="step1();"
+                    class="button" />
+            </div>
         </div>
-        <div id="step2" style="display: none">
-            <div style="display: table; width: 100%">
-                <div class="row">
-                    <div class="cell">
+        <div id="step2" style="display: none;">
+            <div style="width: 100%;padding:0px;" class="table">
+                <div style="display: table; width: 100%;padding:15px 15px 0px 15px;">
+                    <div class="row">
+                        <div class="cell">
+                        </div>
+                        <div class="lastCell">
+                            <div id="txtDistance">
+                            </div>
+                        </div>
                     </div>
-                    <div class="lastCell">
-                        <div id="txtDistance">
+                    <div class="row">
+                        <div class="cell">
+                            <img src="assets/images/logo.png" alt="Taxi" /></div>
+                        <div class="lastCell">
+                            <select id="ddlTaxi">
+                            </select>
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="cell">
-                        <img src="assets/images/logo.png" alt="Taxi" /></div>
-                    <div class="lastCell">
-                        <select id="ddlTaxi">
-                        </select>
-                    </div>
+                <p style="padding:0px 15px;">
+                    Estimated route
+                </p>
+                <div id="map" style="overflow: hidden;padding:0px 15px 15px 15px;">
                 </div>
             </div>
-            <p>
-                Estimated route
-            </p>
-            <div id="map" style="overflow: hidden;">
+            <div style="margin: 10px auto; width: 100%; text-align: center;">
+                <input type="button" id="btnBook" value="Book" onclick="step2();" class="button" />
             </div>
-            <input type="button" id="btnBook" value="Book" onclick="step2();" class="button" />
         </div>
-        <div id="step3" style="display: none; border: 1px solid #000; margin: 5px; padding: 5px;">
+        <div id="step3" style="display: none;width:100%;" class="table">
             <h3>
                 Booking status</h3>
             <div id="msgStatus" class="status">
@@ -134,11 +142,21 @@
             </div>
         </div>
     </div>
-    <p> Disclaimer: This is a beta form and doesn't book a taxi.</p> <%}
+    <p>
+        Disclaimer: This is a beta form and doesn't book a taxi.</p>
+    <%}
        else
-       { %> <h2>
-    Coming soon </h2> <p> We are currently in dev stages on the android app. </p> <p>
-    Mobile web development has also started. </p> <%} %>
+       { %>
+    <h2>
+        Coming soon
+    </h2>
+    <p>
+        We are currently in dev stages on the android app.
+    </p>
+    <p>
+        Mobile web development has also started.
+    </p>
+    <%} %>
 </asp:Content>
 <asp:Content ContentPlaceHolderID="Scripts" runat="server" ID="Scripts">
     <script type="text/javascript" src="assets/js/book.js"></script>
