@@ -2,7 +2,7 @@
 
 namespace cabme.web.Service.Entities
 {
-    [DataContract(Namespace = "http://cabme.co.za/booking")]
+    [DataContract(Namespace = "http://cabme.co.za/confirmation")]
     public class Confirmation
     {
         [DataMember]
