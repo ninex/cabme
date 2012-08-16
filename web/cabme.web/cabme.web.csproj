@@ -96,8 +96,10 @@
     <Content Include="assets\images\refresh.png" />
     <Content Include="assets\js\book.js" />
     <Content Include="assets\js\booking.js" />
+    <Content Include="assets\js\invoices.js" />
     <Content Include="Booking.aspx" />
     <Content Include="Confirm.aspx" />
+    <Content Include="Invoices.aspx" />
     <Content Include="Review.aspx" />
     <Content Include="Reviews.aspx" />
     <Content Include="Scripts\jquery-1.7.2-vsdoc.js" />
@@ -188,6 +190,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Invoices.aspx.cs">
+      <DependentUpon>Invoices.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Invoices.aspx.designer.cs">
+      <DependentUpon>Invoices.aspx</DependentUpon>
+    </Compile>
     <Compile Include="MobileSite.Master.cs">
       <DependentUpon>MobileSite.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -214,6 +223,7 @@
       <DependentUpon>CabmeService.svc</DependentUpon>
     </Compile>
     <Compile Include="Service\Entities\Confirmation.cs" />
+    <Compile Include="Service\Entities\Invoice.cs" />
     <Compile Include="Service\Entities\Review.cs" />
     <Compile Include="Service\Entities\Suburb.cs" />
     <Compile Include="Service\Entities\Taxi.cs" />

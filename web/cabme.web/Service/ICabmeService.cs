@@ -79,5 +79,17 @@ namespace cabme.web.Service
         Suburbs GetAllSuburbsForCity(string city);
 
         #endregion
+
+        #region Invoices
+
+        [WebInvoke(Method = "GET",
+           UriTemplate = "invoice?name={name}&month={month}&year={year}",
+           RequestFormat = WebMessageFormat.Json,
+           ResponseFormat = WebMessageFormat.Json,
+           BodyStyle = WebMessageBodyStyle.Bare)]
+        [OperationContract]
+        Invoice GetInvoice(string name, string month, string year);
+
+        #endregion
     }
 }

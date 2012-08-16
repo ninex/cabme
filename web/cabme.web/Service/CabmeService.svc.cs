@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.ServiceModel;
-using System.ServiceModel.Activation;
-using System.ServiceModel.Web;
-using System.Text;
-using cabme.web.Service.Entities;
 using System.Net;
-using System.Web;
+using System.ServiceModel;
+using System.ServiceModel.Web;
+using cabme.web.Service.Entities;
 
 namespace cabme.web.Service
 {
@@ -204,6 +198,30 @@ namespace cabme.web.Service
                 {
                     return Suburb.GetAllByCity(city);
                 }
+            }
+            catch (Exception ex)
+            {
+                WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.InternalServerError;
+                Elmah.ErrorLog.GetDefault(null).Log(new Elmah.Error(ex));
+                return null;
+            }
+        }
+
+        #endregion
+
+        #region Invoices
+
+        public Invoice GetInvoice(string name, string month, string year)
+        {
+            try
+            {
+                int iMonth = 0, iYear = 0;
+                if (String.IsNullOrEmpty(name) || !int.TryParse(month, out iMonth) || !int.TryParse(year, out iYear))
+                {
+                    WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.BadRequest;
+                    return null;
+                }
+                return Invoice.GetInvoice(name, iMonth, iYear);
             }
             catch (Exception ex)
             {

@@ -59,6 +59,7 @@
                                 <li><a href="#" title="Actions">Actions</a>
                                     <ul>
                                         <li><a href="Booking.aspx" title="View Bookings">View</a></li>
+                                        <li><a href="Invoices.aspx" title="View Invoices">Invoices</a></li>
                                         <li class="last">
                                             <asp:LoginStatus ID="HeadLoginStatus" runat="server" LogoutAction="Redirect" LogoutText="Log Out"
                                                 LogoutPageUrl="~/" />
