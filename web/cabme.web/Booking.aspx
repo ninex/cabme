@@ -24,13 +24,13 @@
                         You have new bookings awaiting confirmation. Refresh to view.</p>
                 </div>
                 <div data-bind="foreach: {data: openBookings, afterAdd: showNewBooking, beforeRemove: removeBooking}">
-                    <div class="table">
+                    <div class="table" style="width:80%;" data-bind="fadeVisible: confirmed">
                         <div class="row">
                             <div class="cell">
                                 <b>Phone Number: </b>
                             </div>
                             <div class="cell lastCell">
-                                <div data-bind="text: phoneNumber, visible: confirmed == true || isTaxi == false || typeof isTaxi == 'undefined'">
+                                <div data-bind="text: phoneNumber, visible: confirmed() == true || isTaxi == false || typeof isTaxi == 'undefined'">
                                 </div>
                             </div>
                         </div>
@@ -66,20 +66,20 @@
                                 <b>From: </b>
                             </div>
                             <div class="cell lastCell">
-                                <div data-bind="text: addrFrom, visible: confirmed == true || isTaxi == false || typeof isTaxi == 'undefined'">
+                                <div data-bind="text: addrFrom, visible: confirmed() == true || isTaxi == false || typeof isTaxi == 'undefined'">
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row" data-bind="visible: typeof addrTo != 'undefined' && addrTo != '' && addrTo != null">
                             <div class="cell">
                                 <b>To: </b>
                             </div>
                             <div class="cell lastCell">
-                                <div data-bind="text: addrTo, visible: confirmed == true || isTaxi == false || typeof isTaxi == 'undefined'">
+                                <div data-bind="text: addrTo, visible: confirmed() == true || isTaxi == false || typeof isTaxi == 'undefined'">
                                 </div>
                             </div>
                         </div>
-                        <div class="row" data-bind="visible: confirmed == false && isTaxi == true">
+                        <div class="row" data-bind="visible: confirmed() == false && isTaxi == true">
                             <div class="cell">
                                 <b>Driver Code: </b>
                             </div>
@@ -87,7 +87,7 @@
                                 <input type="text" maxlength="8" style="width: 40px;" data-bind="value: refCode" />
                             </div>
                         </div>
-                        <div class="row" data-bind="visible: confirmed == false && isTaxi == true">
+                        <div class="row" data-bind="visible: confirmed() == false && isTaxi == true">
                             <div class="cell">
                                 <b>Minutes to arrival: </b>
                             </div>
@@ -95,7 +95,7 @@
                                 <input type="text" maxlength="2" style="width: 40px;" data-bind="value: arrival" />
                             </div>
                         </div>
-                        <div class="row" data-bind="visible: confirmed == false && isTaxi == true">
+                        <div class="row" data-bind="visible: confirmed() == false && isTaxi == true">
                             <div class="cell">
                             </div>
                             <div class="cell lastCell">
@@ -113,7 +113,7 @@
         </div>
         <div id="tab2" style="display: none">
             <div data-bind="foreach: {data: completedBookings}">
-                <div class="table">
+                <div class="table" style="width:80%;">
                     <div class="row">
                         <div class="cell">
                             <b>Phone Number: </b>
@@ -159,7 +159,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row" data-bind="visible: typeof addrTo != 'undefined' && addrTo != '' && addrTo != null">
                         <div class="cell">
                             <b>To: </b>
                         </div>
@@ -184,7 +184,7 @@
         </div>
         <div id="tab3" style="display: none">
             <div data-bind="foreach: {data: missedBookings}">
-                <div class="table">
+                <div class="table" style="width:80%;">
                     <div class="row">
                         <div class="cell">
                             <b>Phone Number: </b>
@@ -230,7 +230,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row" data-bind="visible: typeof addrTo != 'undefined' && addrTo != '' && addrTo != null">
                         <div class="cell">
                             <b>To: </b>
                         </div>

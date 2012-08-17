@@ -60,10 +60,14 @@ namespace cabme.web.Service
                     int.TryParse(after, out afterId);
                 }
                 bool bConfirmed = false, bOpen = false;
+                bool.TryParse(open, out bOpen);
                 if (bool.TryParse(confirmed, out bConfirmed))
                 {
-                    bool.TryParse(open, out bOpen);
                     return Booking.GetAllTaxiBookingsForUser(name, bConfirmed, bOpen, afterId);
+                }
+                else
+                {
+                    return Booking.GetAllTaxiBookingsForUser(name, null, bOpen, afterId);
                 }
                 return null;
             }

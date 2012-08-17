@@ -12,7 +12,7 @@ function Booking(id, phoneNumber, numberOfPeople, pickupTime, suburb, addrFrom, 
     self.suburb = suburb;
     self.addrFrom = addrFrom;
     self.addrTo = addrTo;
-    self.confirmed = confirmed;
+    self.confirmed = ko.observable(confirmed);
     self.hash = hash;
     self.refCode = ko.observable('');
     self.arrival = ko.observable('');
@@ -26,7 +26,7 @@ function BookingViewModel() {
     self.missedBookings = ko.observableArray();
     self.loadData = function () {
         if (taxiId) {
-            var params = 'name=' + taxiId + '&confirmed=false&open=true';
+            var params = 'name=' + taxiId + '&open=true';
             if (self.openBookings().length > 0) {
                 params += '&after=' + self.openBookings()[0].id;
             }
@@ -42,6 +42,11 @@ function BookingViewModel() {
                 }
                 var newBooking = new Booking(booking.Id, booking.PhoneNumber, booking.NumberOfPeople, booking.PickupTime, suburbName, booking.AddrFrom, booking.AddrTo, booking.Confirmed, booking.Hash, taxiId);
                 self.openBookings.unshift(newBooking);
+                if (newBooking.confirmed()) {
+                    setTimeout(function () {
+                        self.openBookings.remove(newBooking);
+                    }, 300000);
+                }
             });
         });
     };
@@ -90,7 +95,11 @@ function BookingViewModel() {
             url: '/service/cabmeservice.svc/confirmbooking',
             data: JSON.stringify(data),
             success: function (msg) {
-                self.openBookings.remove(booking);
+                booking.confirmed(true);
+                self.completedBookings.unshift(booking);
+                setTimeout(function () {
+                    self.openBookings.remove(booking);
+                }, 300000);
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log(errorThrown);
@@ -114,7 +123,25 @@ function btnRefresh() {
     //so that the image button doesn't postback
     return false;
 }
-
+ko.bindingHandlers.fadeVisible = {
+    update: function (element, valueAccessor) {
+        var value = ko.utils.unwrapObservable(valueAccessor());
+        if (value) {
+            $(element).shake(3, 5, 500);
+        }
+    }
+};
+jQuery.fn.shake = function (intShakes, intDistance, intDuration) {
+    this.each(function () {
+                                $(this).css("position", "relative");
+                                for (var x = 1; x <= intShakes; x++) {
+                                    $(this).animate({ left: (intDistance * -1) }, (((intDuration / intShakes) / 4)))
+                                        .animate({ left: intDistance }, ((intDuration / intShakes) / 2))
+                                        .animate({ left: 0 }, (((intDuration / intShakes) / 4)));
+                                }
+    });
+    return this;
+};
 function setupTabs() {
     $('#tab1').show();
     $('#tab2').hide();
