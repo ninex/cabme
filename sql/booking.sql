@@ -32,7 +32,8 @@ CREATE TABLE [dbo].[Booking](
 	[LastModified] [datetime] NOT NULL,
 	[Created] [datetime] NOT NULL,
 	[Hash] varchar(128) ,
-	[SuburbFromId] int NULL
+	[SuburbFromId] int NULL,
+	[ReferenceCode] varchar(10) NULL
  CONSTRAINT [PK_Booking] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

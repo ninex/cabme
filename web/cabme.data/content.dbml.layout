@@ -99,16 +99,16 @@
         <classShapeMoniker Id="6fa91715-270e-422a-afd8-2997cdcada0e" />
       </nodes>
     </associationConnector>
-    <classShape Id="fb2e39e6-28b8-4a29-82c1-61ffd9ea870e" absoluteBounds="1.25, 1.375, 2, 4.6554182942708326">
+    <classShape Id="068bf4a1-7a1c-4b77-9b31-bad675f98cdc" absoluteBounds="1.25, 0.625, 2, 4.8477197265625">
       <DataClassMoniker Name="/contentDataContext/Booking" />
       <nestedChildShapes>
-        <elementListCompartment Id="df86248b-5f54-4e1a-86f9-f4ad2e2fef16" absoluteBounds="1.2650000000000001, 1.835, 1.9700000000000002, 4.095418294270833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="3a93bdae-93ac-4ee7-9832-91c97e08135a" absoluteBounds="1.2650000000000001, 1.085, 1.9700000000000002, 4.2877197265625" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(2.0625 : 6.03041829427083); (2.0625 : 6.875)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(2.0625 : 5.4727197265625); (2.0625 : 6.875)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/contentDataContext/Booking/Booking_Review" />
       <nodes>
-        <classShapeMoniker Id="fb2e39e6-28b8-4a29-82c1-61ffd9ea870e" />
+        <classShapeMoniker Id="068bf4a1-7a1c-4b77-9b31-bad675f98cdc" />
         <classShapeMoniker Id="6fa91715-270e-422a-afd8-2997cdcada0e" />
       </nodes>
     </associationConnector>

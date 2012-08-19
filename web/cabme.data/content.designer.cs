@@ -1704,6 +1704,8 @@ namespace cabme.data
 		
 		private System.Nullable<int> _SuburbFromId;
 		
+		private string _ReferenceCode;
+		
 		private EntitySet<Review> _Reviews;
 		
     #region Extensibility Method Definitions
@@ -1750,6 +1752,8 @@ namespace cabme.data
     partial void OnHashChanged();
     partial void OnSuburbFromIdChanging(System.Nullable<int> value);
     partial void OnSuburbFromIdChanged();
+    partial void OnReferenceCodeChanging(string value);
+    partial void OnReferenceCodeChanged();
     #endregion
 		
 		public Booking()
@@ -2154,6 +2158,26 @@ namespace cabme.data
 					this._SuburbFromId = value;
 					this.SendPropertyChanged("SuburbFromId");
 					this.OnSuburbFromIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ReferenceCode", DbType="VarChar(10)")]
+		public string ReferenceCode
+		{
+			get
+			{
+				return this._ReferenceCode;
+			}
+			set
+			{
+				if ((this._ReferenceCode != value))
+				{
+					this.OnReferenceCodeChanging(value);
+					this.SendPropertyChanging();
+					this._ReferenceCode = value;
+					this.SendPropertyChanged("ReferenceCode");
+					this.OnReferenceCodeChanged();
 				}
 			}
 		}
