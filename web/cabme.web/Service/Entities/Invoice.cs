@@ -29,7 +29,7 @@ namespace cabme.web.Service.Entities
                 {
                     invoice.Items.Add(new InvoiceItem()
                     {
-                        RefCode = "Cde" + r.Next(5),
+                        RefCode = string.IsNullOrEmpty(booking.ReferenceCode) ? string.Empty : booking.ReferenceCode,
                         PickupTime = booking.PickupTime
                     });
                 }

@@ -163,7 +163,7 @@ namespace cabme.web.Service
         {
             try
             {
-                Booking.Confirm(confirmation.Hash);
+                Booking.Confirm(confirmation.Hash, confirmation.RefCode);
                 string msg;
                 int minutes;
                 if (confirmation.Arrival != null && int.TryParse(confirmation.Arrival, out minutes))

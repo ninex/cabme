@@ -19,7 +19,7 @@ namespace cabme.web
                 string hash = Request.QueryString["hash"];
                 if (!string.IsNullOrEmpty(hash))
                 {
-                    Booking booking = Booking.Confirm(hash);
+                    Booking booking = Booking.Confirm(hash, string.Empty);
                     if (booking == null)
                     {
                         status.InnerHtml = "Booking doesn't exist";

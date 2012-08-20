@@ -91,6 +91,9 @@ namespace cabme.web.Service.Entities
         [DataMember]
         public Taxi SelectedTaxi { get; set; }
 
+        [DataMember]
+        public string ReferenceCode { get; set; }
+
         public static Booking MakeBooking(Booking booking)
         {
             if (booking == null || booking.NumberOfPeople <= 0 || string.IsNullOrEmpty(booking.AddrFrom) || //string.IsNullOrEmpty(booking.AddrTo) ||
@@ -348,7 +351,7 @@ namespace cabme.web.Service.Entities
             }
         }
 
-        public static Booking Confirm(string hash)
+        public static Booking Confirm(string hash, string referenceCode)
         {
             using (Data.contentDataContext context = new Data.contentDataContext())
             {
@@ -357,7 +360,9 @@ namespace cabme.web.Service.Entities
                 {
                     var dbBooking = context.Bookings.Where(p => p.Id == booking.Id).SingleOrDefault();
                     booking.Confirmed = true;
+                    booking.ReferenceCode = referenceCode;
                     dbBooking.Confirmed = true;
+                    dbBooking.ReferenceCode = referenceCode;
                     context.SubmitChanges();
                 }
                 return booking;
@@ -393,6 +398,7 @@ namespace cabme.web.Service.Entities
                        LastModified = booking.LastModified,
                        Created = booking.Created,
                        Hash = booking.Hash,
+                       ReferenceCode = booking.ReferenceCode,
                        SelectedTaxi = new Taxi
                        {
                            Id = taxi.Id,
