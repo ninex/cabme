@@ -1,8 +1,7 @@
 ﻿var computedDistance = 0;
 var service, geocoder, directionsService;
 var bookHub;
-var isFull = false;
-var lstOfsuburbs = {};
+var isMapsLoaded = false;
 
 $(document).ready(function () {
     window.hubReady.done(function () {
@@ -13,12 +12,6 @@ $(document).ready(function () {
     bookHub.showMessage = function (message) {
         $('#msgStatus').append('<p class="status">' + message + '</p>');
     };
-    $('[full]').hide();
-    $('#step2').hide();
-
-    //loadQuickTaxis();
-    //loadSuburbs();
-
     ko.applyBindings(new BookingViewModel());
 });
 function Booking() {
@@ -49,6 +42,13 @@ function Booking() {
     self.confirmed = ko.observable(false);
     self.arrival = ko.observable('');
     self.quickTaxi = ko.observable();
+    self.full = ko.observable(false);
+    self.pickup = ko.computed(function () {
+        return self.addrFrom() + ', ' + self.suburbFrom();
+    }, self);
+    self.drop = ko.computed(function () {
+        return self.addrTo() + ', ' + self.suburbTo();
+    }, self);
     self.suburbFrom.subscribe(function (newValue) {
         var city = self.city();
         localStorage[city + 'suburbFrom'] = newValue;
@@ -57,6 +57,23 @@ function Booking() {
         var city = self.city();
         localStorage[city + 'suburbTo'] = newValue;
     });
+    self.full.subscribe(function (newValue) {
+        if (newValue) {
+            if (!isMapsLoaded) {
+                loadMapScript();
+            }
+            $('[full]').show();
+            $('#lblQuickTaxi').hide();
+            $('#btnBookMin').hide();
+            $('#btnMakeFull').html('Press here to switch to quick booking.');
+        } else {
+            $('[full]').hide();
+            $('#lblQuickTaxi').show();
+            $('#btnBookMin').show();
+            $('#btnMakeFull').html('Press here to switch to detailed booking.');
+        }
+    });
+
 }
 function Taxi(id, name) {
     var self = this;
@@ -154,7 +171,7 @@ function BookingViewModel() {
         var data = {
             "PhoneNumber": self.booking().phoneNumber(),
             "NumberOfPeople": 1,
-            "AddrFrom": self.booking().addrFrom() + ', ' + self.booking().suburbFrom(),
+            "AddrFrom": self.booking().pickup(),
             "ComputedDistance": 0,
             "Active": true,
             "Confirmed": false,
@@ -180,87 +197,59 @@ function BookingViewModel() {
             });
         });
     };
-    self.loadQuickTaxi();
-    self.loadSuburbs();
-}
-/*
-function loadMapScript() {
-var script = document.createElement('script');
-script.type = 'text/javascript';
-script.src = 'http://maps.googleapis.com/maps/api/js?key=AIzaSyB2SQU0TkPbS1-MT4D8fkdvZ4J0JkIeBf8&sensor=false&callback=mapsLoaded';
-document.body.appendChild(script);
-}
-window.onload = loadMapScript;
+    self.step1 = function () {
+        var msg = "";
+        var regDate = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
+        var regTime = /^[0-9]{2}:[0-9]{2}$/;
+        var regNum = /^[0-9]+$/;
+        if (!regDate.test(self.booking().pickupDate())) {
+            msg += "Invalid date specified.<br/>";
+        }
+        if (!regTime.test(self.booking().pickupTime())) {
+            msg += "Invalid time specified.<br/>";
+        }
+        if (!regNum.test(self.booking().numberOfPeople())) {
+            msg += "Invalid number of people specified.<br/>";
+        }
+        if (self.booking().addrFrom().length <= 0 || self.booking().addrTo().length <= 0) {
+            msg += "Please provide an address from and to.<br/>";
+        }
+        if (!regNum.test(self.booking().phoneNumber())) {
+            msg += 'Invalid phone number.<br/>';
+            return;
+        }
+        if (msg.length > 0) {
+            popup('Error', msg);
+            return;
+        }
+        bookHub.announce(self.booking().phoneNumber());
+        $('#loading').show();
 
-function mapsLoaded() {
-geocoder = new google.maps.Geocoder();
-service = new google.maps.DistanceMatrixService();
-directionsService = new google.maps.DirectionsService();
-}*/
-
-function makeFull() {
-    if (!isFull) {
-        $('[full]').show();
-        $('#lblQuickTaxi').hide();
-        $('#btnBookMin').hide();
-        $('#btnMakeFull').html('Press here to switch to quick booking.');
-        isFull = true;
-    } else {
-        $('[full]').hide();
-        $('#lblQuickTaxi').show();
-        $('#btnBookMin').show();
-        $('#btnMakeFull').html('Press here to switch to detailed booking.');
-        isFull = false;
-    }
-}
-
-function step1() {
-    var pickupDate = $('#pickupDate').val();
-    var pickupTime = $('#pickupTime').val();
-    var numPeople = $('#number').val();
-    var origin = $('#from').val();
-    var destination = $('#to').val();
-
-    var msg = "";
-    var regDate = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
-    var regTime = /^[0-9]{2}:[0-9]{2}$/;
-    var regNum = /^[0-9]+$/;
-    if (!regDate.test(pickupDate)) {
-        msg += "Invalid date specified.<br/>";
-    }
-    if (!regTime.test(pickupTime)) {
-        msg += "Invalid time specified.<br/>";
-    }
-    if (!regNum.test(numPeople)) {
-        msg += "Invalid number of people specified.<br/>";
-    }
-    if (origin.length <= 0 || destination.length <= 0) {
-        msg += "Please provide an address from and to.<br/>";
-    }
-    if (!regNum.test($('#txtPhone').val())) {
-        msg += 'Invalid phone number.<br/>';
-        return;
-    }
-    if (msg.length > 0) {
-        popup('Error', msg);
-        return;
-    }
-
-    bookHub.announce($('#txtPhone').val());
-    $('#loading').show();
-
-    origin += ', ' + $('#fromSuburb').attr('selected', true).val();
-    destination += ', ' + $('#toSuburb').attr('selected', true).val();
-
-    service.getDistanceMatrix(
+        service.getDistanceMatrix(
 			  {
-			      origins: [origin],
-			      destinations: [destination],
+			      origins: [self.booking().pickup()],
+			      destinations: [self.booking().drop()],
 			      travelMode: google.maps.TravelMode.DRIVING,
 			      avoidHighways: false,
 			      avoidTolls: false
 			  }, distanceResults);
+    };
+    self.loadQuickTaxi();
+    self.loadSuburbs();
 }
+
+function loadMapScript() {
+    var script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = 'http://maps.googleapis.com/maps/api/js?key=AIzaSyB2SQU0TkPbS1-MT4D8fkdvZ4J0JkIeBf8&sensor=false&callback=mapsLoaded';
+    document.body.appendChild(script);
+}
+function mapsLoaded() {
+    geocoder = new google.maps.Geocoder();
+    service = new google.maps.DistanceMatrixService();
+    directionsService = new google.maps.DirectionsService();
+}
+
 function step2() {
 
     $('#step2').slideUp();

@@ -13,7 +13,7 @@
             <img src="assets/images/loader.gif" alt="loading" />
         </div>
         <div id="step1" style="display: none">
-            <p id="btnMakeFull" onclick="makeFull();" class="clickMe">
+            <p id="btnMakeFull" class="clickMe" data-bind="click: function(data, event) { booking().full(!booking().full()); }">
                 Switch to detailed booking.</p>
             <div style="width: 100%;" class="table">
                 <div class="row">
@@ -79,7 +79,7 @@
                         <img src="assets/images/drop.png" alt="Drop Off" />
                     </div>
                     <div class="lastcell">
-                        <input type="text" id="to" data-bind="value: booking().addrTo()" />
+                        <input type="text" id="to" data-bind="value: booking().addrTo" />
                     </div>
                 </div>
                 <div class="row" full style="display: none">
@@ -102,7 +102,7 @@
             </div>
             <div style="margin: 10px auto; width: 100%; text-align: center;">
                 <input type="button" id="btnBookMin" value="Book" data-bind="click: step1Min" class="button" />
-                <input full style="display: none" type="button" id="btnConfirm" value="Next" onclick="step1();"
+                <input full style="display: none" type="button" id="btnConfirm" value="Next" data-bind="click: step1"
                     class="button" />
             </div>
         </div>
