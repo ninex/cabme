@@ -13,7 +13,7 @@
             <img src="assets/images/loader.gif" alt="loading" />
         </div>
         <div id="step1" style="display: none">
-            <p id="btnMakeFull" onclick="makeFull();" class="clickMe" style="display: none;">
+            <p id="btnMakeFull" onclick="makeFull();" class="clickMe">
                 Switch to detailed booking.</p>
             <div style="width: 100%;" class="table">
                 <div class="row">
@@ -21,7 +21,7 @@
                         <img src="assets/images/city.png" alt="City" />
                     </div>
                     <div class="lastcell">
-                        <select id="city" onchange="cityChanged();">
+                        <select id="city" data-bind="value: booking().city">
                             <option selected value="Cape Town">Cape Town</option>
                             <option value="Johannesburg">Johannesburg</option>
                         </select>
@@ -32,41 +32,45 @@
                         <img src="assets/images/phone.png" alt="Phone Number" />
                     </div>
                     <div class="lastcell">
-                        <input type="tel" id="txtPhone" /></div>
+                        <input type="tel" id="txtPhone" data-bind="value: booking().phoneNumber()" />
+                    </div>
                 </div>
                 <div class="row" full style="display: none">
                     <div class="cell">
                         <img src="assets/images/calendar.png" alt="Pickup date" />
                     </div>
                     <div class="lastcell">
-                        <input id="pickupDate" type="date" /></div>
+                        <input id="pickupDate" type="date" data-bind="value: booking().pickupDate()" />
+                    </div>
                 </div>
                 <div class="row" full style="display: none">
                     <div class="cell">
                     </div>
                     <div class="lastcell">
-                        <input id="pickupTime" type="time" /></div>
+                        <input id="pickupTime" type="time" data-bind="value: booking().pickupTime()" />
+                    </div>
                 </div>
                 <div class="row" full style="display: none">
                     <div class="cell">
                         <img src="assets/images/people.png" alt="Number of people" />
                     </div>
                     <div class="lastcell">
-                        <input type="number" id="number" value="1" /></div>
+                        <input type="number" id="number" data-bind="value: booking().numberOfPeople()" />
+                    </div>
                 </div>
                 <div class="row">
                     <div class="cell">
                         <img src="assets/images/pickup.png" alt="Pickup From" />
                     </div>
                     <div class="lastcell">
-                        <input type="text" id="from" />
+                        <input type="text" id="from" data-bind="value: booking().addrFrom()" />
                     </div>
                 </div>
                 <div class="row">
                     <div class="cell">
                     </div>
                     <div class="lastcell">
-                        <select id="fromSuburb" onchange="suburbChanged();">
+                        <select id="fromSuburb" data-bind="value: booking().suburbFrom, options: suburbs(), optionsText: 'name', optionsValue: 'fullAddress'">
                         </select>
                     </div>
                 </div>
@@ -75,14 +79,14 @@
                         <img src="assets/images/drop.png" alt="Drop Off" />
                     </div>
                     <div class="lastcell">
-                        <input type="text" id="to" />
+                        <input type="text" id="to" data-bind="value: booking().addrTo()" />
                     </div>
                 </div>
                 <div class="row" full style="display: none">
                     <div class="cell">
                     </div>
                     <div class="lastcell">
-                        <select id="toSuburb" onchange="suburbChanged();">
+                        <select id="toSuburb" data-bind="value: booking().suburbTo, options: suburbs(), optionsText: 'name', optionsValue: 'fullAddress'">
                         </select>
                     </div>
                 </div>
@@ -91,21 +95,20 @@
                         <img src="assets/images/logo.png" alt="Taxi" />
                     </div>
                     <div class="lastcell">
-                        <select id="ddlQuickTaxi">
+                        <select id="ddlQuickTaxi" data-bind="options: taxis(), optionsText: 'name',value: booking().quickTaxi">
                         </select>
                     </div>
                 </div>
             </div>
             <div style="margin: 10px auto; width: 100%; text-align: center;">
-                <input type="button" id="btnBookMin" value="Book" onclick="step1Min();" style="display: none;"
-                    class="button" />
+                <input type="button" id="btnBookMin" value="Book" data-bind="click: step1Min" class="button" />
                 <input full style="display: none" type="button" id="btnConfirm" value="Next" onclick="step1();"
                     class="button" />
             </div>
         </div>
         <div id="step2" style="display: none;">
-            <div style="width: 100%;padding:0px;" class="table">
-                <div style="display: table; width: 100%;padding:15px 15px 0px 15px;">
+            <div style="width: 100%; padding: 0px;" class="table">
+                <div style="display: table; width: 100%; padding: 15px 15px 0px 15px;">
                     <div class="row">
                         <div class="cell">
                         </div>
@@ -123,17 +126,17 @@
                         </div>
                     </div>
                 </div>
-                <p style="padding:0px 15px;">
+                <p style="padding: 0px 15px;">
                     Estimated route
                 </p>
-                <div id="map" style="overflow: hidden;padding:0px 15px 15px 15px;">
+                <div id="map" style="overflow: hidden; padding: 0px 15px 15px 15px;">
                 </div>
             </div>
             <div style="margin: 10px auto; width: 100%; text-align: center;">
                 <input type="button" id="btnBook" value="Book" onclick="step2();" class="button" />
             </div>
         </div>
-        <div id="step3" style="display: none;width:100%;" class="table">
+        <div id="step3" style="display: none; width: 100%;" class="table">
             <h3>
                 Booking status</h3>
             <div id="msgStatus" class="status">
@@ -159,5 +162,6 @@
     <%} %>
 </asp:Content>
 <asp:Content ContentPlaceHolderID="Scripts" runat="server" ID="Scripts">
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/knockout/2.1.0/knockout-min.js"></script>
     <script type="text/javascript" src="assets/js/book.js"></script>
 </asp:Content>
