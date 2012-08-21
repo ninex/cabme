@@ -66,12 +66,12 @@ function Booking() {
             $('[full]').show();
             $('#lblQuickTaxi').hide();
             $('#btnBookMin').hide();
-            $('#btnMakeFull').html('Press here to switch to quick booking.');
+            $('#btnMakeFull').html('Switch to quick booking.');
         } else {
             $('[full]').hide();
             $('#lblQuickTaxi').show();
             $('#btnBookMin').show();
-            $('#btnMakeFull').html('Press here to switch to detailed booking.');
+            $('#btnMakeFull').html('Switch to detailed booking.');
         }
     });
 
