@@ -32,7 +32,7 @@
                         <img src="assets/images/phone.png" alt="Phone Number" />
                     </div>
                     <div class="lastcell">
-                        <input type="tel" id="txtPhone" data-bind="value: booking().phoneNumber()" />
+                        <input type="tel" id="txtPhone" placeholder="Phone number" data-bind="value: booking().phoneNumber" />
                     </div>
                 </div>
                 <div class="row" full style="display: none">
@@ -40,14 +40,14 @@
                         <img src="assets/images/calendar.png" alt="Pickup date" />
                     </div>
                     <div class="lastcell">
-                        <input id="pickupDate" type="date" data-bind="value: booking().pickupDate()" />
+                        <input id="pickupDate" type="date" placeholder="Pickup date" data-bind="value: booking().pickupDate" />
                     </div>
                 </div>
                 <div class="row" full style="display: none">
                     <div class="cell">
                     </div>
                     <div class="lastcell">
-                        <input id="pickupTime" type="time" data-bind="value: booking().pickupTime()" />
+                        <input id="pickupTime" type="time" placeholder="Pickup time" data-bind="value: booking().pickupTime" />
                     </div>
                 </div>
                 <div class="row" full style="display: none">
@@ -55,7 +55,7 @@
                         <img src="assets/images/people.png" alt="Number of people" />
                     </div>
                     <div class="lastcell">
-                        <input type="number" id="number" data-bind="value: booking().numberOfPeople()" />
+                        <input type="number" id="number" placeholder="Number of people" data-bind="value: booking().numberOfPeople" />
                     </div>
                 </div>
                 <div class="row">
@@ -63,7 +63,7 @@
                         <img src="assets/images/pickup.png" alt="Pickup From" />
                     </div>
                     <div class="lastcell">
-                        <input type="text" id="from" data-bind="value: booking().addrFrom()" />
+                        <input type="text" id="from" placeholder="Pickup from" data-bind="value: booking().addrFrom" />
                     </div>
                 </div>
                 <div class="row">
@@ -79,7 +79,7 @@
                         <img src="assets/images/drop.png" alt="Drop Off" />
                     </div>
                     <div class="lastcell">
-                        <input type="text" id="to" data-bind="value: booking().addrTo" />
+                        <input type="text" id="to" placeholder="Drop off" data-bind="value: booking().addrTo" />
                     </div>
                 </div>
                 <div class="row" full style="display: none">
