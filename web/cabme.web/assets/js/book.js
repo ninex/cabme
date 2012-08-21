@@ -1,5 +1,4 @@
-﻿var computedDistance = 0;
-var service, geocoder, directionsService;
+﻿var service, geocoder, directionsService;
 var bookHub;
 var isMapsLoaded = false;
 
@@ -39,9 +38,11 @@ function Booking() {
     self.suburbTo = ko.observable('');
     self.addrFrom = ko.observable(from);
     self.addrTo = ko.observable('');
+    self.computedDistance = ko.observable('');
+    self.displayDistance = ko.observable('');
     self.confirmed = ko.observable(false);
-    self.arrival = ko.observable('');
     self.quickTaxi = ko.observable();
+    self.taxi = ko.observable();
     self.full = ko.observable(false);
     self.pickup = ko.computed(function () {
         return self.addrFrom() + ', ' + self.suburbFrom();
@@ -75,10 +76,18 @@ function Booking() {
     });
 
 }
-function Taxi(id, name) {
+function Taxi(id, name, estimate) {
     var self = this;
     self.id = id;
     self.name = name;
+    self.estimated = ko.observable(estimate);
+    self.display = ko.computed(function () {
+        if (self.estimated() > 0) {
+            return self.name + ' - R' + (parseInt(self.estimated()) / 100);
+        } else {
+            return self.name;
+        }
+    }, self);
 }
 function Suburb(id, name, city, postalCode) {
     var self = this;
@@ -96,7 +105,7 @@ function BookingViewModel() {
     self.loadQuickTaxi = function () {
         $.getJSON('/service/cabmeservice.svc/taxis', function (json) {
             $.each(json, function (index, taxi) {
-                self.taxis.push(new Taxi(taxi.Id, taxi.Name));
+                self.taxis.push(new Taxi(taxi.Id, taxi.Name, ''));
             });
         });
     };
@@ -232,12 +241,97 @@ function BookingViewModel() {
 			      travelMode: google.maps.TravelMode.DRIVING,
 			      avoidHighways: false,
 			      avoidTolls: false
-			  }, distanceResults);
+			  }, self.distanceResults);
+    };
+    self.step2 = function () {
+        $('#step2').slideUp();
+        $('#loading').show();
+        if (supports_html5_storage()) {
+            localStorage["from"] = self.booking().addrFrom();
+            localStorage["phone"] = self.booking().phoneNumber();
+        }
+        var suburbFrom = ko.utils.arrayFirst(self.suburbs(), function (suburb) {
+            return suburb.fullAddress === self.booking().suburbFrom();
+        });
+
+        var data = {
+            "PhoneNumber": self.booking().phoneNumber(),
+            "NumberOfPeople": self.booking().numberOfPeople(),
+            "PickupTime": self.booking().pickupDate() + ' ' + self.booking().pickupTime() + ':00',
+            "AddrFrom": self.booking().pickup(),
+            "AddrTo": self.booking().drop(),
+            "ComputedDistance": self.booking().computedDistance(),
+            "Active": true,
+            "Confirmed": false,
+            "TaxiId": self.booking().taxi().id,
+            "SuburbFromId": suburbFrom != null ? suburbFrom.id : 0
+        };
+
+        $('#step3').show();
+        $('#loading').hide();
+
+        $.ajax({
+            type: "POST",
+            contentType: 'application/json',
+            url: '/service/cabmeservice.svc/booking',
+            data: JSON.stringify(data),
+            success: function (msg) {
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(errorThrown);
+                popup('Server error', 'The booking can not be created due to a server problem.');
+            }
+        });
+    };
+    self.distanceResults = function (response, status) {
+        if (status == google.maps.DistanceMatrixStatus.OK) {
+            var origins = response.originAddresses;
+            var destinations = response.destinationAddresses;
+
+            var element = response.rows[0].elements[0];
+            if (element.status != 'ZERO_RESULTS') {
+                var distance = element.distance.text;
+                var duration = element.duration.text;
+                var from = origins[0];
+                var to = destinations[0];
+                self.booking().displayDistance(distance);
+                self.booking().computedDistance(element.distance.value);
+
+                $.getJSON('/service/cabmeservice.svc/taxis?distance=' + self.booking().computedDistance(), function (json) {
+                    self.taxis.removeAll();
+                    $.each(json, function (index, taxi) {
+                        self.taxis.push(new Taxi(taxi.Id, taxi.Name, taxi.PriceEstimate));
+                    });
+                    $('#step1').slideUp();
+                    $('#step2').show();
+                    var request = {
+                        origin: self.booking().pickup(),
+                        destination: self.booking().drop(),
+                        travelMode: google.maps.TravelMode.DRIVING
+                    };
+                    directionsService.route(request, function (result, status) {
+                        if (status == google.maps.DirectionsStatus.OK) {
+                            var width = $(document).width();
+                            if (width > 480) {
+                                width = 480;
+                            }
+                            $('#map').html('<img style="max-width:100%;max-height:100%;" src="http://maps.googleapis.com/maps/api/staticmap?size=' + width + 'x400&sensor=false&path=weight:5|color:blue|enc:' + result.routes[0].overview_polyline.points + '&markers=label:A|' + from + '&markers=label:B|' + to + '" />');
+                        }
+                    });
+                    $('#loading').hide();
+                });
+            } else {
+                $('#loading').hide();
+                popup('Check Address', 'Can not find both addresses. Please double check.');
+            }
+        } else {
+            $('#loading').hide();
+            popup('Server problem', 'We are having problems accessing the Google Maps service');
+        }
     };
     self.loadQuickTaxi();
     self.loadSuburbs();
 }
-
 function loadMapScript() {
     var script = document.createElement('script');
     script.type = 'text/javascript';
@@ -248,95 +342,6 @@ function mapsLoaded() {
     geocoder = new google.maps.Geocoder();
     service = new google.maps.DistanceMatrixService();
     directionsService = new google.maps.DirectionsService();
-}
-
-function step2() {
-
-    $('#step2').slideUp();
-    if (supports_html5_storage()) {
-        localStorage["from"] = $('#from').val();
-        localStorage["phone"] = $('#txtPhone').val();
-    }
-
-    $('#loading').show();
-    var taxiId = $('#ddlTaxi').attr('selected', true).val();
-    var data = {
-        "PhoneNumber": $('#txtPhone').val(),
-        "NumberOfPeople": $('#number').val(),
-        "PickupTime": $('#pickupDate').val() + ' ' + $('#pickupTime').val() + ':00',
-        "AddrFrom": $('#from').val() + ', ' + $('#fromSuburb').attr('selected', true).val(),
-        "AddrTo": $('#to').val() + ', ' + $('#toSuburb').attr('selected', true).val(),
-        "ComputedDistance": computedDistance,
-        "Active": true,
-        "Confirmed": false,
-        "TaxiId": taxiId,
-        "SuburbFromId": lstOfsuburbs[$('#fromSuburb').attr('selected', true).val()]
-    };
-
-    $('#step3').show();
-    $('#loading').hide();
-
-    $.ajax({
-        type: "POST",
-        contentType: 'application/json',
-        url: '/service/cabmeservice.svc/booking',
-        data: JSON.stringify(data),
-        success: function (msg) {
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            console.log(errorThrown);
-            popup('Server error', 'The booking can not be created due to a server problem.');
-        }
-    });
-}
-
-function distanceResults(response, status) {
-    if (status == google.maps.DistanceMatrixStatus.OK) {
-        var origins = response.originAddresses;
-        var destinations = response.destinationAddresses;
-
-        var element = response.rows[0].elements[0];
-        if (element.status != 'ZERO_RESULTS') {
-            var distance = element.distance.text;
-            var duration = element.duration.text;
-            var from = origins[0];
-            var to = destinations[0];
-            computedDistance = element.distance.value;
-            $('#txtDistance').html(distance);
-
-            $.getJSON('/service/cabmeservice.svc/taxis?distance=' + computedDistance, function (json) {
-                var options = '';
-                $.each(json, function (index, taxi) {
-                    options += '<option value="' + taxi.Id + '">' + taxi.Name + ' - R' + (taxi.PriceEstimate / 100) + '</option>';
-                });
-                $('#ddlTaxi').html(options);
-                $('#step1').slideUp();
-                $('#step2').show();
-                var request = {
-                    origin: $('#from').val() + ', ' + $('#fromSuburb').attr('selected', true).val(),
-                    destination: $('#to').val() + ', ' + $('#toSuburb').attr('selected', true).val(),
-                    travelMode: google.maps.TravelMode.DRIVING
-                };
-                directionsService.route(request, function (result, status) {
-                    if (status == google.maps.DirectionsStatus.OK) {
-                        var width = $(document).width();
-                        if (width > 480) {
-                            width = 480;
-                        }
-                        $('#map').html('<img style="max-width:100%;max-height:100%;" src="http://maps.googleapis.com/maps/api/staticmap?size=' + width + 'x400&sensor=false&path=weight:5|color:blue|enc:' + result.routes[0].overview_polyline.points + '&markers=label:A|' + from + '&markers=label:B|' + to + '" />');
-                    }
-                });
-                $('#loading').hide();
-            });
-        } else {
-            $('#loading').hide();
-            popup('Check Address', 'Can not find both addresses. Please double check.');
-        }
-    } else {
-        $('#loading').hide();
-        popup('Server problem', 'We are having problems accessing the Google Maps service');
-    }
-
 }
 function popup(header, msg) {
     $('<div id="pop" class="popContainer"><div class="pop"><h1>' + header + '</h1><p>' + msg + '</p><input type="button" class="button" value="OK" onclick="removePop();" /></div></div>').insertAfter('#loading');

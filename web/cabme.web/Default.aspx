@@ -95,7 +95,7 @@
                         <img src="assets/images/logo.png" alt="Taxi" />
                     </div>
                     <div class="lastcell">
-                        <select id="ddlQuickTaxi" data-bind="options: taxis(), optionsText: 'name',value: booking().quickTaxi">
+                        <select id="ddlQuickTaxi" data-bind="options: taxis, optionsText: 'name',value: booking().quickTaxi">
                         </select>
                     </div>
                 </div>
@@ -113,7 +113,7 @@
                         <div class="cell">
                         </div>
                         <div class="lastCell">
-                            <div id="txtDistance">
+                            <div id="txtDistance" data-bind="text: booking().displayDistance">
                             </div>
                         </div>
                     </div>
@@ -121,7 +121,7 @@
                         <div class="cell">
                             <img src="assets/images/logo.png" alt="Taxi" /></div>
                         <div class="lastCell">
-                            <select id="ddlTaxi">
+                            <select id="ddlTaxi" data-bind="options: taxis, optionsText: 'display',value: booking().taxi">
                             </select>
                         </div>
                     </div>
@@ -133,7 +133,7 @@
                 </div>
             </div>
             <div style="margin: 10px auto; width: 100%; text-align: center;">
-                <input type="button" id="btnBook" value="Book" onclick="step2();" class="button" />
+                <input type="button" id="btnBook" value="Book" class="button" data-bind="click: step2"/>
             </div>
         </div>
         <div id="step3" style="display: none; width: 100%;" class="table">
