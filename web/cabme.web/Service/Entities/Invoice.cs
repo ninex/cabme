@@ -30,7 +30,8 @@ namespace cabme.web.Service.Entities
                     invoice.Items.Add(new InvoiceItem()
                     {
                         RefCode = string.IsNullOrEmpty(booking.ReferenceCode) ? string.Empty : booking.ReferenceCode,
-                        PickupTime = booking.PickupTime
+                        PickupTime = booking.PickupTime,
+                        SuburbFrom = booking != null ? booking.SuburbFrom.Name : string.Empty
                     });
                 }
                 invoice.Total = "R " + subSet.Count().ToString() + ".00";
@@ -50,6 +51,8 @@ namespace cabme.web.Service.Entities
         public string RefCode { get; set; }
         [DataMember]
         public string PickupTime { get; set; }
+        [DataMember]
+        public string SuburbFrom { get; set; }
     }
 
     [CollectionDataContract(Namespace = "http://cabme.co.za/invoiceitems")]

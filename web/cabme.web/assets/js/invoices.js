@@ -7,7 +7,7 @@ function Invoice(total, items, filter) {
     self.items = ko.observableArray();
     self.filter = filter;
     $.each(items, function (index, item) {
-        self.items.push({ refCode: item.RefCode, time: item.PickupTime });
+        self.items.push({ refCode: item.RefCode, time: item.PickupTime, suburbFrom: item.SuburbFrom });
     });
     this.itemsToShow = ko.computed(function () {
         var filter = this.filter();
@@ -22,6 +22,7 @@ function InvoiceViewModel() {
     self.filter = ko.observable('');
     self.invoice = ko.observableArray();
     self.monthYear = ko.observable('');
+    self.detailed = ko.observable(false);
     self.loadData = function (year, month) {
         if (taxiId) {
             $.getJSON('/service/cabmeservice.svc/invoice?name=' + taxiId + '&month=' + month + '&year=' + year, function (invoice) {

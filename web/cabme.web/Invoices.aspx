@@ -28,20 +28,31 @@
                 $(this).blur();
             }
           }" />
-        <label>
+        <label>Detailed
+            <input type="checkbox" data-bind="checked: detailed" /></label>
+        <label data-bind="visible: detailed()">
             Reference Code :</label>
-        <input type="text" data-bind="value: filter, valueUpdate: 'afterkeydown'" />
+        <input type="text" data-bind="value: filter, valueUpdate: 'afterkeydown', visible: detailed()" />
     </div>
     <div data-bind="foreach: invoice">
-        <div class="table" style="width: 100%">
-            <div style="display: table-header-group" data-bind="">
+        <div class="table" style="width: 100%" data-bind="visible: $root.detailed()">
+            <div style="display: table-header-group">
                 <div class="cell">
-                    <b>Reference Code</b></div>
+                    <b>Suburb From</b>
+                </div>
                 <div class="cell">
-                    <b>Time</b></div>
+                    <b>Reference Code</b>
+                </div>
+                <div class="cell">
+                    <b>Time</b>
+                </div>
             </div>
             <!-- ko foreach: itemsToShow -->
             <div class="row" style="width: 100%">
+                <div class="cell" style="margin: 10px; border-bottom: 1px solid #eee;">
+                    <label data-bind="text: suburbFrom">
+                    </label>
+                </div>
                 <div class="cell" style="margin: 10px; border-bottom: 1px solid #eee;">
                     <label data-bind="text: refCode">
                     </label>
@@ -53,6 +64,28 @@
             </div>
             <!-- /ko -->
             <div class="row">
+                <div class="cell">
+                </div>
+                <div class="cell">
+                </div>
+                <div class="cell" style="text-align: right">
+                    <b>Total:&nbsp;</b><label data-bind="text: total">
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="table" style="width: 100%" data-bind="visible: !$root.detailed()">
+            <div class="row">
+                <div class="cell">
+                </div>
+                <div class="cell">
+                </div>
+                <div class="cell">
+                </div>
+            </div>
+            <div class="row">
+                <div class="cell">
+                </div>
                 <div class="cell">
                 </div>
                 <div class="cell" style="text-align: right">
