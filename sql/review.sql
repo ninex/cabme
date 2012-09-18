@@ -1,5 +1,3 @@
-USE [content]
-GO
 
 IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Review_Booking]') AND parent_object_id = OBJECT_ID(N'[dbo].[Review]'))
 ALTER TABLE [dbo].[Review] DROP CONSTRAINT [FK_Review_Booking]
