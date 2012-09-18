@@ -1690,9 +1690,13 @@ namespace cabme.data
 		
 		private int _EstimatedPrice;
 		
+		private int _WaitingTime;
+		
 		private bool _Active;
 		
 		private bool _Confirmed;
+		
+		private bool _Accepted;
 		
 		private System.Nullable<int> _TaxiId;
 		
@@ -1738,10 +1742,14 @@ namespace cabme.data
     partial void OnComputedDistanceChanged();
     partial void OnEstimatedPriceChanging(int value);
     partial void OnEstimatedPriceChanged();
+    partial void OnWaitingTimeChanging(int value);
+    partial void OnWaitingTimeChanged();
     partial void OnActiveChanging(bool value);
     partial void OnActiveChanged();
     partial void OnConfirmedChanging(bool value);
     partial void OnConfirmedChanged();
+    partial void OnAcceptedChanging(bool value);
+    partial void OnAcceptedChanged();
     partial void OnTaxiIdChanging(System.Nullable<int> value);
     partial void OnTaxiIdChanged();
     partial void OnLastModifiedChanging(System.DateTime value);
@@ -2022,6 +2030,26 @@ namespace cabme.data
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_WaitingTime", DbType="Int NOT NULL")]
+		public int WaitingTime
+		{
+			get
+			{
+				return this._WaitingTime;
+			}
+			set
+			{
+				if ((this._WaitingTime != value))
+				{
+					this.OnWaitingTimeChanging(value);
+					this.SendPropertyChanging();
+					this._WaitingTime = value;
+					this.SendPropertyChanged("WaitingTime");
+					this.OnWaitingTimeChanged();
+				}
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Active", DbType="Bit NOT NULL")]
 		public bool Active
 		{
@@ -2058,6 +2086,26 @@ namespace cabme.data
 					this._Confirmed = value;
 					this.SendPropertyChanged("Confirmed");
 					this.OnConfirmedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Accepted", DbType="Bit NOT NULL")]
+		public bool Accepted
+		{
+			get
+			{
+				return this._Accepted;
+			}
+			set
+			{
+				if ((this._Accepted != value))
+				{
+					this.OnAcceptedChanging(value);
+					this.SendPropertyChanging();
+					this._Accepted = value;
+					this.SendPropertyChanged("Accepted");
+					this.OnAcceptedChanged();
 				}
 			}
 		}
