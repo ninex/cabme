@@ -162,9 +162,8 @@ namespace cabme.web.Service
         {
             try
             {
-                Booking.Confirm(confirmation.Hash, confirmation.RefCode);
                 string msg;
-                int minutes;
+                int minutes = 0;
                 if (confirmation.Arrival != null && int.TryParse(confirmation.Arrival, out minutes))
                 {
                     msg = "Booking confirmed. Taxi will arrive in " + minutes + " min.";
@@ -173,6 +172,7 @@ namespace cabme.web.Service
                 {
                     msg = "Booking confirmed.";
                 }
+                Booking.Confirm(confirmation.Hash, confirmation.RefCode, minutes);
                 if (!string.IsNullOrEmpty(confirmation.PhoneNumber))
                 {
                     cabme.web.Service.Hubs.BookHub.SendClientMessage(confirmation.PhoneNumber, msg);

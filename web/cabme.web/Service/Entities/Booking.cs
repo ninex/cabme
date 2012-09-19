@@ -73,6 +73,12 @@ namespace cabme.web.Service.Entities
         public bool Confirmed { get; set; }
 
         [DataMember]
+        public bool Accepted { get; set; }
+
+        [DataMember]
+        public int WaitingTime { get; set; }
+
+        [DataMember]
         public int TaxiId { get; set; }
 
         public DateTime LastModified { get; set; }
@@ -165,6 +171,8 @@ namespace cabme.web.Service.Entities
                 dataBooking.ComputedDistance = booking.ComputedDistance;
                 dataBooking.Active = booking.Active;
                 dataBooking.Confirmed = booking.Confirmed;
+                dataBooking.Accepted = booking.Accepted;
+                dataBooking.WaitingTime = 0;
                 dataBooking.TaxiId = booking.TaxiId;
                 dataBooking.LastModified = DateTime.Now;
                 dataBooking.Hash = Account.Hash.HashPassword(booking.PickupTime + booking.PhoneNumber);
@@ -325,6 +333,7 @@ namespace cabme.web.Service.Entities
                 }
             }
         }
+
         public static Bookings GetAllActiveBookingsForUser(string userName)
         {
             using (Data.contentDataContext context = new Data.contentDataContext())
@@ -342,6 +351,7 @@ namespace cabme.web.Service.Entities
                 }
             }
         }
+
         public static Booking GetBookingByHash(string hash)
         {
             using (Data.contentDataContext context = new Data.contentDataContext())
@@ -351,7 +361,7 @@ namespace cabme.web.Service.Entities
             }
         }
 
-        public static Booking Confirm(string hash, string referenceCode)
+        public static Booking Confirm(string hash, string referenceCode, int waitingTime)
         {
             using (Data.contentDataContext context = new Data.contentDataContext())
             {
@@ -361,8 +371,10 @@ namespace cabme.web.Service.Entities
                     var dbBooking = context.Bookings.Where(p => p.Id == booking.Id).SingleOrDefault();
                     booking.Confirmed = true;
                     booking.ReferenceCode = referenceCode;
+                    booking.WaitingTime = waitingTime;
                     dbBooking.Confirmed = true;
                     dbBooking.ReferenceCode = referenceCode;
+                    dbBooking.WaitingTime = waitingTime;
                     context.SubmitChanges();
                 }
                 return booking;
@@ -394,6 +406,8 @@ namespace cabme.web.Service.Entities
                        EstimatedPrice = booking.EstimatedPrice,
                        Active = booking.Active,
                        Confirmed = booking.Confirmed,
+                       Accepted = booking.Accepted,
+                       WaitingTime = booking.WaitingTime,
                        TaxiId = booking.TaxiId.HasValue ? booking.TaxiId.Value : 0,
                        LastModified = booking.LastModified,
                        Created = booking.Created,
