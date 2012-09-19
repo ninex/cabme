@@ -11,6 +11,13 @@ $(document).ready(function () {
     bookHub.showMessage = function (message) {
         $('#msgStatus').append('<p class="status">' + message + '</p>');
     };
+    bookHub.confirmBooking = function (time) {
+        if (time && time > 0) {
+            $('#msgStatus').append('<p class="status">Booking confirmed. Taxi will arrive in ' + time + ' minutes.</p>');
+        } else {
+            $('#msgStatus').append('<p class="status">Booking has been confirmed</p>');
+        }
+    };
     ko.applyBindings(new BookingViewModel());
 });
 function Booking() {

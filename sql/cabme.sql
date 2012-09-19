@@ -396,6 +396,7 @@ INSERT INTO [dbo].UserRole (RoleId, UserId)
 INSERT INTO [dbo].UserRole (RoleId, UserId)
 	VALUES (2,2)
 
+
 	     
 INSERT INTO dbo.Taxi (Name, PhoneNumber, RatePerKm, MinRate, Units, StartOfService, EndOfService, Is24HService, FleetSize)
 	VALUES ('Taxi A', '02188888888', 900, 2000, 50, '2012-08-03 00:00:00.000','2012-08-03 00:00:00.000', 1, 50)
@@ -403,6 +404,13 @@ INSERT INTO dbo.Taxi (Name, PhoneNumber, RatePerKm, MinRate, Units, StartOfServi
 	VALUES ('Taxi B', '0219999999', 950, 1800, 1, '2012-08-03 00:00:00.000','2012-08-03 00:00:00.000', 1, 40)
 INSERT INTO [dbo].UserTaxi (UserId, TaxiId)
 	VALUES (2, 1)
+	
+INSERT INTO [dbo].[ContactDetail]([TaxiId],[PhoneNumber],[BookingEmail],[BookingSMS],[UseEmail])
+VALUES (1,'0825098233','abriegreeff+testTaxiA@gmail.com','0825098233',1)
+
+INSERT INTO [dbo].[ContactDetail]([TaxiId],[PhoneNumber],[BookingEmail],[BookingSMS],[UseEmail])
+VALUES (2,'0825098233','abriegreeff+testTaxiB@gmail.com','0825098233',1)
+	
 --City Bowl 
 IF (Select COUNT(1) FROM dbo.Suburb WHERE Name like 'Bo-Kaap') <= 0
 	INSERT INTO [dbo].[Suburb] ([Name],[City],[PostalCode])

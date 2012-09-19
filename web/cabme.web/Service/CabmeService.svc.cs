@@ -162,20 +162,15 @@ namespace cabme.web.Service
         {
             try
             {
-                string msg;
                 int minutes = 0;
-                if (confirmation.Arrival != null && int.TryParse(confirmation.Arrival, out minutes))
+                if (confirmation != null)
                 {
-                    msg = "Booking confirmed. Taxi will arrive in " + minutes + " min.";
-                }
-                else
-                {
-                    msg = "Booking confirmed.";
-                }
-                Booking.Confirm(confirmation.Hash, confirmation.RefCode, minutes);
-                if (!string.IsNullOrEmpty(confirmation.PhoneNumber))
-                {
-                    cabme.web.Service.Hubs.BookHub.SendClientMessage(confirmation.PhoneNumber, msg);
+                    int.TryParse(confirmation.Arrival, out minutes);
+                    Booking.Confirm(confirmation.Hash, confirmation.RefCode, minutes);
+                    if (!string.IsNullOrEmpty(confirmation.PhoneNumber))
+                    {
+                        cabme.web.Service.Hubs.BookHub.ConfirmBooking(confirmation.PhoneNumber, minutes);
+                    }
                 }
             }
             catch (Exception ex)

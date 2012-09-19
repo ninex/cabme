@@ -38,5 +38,25 @@ namespace cabme.web.Service.Hubs
                 Elmah.ErrorLog.GetDefault(null).Log(new Elmah.Error(ex));
             }
         }
+
+        public static void ConfirmBooking(string number, int waitingTime)
+        {
+            try
+            {
+                var hubContext = SignalR.GlobalHost.ConnectionManager.GetHubContext<BookHub>();
+                if (Connections.ContainsKey(number))
+                {
+                    string id = Connections[number];
+                    if (!string.IsNullOrEmpty(id))
+                    {
+                        hubContext.Clients[id].confirmBooking(waitingTime);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Elmah.ErrorLog.GetDefault(null).Log(new Elmah.Error(ex));
+            }
+        }
     }
 }
