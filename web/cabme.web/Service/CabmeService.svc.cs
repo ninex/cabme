@@ -69,7 +69,6 @@ namespace cabme.web.Service
                 {
                     return Booking.GetAllTaxiBookingsForUser(name, null, bOpen, afterId);
                 }
-                return null;
             }
             catch (Exception ex)
             {
