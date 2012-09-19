@@ -250,7 +250,7 @@
 </asp:Content>
 <asp:Content ContentPlaceHolderID="Scripts" runat="server" ID="Scripts">
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/knockout/2.1.0/knockout-min.js"></script>
-    <script type="text/javascript" src="assets/js/booking.js"></script>
+    <script type="text/javascript" src="assets/js/viewbooking.js"></script>
     <script type="text/javascript">
         var taxiId;
         var userID =  '<% =Page.User.Identity.Name %>';
