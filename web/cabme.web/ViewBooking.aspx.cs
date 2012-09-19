@@ -9,7 +9,7 @@ using cabme.web.Service.Hubs;
 
 namespace cabme.web
 {
-    public partial class BookingPage : BasePage
+    public partial class ViewBookingPage : BasePage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

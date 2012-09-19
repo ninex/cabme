@@ -10,6 +10,6 @@
 namespace cabme.web {
     
     
-    public partial class BookingPage {
+    public partial class ViewBookingPage {
     }
 }

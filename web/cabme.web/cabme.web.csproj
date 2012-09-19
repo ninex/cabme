@@ -95,9 +95,9 @@
     <Content Include="assets\images\pickup.png" />
     <Content Include="assets\images\refresh.png" />
     <Content Include="assets\js\book.js" />
-    <Content Include="assets\js\booking.js" />
+    <Content Include="assets\js\viewbooking.js" />
     <Content Include="assets\js\invoices.js" />
-    <Content Include="Booking.aspx" />
+    <Content Include="ViewBooking.aspx" />
     <Content Include="Confirm.aspx" />
     <Content Include="Invoices.aspx" />
     <Content Include="Review.aspx" />
@@ -166,12 +166,12 @@
     <Compile Include="BasePage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Booking.aspx.cs">
-      <DependentUpon>Booking.aspx</DependentUpon>
+    <Compile Include="ViewBooking.aspx.cs">
+      <DependentUpon>ViewBooking.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Booking.aspx.designer.cs">
-      <DependentUpon>Booking.aspx</DependentUpon>
+    <Compile Include="ViewBooking.aspx.designer.cs">
+      <DependentUpon>ViewBooking.aspx</DependentUpon>
     </Compile>
     <Compile Include="Confirm.aspx.cs">
       <DependentUpon>Confirm.aspx</DependentUpon>

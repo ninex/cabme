@@ -1,5 +1,5 @@
 ﻿<%@ Page Title="View Bookings" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true"
-    CodeBehind="Booking.aspx.cs" Inherits="cabme.web.BookingPage" ClientIDMode="Static" %>
+    CodeBehind="ViewBooking.aspx.cs" Inherits="cabme.web.ViewBookingPage" ClientIDMode="Static" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 </asp:Content>
