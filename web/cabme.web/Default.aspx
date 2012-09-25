@@ -133,7 +133,7 @@
                 </div>
             </div>
             <div style="margin: 10px auto; width: 100%; text-align: center;">
-                <input type="button" id="btnBook" value="Book" class="button" data-bind="click: step2"/>
+                <input type="button" id="btnBook" value="Book" class="button" data-bind="click: step2" />
             </div>
         </div>
         <div id="step3" style="display: none; width: 100%;" class="table">
@@ -142,6 +142,12 @@
             <div id="msgStatus" class="status">
                 <p class="status">
                     Booking sent to server.</p>
+            </div>
+            <div data-bind="visible: booking().confirmed">
+                Booking confirmed. Taxi will arrive in
+                <label data-bind="text: booking().waitingTime">
+                </label>
+                minutes
             </div>
         </div>
     </div>

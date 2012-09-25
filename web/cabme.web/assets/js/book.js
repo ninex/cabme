@@ -1,6 +1,7 @@
 ﻿var service, geocoder, directionsService;
 var bookHub;
 var isMapsLoaded = false;
+var model;
 
 $(document).ready(function () {
     window.hubReady.done(function () {
@@ -13,12 +14,14 @@ $(document).ready(function () {
     };
     bookHub.confirmBooking = function (time) {
         if (time && time > 0) {
-            $('#msgStatus').append('<p class="status">Booking confirmed. Taxi will arrive in ' + time + ' minutes.</p>');
+            model.booking().confirmed(true);
+            model.booking().waitingTime(time);
         } else {
             $('#msgStatus').append('<p class="status">Booking has been confirmed</p>');
         }
     };
-    ko.applyBindings(new BookingViewModel());
+    model = new BookingViewModel();
+    ko.applyBindings(model);
 });
 function Booking() {
     var self = this;
@@ -51,6 +54,7 @@ function Booking() {
     self.quickTaxi = ko.observable();
     self.taxi = ko.observable();
     self.full = ko.observable(false);
+    self.waitingTime = ko.observable(0);
     self.pickup = ko.computed(function () {
         return self.addrFrom() + ', ' + self.suburbFrom();
     }, self);
