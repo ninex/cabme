@@ -144,10 +144,17 @@
                     Booking sent to server.</p>
             </div>
             <div data-bind="visible: booking().confirmed">
-                Booking confirmed. Taxi will arrive in
+                Booking confirmed. Taxi can arrive in
                 <label data-bind="text: booking().waitingTime">
                 </label>
-                minutes
+                minutes at
+                <label data-bind="text: booking().expectedArrival">
+                </label>
+                <div>
+                    <input type="button" id="btnAccept" value="Accept" class="button" data-bind="click: accept" />
+                    <input type="button" id="btnNewTaxi" value="Change Taxi" class="button" data-bind="click: changeTaxi" />
+                    <input type="button" id="btnCancel" value="Cancel" class="button" data-bind="click: cancel" />
+                </div>
             </div>
         </div>
     </div>

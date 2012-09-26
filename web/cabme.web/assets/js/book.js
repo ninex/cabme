@@ -61,6 +61,11 @@ function Booking() {
     self.drop = ko.computed(function () {
         return self.addrTo() + ', ' + self.suburbTo();
     }, self);
+    self.expectedArrival = ko.computed(function () {
+        var now = new Date();
+        now.setMinutes(now.getMinutes() + self.waitingTime());
+        return now.getHours().padLeft(2, '0') + ':' + now.getMinutes().padLeft(2, '0');
+    }, self);
     self.suburbFrom.subscribe(function (newValue) {
         var city = self.city();
         localStorage[city + 'suburbFrom'] = newValue;
@@ -293,6 +298,15 @@ function BookingViewModel() {
                 popup('Server error', 'The booking can not be created due to a server problem.');
             }
         });
+    };
+    self.accept = function () {
+        alert('Booking accepted');
+    };
+    self.cancel = function () {
+        alert('Booking cancelled');
+    };
+    self.changeTaxi = function () {
+        alert('Changing taxi');
     };
     self.distanceResults = function (response, status) {
         if (status == google.maps.DistanceMatrixStatus.OK) {
