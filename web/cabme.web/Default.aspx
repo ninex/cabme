@@ -139,15 +139,14 @@
         <div id="step3" style="display: none; width: 100%;" class="table">
             <h3>
                 Booking status</h3>
-            <div id="msgStatus" class="status" data-bind="visible: !booking().accepted()">
+            <div id="msgStatus" class="status" data-bind="visible: !booking().accepted() && !booking().switchTaxi()">
                 <p class="status">
                     Booking sent to server.</p>
             </div>
-            <div data-bind="visible: !booking().confirmed()">
-                <input type="button" id="btnChange" value="Change Taxi" class="button" data-bind="click: changeTaxi" />
+            <div data-bind="visible: !booking().confirmed() && !booking().switchTaxi()">
                 <input type="button" id="btnCancel" value="Cancel" class="button" data-bind="click: cancel" />
             </div>
-            <div data-bind="visible: booking().confirmed() && !booking().accepted()">
+            <div data-bind="visible: booking().confirmed() && !booking().accepted() && !booking().switchTaxi()">
                 Booking confirmed. Taxi can arrive in
                 <label data-bind="text: booking().waitingTime">
                 </label>
@@ -156,14 +155,17 @@
                 </label>
                 <div>
                     <input type="button" id="btnAccept" value="Accept" class="button" data-bind="click: accept" />
-                    <input type="button" id="btnNewTaxi" value="Change Taxi" class="button" data-bind="click: changeTaxi" />
                     <input type="button" id="btnDismiss" value="Cancel" class="button" data-bind="click: cancel" />
                 </div>
             </div>
-            <div data-bind="visible: booking().accepted()">
-                Booking accepted. Taxi expected at 
+            <div data-bind="visible: booking().accepted() && !booking().switchTaxi()">
+                Booking accepted. Taxi expected at
                 <label data-bind="text: booking().expectedArrival">
                 </label>
+            </div>
+            <div data-bind="visible: booking().switchTaxi()">
+                Here you pick a new taxi.
+                <input type="button" id="btnNewTaxi" value="Change Taxi" class="button" data-bind="click: changeTaxi" />
             </div>
         </div>
     </div>

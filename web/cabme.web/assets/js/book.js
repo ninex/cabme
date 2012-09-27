@@ -52,6 +52,7 @@ function Booking() {
 	self.displayDistance = ko.observable('');
 	self.confirmed = ko.observable(false);
 	self.accepted = ko.observable(false);
+	self.switchTaxi = ko.observable(false);
 	self.quickTaxi = ko.observable();
 	self.taxi = ko.observable();
 	self.full = ko.observable(false);
@@ -322,7 +323,21 @@ function BookingViewModel() {
 	    });
 	};
 	self.cancel = function () {
-		alert('Booking cancelled');
+	    $.ajax({
+	        type: "POST",
+	        contentType: 'application/json',
+	        url: '/service/cabmeservice.svc/cancelbooking?id=' + self.booking().id(),
+	        data: '',
+	        success: function (msg) {
+	            self.booking().accepted(false);
+	            self.booking().confirmed(false);
+	            self.booking().switchTaxi(true);
+	        },
+	        error: function (jqXHR, textStatus, errorThrown) {
+	            console.log(errorThrown);
+	            popup('Server error', 'The booking has not been cancelled due to a server problem.');
+	        }
+	    });
 	};
 	self.changeTaxi = function () {
 		alert('Changing taxi');

@@ -208,6 +208,36 @@ namespace cabme.web.Service
             }
         }
 
+
+        public void CancelBooking(string id)
+        {
+            try
+            {
+                if (String.IsNullOrEmpty(id))
+                {
+                    WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.BadRequest;
+                    return;
+                }
+                int bookingId = 0;
+                if (int.TryParse(id, out bookingId))
+                {
+                    Booking.CancelBooking(bookingId);
+                }
+                else
+                {
+                    WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.BadRequest;
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.InternalServerError;
+                Elmah.ErrorLog.GetDefault(null).Log(new Elmah.Error(ex));
+                return;
+            }
+        }
+
+
         #endregion
 
         #region Suburbs

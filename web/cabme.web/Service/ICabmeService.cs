@@ -74,6 +74,14 @@ namespace cabme.web.Service
         [OperationContract]
         void AcceptBooking(string id);
 
+        [WebInvoke(Method = "POST",
+          UriTemplate = "cancelbooking?id={id}",
+          RequestFormat = WebMessageFormat.Json,
+          ResponseFormat = WebMessageFormat.Json,
+          BodyStyle = WebMessageBodyStyle.Bare)]
+        [OperationContract]
+        void CancelBooking(string id);
+
 
         #endregion
 

@@ -394,6 +394,21 @@ namespace cabme.web.Service.Entities
             }
         }
 
+        public static void CancelBooking(int id)
+        {
+            using (Data.contentDataContext context = new Data.contentDataContext())
+            {
+                var dbBooking = context.Bookings.Where(p => p.Id == id).SingleOrDefault();
+                if (dbBooking != null)
+                {
+                    dbBooking.Accepted = false;
+                    dbBooking.Confirmed = false;
+                    dbBooking.Active = false;
+                    context.SubmitChanges();
+                }
+            }
+        }
+
         private static IQueryable<Booking> AllQueryableBookings(Data.contentDataContext context)
         {
             return from booking in context.Bookings
