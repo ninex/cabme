@@ -163,10 +163,23 @@
                 <label data-bind="text: booking().expectedArrival">
                 </label>
             </div>
-            <div data-bind="visible: booking().switchTaxi()">
-                Here you pick a new taxi.
-                <input type="button" id="btnNewTaxi" value="Change Taxi" class="button" data-bind="click: changeTaxi" />
+        </div>
+        <div data-bind="visible: booking().switchTaxi()">
+            <h3>
+                Change taxi</h3>
+            <div style="width: 100%;" class="table">
+                <div class="row">
+                    <div class="cell">
+                        <img src="assets/images/logo.png" alt="Taxi" />
+                    </div>
+                    <div class="lastcell">
+                        <select id="ddlSwitchTaxi" data-bind="options: taxis, optionsText: 'name',value: booking().quickTaxi">
+                        </select>
+                    </div>
+                </div>
             </div>
+            <div style="margin: 10px auto; width: 100%; text-align: center;">
+                <input type="button" id="btnNewTaxi" value="Change Taxi" class="button" data-bind="click: changeTaxi" /></div>
         </div>
     </div>
     <p>

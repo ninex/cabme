@@ -332,6 +332,7 @@ function BookingViewModel() {
 	            self.booking().accepted(false);
 	            self.booking().confirmed(false);
 	            self.booking().switchTaxi(true);
+	            $('#step3').hide();
 	        },
 	        error: function (jqXHR, textStatus, errorThrown) {
 	            console.log(errorThrown);
@@ -340,7 +341,46 @@ function BookingViewModel() {
 	    });
 	};
 	self.changeTaxi = function () {
-		alert('Changing taxi');
+	    $('#loading').show();
+
+	    self.booking().switchTaxi(false);
+
+	    var suburbFrom = ko.utils.arrayFirst(self.suburbs(), function (suburb) {
+	        return suburb.fullAddress === self.booking().suburbFrom();
+	    });
+
+	    var data = {
+            "Id" : self.booking().id(),
+	        "PhoneNumber": self.booking().phoneNumber(),
+	        "NumberOfPeople": 1,
+	        "AddrFrom": self.booking().pickup(),
+	        "ComputedDistance": 0,
+	        "Active": true,
+	        "Confirmed": false,
+	        "TaxiId": self.booking().quickTaxi().id,
+	        "SuburbFromId": suburbFrom != null ? suburbFrom.id : 0
+	    };
+
+	    $('#step3').show();
+	    $('#loading').hide();
+
+	    bookHub.announce(self.booking().phoneNumber()).done(function () {
+	        $.ajax({
+	            type: "POST",
+	            contentType: 'application/json',
+	            url: '/service/cabmeservice.svc/booking',
+	            data: JSON.stringify(data),
+	            success: function (msg) {
+	                if (msg) {
+	                    self.booking().id(msg.Id);
+	                }
+	            },
+	            error: function (jqXHR, textStatus, errorThrown) {
+	                console.log(errorThrown);
+	                popup('Server error', 'The booking can not be updated due to a server problem.');
+	            }
+	        });
+	    });
 	};
 	self.distanceResults = function (response, status) {
 		if (status == google.maps.DistanceMatrixStatus.OK) {
