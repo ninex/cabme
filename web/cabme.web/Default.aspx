@@ -179,7 +179,9 @@
                 </div>
             </div>
             <div style="margin: 10px auto; width: 100%; text-align: center;">
-                <input type="button" id="btnNewTaxi" value="Change Taxi" class="button" data-bind="click: changeTaxi" /></div>
+                <input type="button" id="btnNewTaxi" value="Change Taxi" class="button" data-bind="click: changeTaxi" />
+                <input type="button" id="btnRestart" value="Restart" class="button" data-bind="click: restart" />
+            </div>
         </div>
     </div>
     <p>

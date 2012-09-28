@@ -382,6 +382,18 @@ function BookingViewModel() {
 	        });
 	    });
 	};
+	self.restart = function () {
+	    $('#loading').show();
+	    $('#step3').hide();
+	    self.booking().id(0);
+	    self.booking().confirmed(false);
+	    self.booking().accepted(false);
+	    self.booking().switchTaxi(false);
+	    self.booking().full = (false);
+	    $('#msgStatus').html('');
+	    $('#step1').slideDown();
+	    $('#loading').hide();
+	}
 	self.distanceResults = function (response, status) {
 		if (status == google.maps.DistanceMatrixStatus.OK) {
 			var origins = response.originAddresses;
