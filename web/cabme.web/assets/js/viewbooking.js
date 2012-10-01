@@ -109,6 +109,21 @@ function BookingViewModel() {
     self.independent = function (booking) {
         alert('Send independent logic');
     };
+    self.reject = function (booking) {
+        $.ajax({
+            type: "POST",
+            contentType: 'application/json',
+            url: '/service/cabmeservice.svc/cancelbooking?id=' + booking.id,
+            data: '',
+            success: function (msg) {
+                self.openBookings.remove(booking);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(errorThrown);
+                popup('Server error', 'The booking has not been cancelled due to a server problem.');
+            }
+        });
+    };
     self.review = function (booking) {
         alert('Review logic');
     };

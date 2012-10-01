@@ -100,7 +100,7 @@
                             </div>
                             <div class="cell lastCell">
                                 <input type="button" class="button" value="Confirm" data-bind="click: $parent.confirm" />
-                                <input type="button" class="button" value="Independent" data-bind="click: $parent.independent" />
+                                <input type="button" class="button" value="Reject" data-bind="click: $parent.reject" />
                             </div>
                         </div>
                     </div>

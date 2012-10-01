@@ -221,7 +221,12 @@ namespace cabme.web.Service
                 int bookingId = 0;
                 if (int.TryParse(id, out bookingId))
                 {
-                    Booking.CancelBooking(bookingId);
+                    var booking = Booking.CancelBooking(bookingId);
+
+                    if (booking != null && !string.IsNullOrEmpty(booking.PhoneNumber))
+                    {
+                        cabme.web.Service.Hubs.BookHub.CancelBooking(booking.PhoneNumber);
+                    }
                 }
                 else
                 {

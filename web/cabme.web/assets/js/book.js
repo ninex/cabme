@@ -4,24 +4,30 @@ var isMapsLoaded = false;
 var model;
 
 $(document).ready(function () {
-	window.hubReady.done(function () {
-		$('#loading').hide();
-		$('#step1').fadeIn();
-	});
-	bookHub = $.connection.bookHub;
-	bookHub.showMessage = function (message) {
-		$('#msgStatus').append('<p class="status">' + message + '</p>');
-	};
-	bookHub.confirmBooking = function (time) {
-		if (time && time > 0) {
-			model.booking().confirmed(true);
-			model.booking().waitingTime(time);
-		} else {
-			$('#msgStatus').append('<p class="status">Booking has been confirmed</p>');
-		}
-	};
-	model = new BookingViewModel();
-	ko.applyBindings(model);
+    window.hubReady.done(function () {
+        $('#loading').hide();
+        $('#step1').fadeIn();
+    });
+    bookHub = $.connection.bookHub;
+    bookHub.showMessage = function (message) {
+        $('#msgStatus').append('<p class="status">' + message + '</p>');
+    };
+    bookHub.confirmBooking = function (time) {
+        if (time && time > 0) {
+            model.booking().confirmed(true);
+            model.booking().waitingTime(time);
+        } else {
+            $('#msgStatus').append('<p class="status">Booking has been confirmed</p>');
+        }
+    };
+    bookHub.cancelBooking = function () {
+        model.booking().accepted(false);
+        model.booking().confirmed(false);
+        model.booking().switchTaxi(true);
+        $('#step3').hide();
+    }
+    model = new BookingViewModel();
+    ko.applyBindings(model);
 });
 function Booking() {
 	var self = this;
