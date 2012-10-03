@@ -24,7 +24,7 @@
                         You have new bookings awaiting confirmation. Refresh to view.</p>
                 </div>
                 <div data-bind="foreach: {data: openBookings, afterAdd: showNewBooking, beforeRemove: removeBooking}">
-                    <div class="table" style="width:80%;" data-bind="fadeVisible: confirmed">
+                    <div class="table" style="width: 80%;" data-bind="fadeVisible: confirmed, fadeVisible: accepted">
                         <div class="row">
                             <div class="cell">
                                 <b>Phone Number: </b>
@@ -95,11 +95,19 @@
                                 <input type="text" maxlength="2" style="width: 40px;" data-bind="value: arrival" />
                             </div>
                         </div>
-                        <div class="row" data-bind="visible: confirmed() == false && isTaxi == true">
+                        <div class="row" data-bind="visible: !accepted() && confirmed() && isTaxi">
                             <div class="cell">
                             </div>
                             <div class="cell lastCell">
-                                <input type="button" class="button" value="Confirm" data-bind="click: $parent.confirm" />
+                                <div class="status">
+                                    Waiting for client to accept</div>
+                            </div>
+                        </div>
+                        <div class="row" data-bind="visible: accepted() == false && isTaxi == true">
+                            <div class="cell">
+                            </div>
+                            <div class="cell lastCell">
+                                <input type="button" class="button" value="Confirm" data-bind="click: $parent.confirm, visible: !confirmed()" />
                                 <input type="button" class="button" value="Reject" data-bind="click: $parent.reject" />
                             </div>
                         </div>
@@ -113,7 +121,7 @@
         </div>
         <div id="tab2" style="display: none">
             <div data-bind="foreach: {data: completedBookings}">
-                <div class="table" style="width:80%;">
+                <div class="table" style="width: 80%;">
                     <div class="row">
                         <div class="cell">
                             <b>Phone Number: </b>
@@ -184,7 +192,7 @@
         </div>
         <div id="tab3" style="display: none">
             <div data-bind="foreach: {data: missedBookings}">
-                <div class="table" style="width:80%;">
+                <div class="table" style="width: 80%;">
                     <div class="row">
                         <div class="cell">
                             <b>Phone Number: </b>
@@ -261,6 +269,12 @@
              taxiHub = $.connection.taxiHub;
              taxiHub.pendingBooking = function () {
                     $('#pendingBookings').slideDown();
+                };                
+             taxiHub.acceptedBooking = function (id) {
+                    acceptedBooking(id);
+                };                
+             taxiHub.cancelBooking = function (id) {
+                    cancelBooking(id);
                 };
             window.hubReady.done(function () {
                 <% if (Page.User.IsInRole("Taxi")){ %>

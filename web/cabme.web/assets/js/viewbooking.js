@@ -1,9 +1,10 @@
-﻿
+﻿var model;
 $(document).ready(function () {
     setupTabs();
-    ko.applyBindings(new BookingViewModel());
+    model = new BookingViewModel();
+    ko.applyBindings(model);
 });
-function Booking(id, phoneNumber, numberOfPeople, pickupTime, suburb, addrFrom, addrTo, confirmed, hash, taxiId) {
+function Booking(id, phoneNumber, numberOfPeople, pickupTime, suburb, addrFrom, addrTo, confirmed, accepted, hash, taxiId) {
     var self = this;
     self.id = id;
     self.phoneNumber = phoneNumber;
@@ -13,6 +14,7 @@ function Booking(id, phoneNumber, numberOfPeople, pickupTime, suburb, addrFrom, 
     self.addrFrom = addrFrom;
     self.addrTo = addrTo;
     self.confirmed = ko.observable(confirmed);
+    self.accepted = ko.observable(accepted);
     self.hash = hash;
     self.refCode = ko.observable('');
     self.arrival = ko.observable('');
@@ -40,7 +42,7 @@ function BookingViewModel() {
                 if (booking.SuburbFrom && booking.SuburbFrom != null) {
                     suburbName = booking.SuburbFrom.Name;
                 }
-                var newBooking = new Booking(booking.Id, booking.PhoneNumber, booking.NumberOfPeople, booking.PickupTime, suburbName, booking.AddrFrom, booking.AddrTo, booking.Confirmed, booking.Hash, taxiId);
+                var newBooking = new Booking(booking.Id, booking.PhoneNumber, booking.NumberOfPeople, booking.PickupTime, suburbName, booking.AddrFrom, booking.AddrTo, booking.Confirmed, booking.Accepted, booking.Hash, taxiId);
                 self.openBookings.unshift(newBooking);
                 if (newBooking.confirmed()) {
                     setTimeout(function () {
@@ -62,7 +64,7 @@ function BookingViewModel() {
                 if (booking.SuburbFrom && booking.SuburbFrom != null) {
                     suburbName = booking.SuburbFrom.Name;
                 }
-                self.completedBookings.unshift(new Booking(booking.Id, booking.PhoneNumber, booking.NumberOfPeople, booking.PickupTime, suburbName, booking.AddrFrom, booking.AddrTo, booking.Confirmed, booking.Hash, taxiId));
+                self.completedBookings.unshift(new Booking(booking.Id, booking.PhoneNumber, booking.NumberOfPeople, booking.PickupTime, suburbName, booking.AddrFrom, booking.AddrTo, booking.Confirmed, booking.Accepted, booking.Hash, taxiId));
             });
         });
     };
@@ -78,7 +80,7 @@ function BookingViewModel() {
                 if (booking.SuburbFrom && booking.SuburbFrom != null) {
                     suburbName = booking.SuburbFrom.Name;
                 }
-                self.missedBookings.unshift(new Booking(booking.Id, booking.PhoneNumber, booking.NumberOfPeople, booking.PickupTime, suburbName, booking.AddrFrom, booking.AddrTo, booking.Confirmed, booking.Hash, taxiId));
+                self.missedBookings.unshift(new Booking(booking.Id, booking.PhoneNumber, booking.NumberOfPeople, booking.PickupTime, suburbName, booking.AddrFrom, booking.AddrTo, booking.Confirmed, booking.Accepted, booking.Hash, taxiId));
             });
         });
     };
@@ -109,6 +111,12 @@ function BookingViewModel() {
     self.independent = function (booking) {
         alert('Send independent logic');
     };
+    self.acceptedBooking = function (id) {
+        var booking = ko.utils.arrayFirst(self.openBookings(), function (booking) {
+            return booking.id === id;
+        });
+        booking.accepted(true);
+    };
     self.reject = function (booking) {
         $.ajax({
             type: "POST",
@@ -124,6 +132,14 @@ function BookingViewModel() {
             }
         });
     };
+    self.cancelBooking = function (id) {
+        var booking = ko.utils.arrayFirst(self.openBookings(), function (booking) {
+            return booking.id === id;
+        });
+        booking.accepted(false);
+        booking.confirmed(false);
+        self.openBookings.remove(booking);
+    }
     self.review = function (booking) {
         alert('Review logic');
     };
@@ -132,6 +148,12 @@ function BookingViewModel() {
     self.loadData();
     self.loadCompletedData();
     self.loadMissedData();
+}
+function acceptedBooking(id) {
+    model.acceptedBooking(id);
+}
+function cancelBooking(id) {
+    model.cancelBooking(id);
 }
 function btnRefresh() {
     $('#pendingBookings').slideUp();

@@ -58,5 +58,56 @@ namespace cabme.web.Service.Hubs
                 Elmah.ErrorLog.GetDefault(null).Log(new Elmah.Error(ex));
             }
         }
+
+        public static void SendTaxiBookingAccepted(int taxiId, int bookingId)
+        {
+            try
+            {
+                var hubContext = SignalR.GlobalHost.ConnectionManager.GetHubContext<TaxiHub>();
+                if (Connections.ContainsKey(taxiId))
+                {
+                    Dictionary<string, string> users = Connections[taxiId];
+                    if (users != null)
+                    {
+                        foreach (string id in users.Values)
+                        {
+                            if (!string.IsNullOrEmpty(id))
+                            {
+                                hubContext.Clients[id].acceptedBooking(bookingId);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Elmah.ErrorLog.GetDefault(null).Log(new Elmah.Error(ex));
+            }
+        }
+        public static void SendTaxiBookingCancelled(int taxiId, int bookingId)
+        {
+            try
+            {
+                var hubContext = SignalR.GlobalHost.ConnectionManager.GetHubContext<TaxiHub>();
+                if (Connections.ContainsKey(taxiId))
+                {
+                    Dictionary<string, string> users = Connections[taxiId];
+                    if (users != null)
+                    {
+                        foreach (string id in users.Values)
+                        {
+                            if (!string.IsNullOrEmpty(id))
+                            {
+                                hubContext.Clients[id].cancelBooking(bookingId);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Elmah.ErrorLog.GetDefault(null).Log(new Elmah.Error(ex));
+            }
+        }
     }
 }

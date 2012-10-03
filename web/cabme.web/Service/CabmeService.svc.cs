@@ -192,7 +192,8 @@ namespace cabme.web.Service
                 int bookingId = 0;
                 if (int.TryParse(id, out bookingId))
                 {
-                    Booking.AcceptBooking(bookingId);
+                    var booking  = Booking.AcceptBooking(bookingId);
+                    cabme.web.Service.Hubs.TaxiHub.SendTaxiBookingAccepted(booking.SelectedTaxi.Id, bookingId);
                 }
                 else
                 {
@@ -223,10 +224,16 @@ namespace cabme.web.Service
                 {
                     var booking = Booking.CancelBooking(bookingId);
 
-                    if (booking != null && !string.IsNullOrEmpty(booking.PhoneNumber))
+                    if (booking != null)
                     {
-                        cabme.web.Service.Hubs.BookHub.CancelBooking(booking.PhoneNumber);
+                        if (!string.IsNullOrEmpty(booking.PhoneNumber))
+                        {
+                            cabme.web.Service.Hubs.BookHub.CancelBooking(booking.PhoneNumber);
+                        }
+
+                        cabme.web.Service.Hubs.TaxiHub.SendTaxiBookingAccepted(booking.SelectedTaxi.Id, bookingId);
                     }
+
                 }
                 else
                 {

@@ -148,6 +148,11 @@ fieldset label.inline
 	clear: both;
 }
 
+.status
+{
+	font-size: 1.4em;
+	font-weight: bold;
+}
 .title
 {
 	display: block;

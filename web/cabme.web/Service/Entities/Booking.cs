@@ -381,7 +381,7 @@ namespace cabme.web.Service.Entities
             }
         }
 
-        public static void AcceptBooking(int id)
+        public static Booking AcceptBooking(int id)
         {
             using (Data.contentDataContext context = new Data.contentDataContext())
             {
@@ -391,6 +391,8 @@ namespace cabme.web.Service.Entities
                     dbBooking.Accepted = true;
                     context.SubmitChanges();
                 }
+                var booking = AllQueryableBookings(context).Where(p => p.Id == id).SingleOrDefault();
+                return booking;
             }
         }
 
