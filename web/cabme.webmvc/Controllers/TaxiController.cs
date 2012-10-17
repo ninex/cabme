@@ -70,7 +70,7 @@ namespace cabme.webmvc.Controllers
                     EndOfService = taxi.EndOfService,
                     Is24HService = taxi.Is24HService,
                     FleetSize = taxi.FleetSize,
-                    PriceEstimate = GetPriceEstimate(distance, taxi.RatePerKm, taxi.MinRate, taxi.Units)
+                    PriceEstimate = Taxi.GetPriceEstimate(distance, taxi.RatePerKm, taxi.MinRate, taxi.Units)
                 });
                 return taxis.ToList();
             }
@@ -86,28 +86,6 @@ namespace cabme.webmvc.Controllers
                         where users.Name == user
                         select userTaxi.TaxiId).SingleOrDefault();
             }
-        }
-
-        private int GetPriceEstimate(int distance, int ratePerKm, int minRate, int units)
-        {
-            int estimate = 0;
-            if (distance > 0)
-            {
-                var computedPrice = (ratePerKm * distance) / 1000;
-                if (computedPrice < minRate)
-                {
-                    computedPrice = minRate;
-                }
-                else
-                {
-                    if (computedPrice % units > 0)
-                    {
-                        computedPrice = computedPrice - (computedPrice % units) + units;
-                    }
-                }
-                estimate = computedPrice;
-            }
-            return estimate;
         }
 
     }

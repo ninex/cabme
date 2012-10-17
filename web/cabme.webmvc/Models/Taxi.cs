@@ -18,5 +18,27 @@ namespace cabme.webmvc.Models
         public bool Is24HService { get; set; }
         public short FleetSize { get; set; }
         public int PriceEstimate { get; set; }
+
+        public static int GetPriceEstimate(int distance, int ratePerKm, int minRate, int units)
+        {
+            int estimate = 0;
+            if (distance > 0)
+            {
+                var computedPrice = (ratePerKm * distance) / 1000;
+                if (computedPrice < minRate)
+                {
+                    computedPrice = minRate;
+                }
+                else
+                {
+                    if (computedPrice % units > 0)
+                    {
+                        computedPrice = computedPrice - (computedPrice % units) + units;
+                    }
+                }
+                estimate = computedPrice;
+            }
+            return estimate;
+        }
     }
 }
