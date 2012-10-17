@@ -87,6 +87,5 @@ namespace cabme.webmvc.Controllers
                         select userTaxi.TaxiId).SingleOrDefault();
             }
         }
-
     }
 }
