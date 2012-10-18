@@ -145,6 +145,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Hubs\BookHub.cs" />
+    <Compile Include="Hubs\LogHub.cs" />
+    <Compile Include="Hubs\TaxiHub.cs" />
     <Compile Include="Models\Booking.cs" />
     <Compile Include="Models\Confirmation.cs" />
     <Compile Include="Models\Suburb.cs" />

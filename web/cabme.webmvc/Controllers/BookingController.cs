@@ -7,6 +7,7 @@ using System.Web.Http;
 using Data = cabme.data;
 using cabme.webmvc.Models;
 using System.Threading.Tasks;
+using cabme.webmvc.Hubs;
 
 namespace cabme.webmvc.Controllers
 {
@@ -34,7 +35,7 @@ namespace cabme.webmvc.Controllers
             {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
-            //BookHub.SendClientMessage(booking.PhoneNumber, "Booking has been received by server.");
+            BookHub.SendClientMessage(booking.PhoneNumber, "Booking has been received by server.");
             using (Data.contentDataContext context = new Data.contentDataContext())
             {
                 Data.Booking dataBooking;
@@ -107,7 +108,7 @@ namespace cabme.webmvc.Controllers
                 context.SubmitChanges();
                 booking.Id = dataBooking.Id;
 
-                //BookHub.SendClientMessage(booking.PhoneNumber, "Booking is being sent to " + booking.SelectedTaxi.Name + ".");
+                BookHub.SendClientMessage(booking.PhoneNumber, "Booking is being sent to " + booking.SelectedTaxi.Name + ".");
 #if DEBUG
                 string url = "http://www.cabme.co.za/confirm.aspx?hash=" + dataBooking.Hash;
 #else
@@ -135,9 +136,9 @@ namespace cabme.webmvc.Controllers
                                 mailBody = string.Format("Booking received.<br/><a href=\"{0}\">Click here to confirm</a>", url);
                             }
                             //Send confirm booking email
-                            /*Mail.SendMail(contactDetails.BookingEmail, "cabme@abrie.net", "Test booking email", mailBody);
+                            /*Mail.SendMail(contactDetails.BookingEmail, "cabme@abrie.net", "Test booking email", mailBody);*/
                             TaxiHub.SendTaxiPendingBooking(booking.SelectedTaxi.Id);
-                            BookHub.SendClientMessage(booking.PhoneNumber, "Waiting for " + booking.SelectedTaxi.Name + " to confirm.");*/
+                            BookHub.SendClientMessage(booking.PhoneNumber, "Waiting for " + booking.SelectedTaxi.Name + " to confirm.");
                         }
                         else
                         {
