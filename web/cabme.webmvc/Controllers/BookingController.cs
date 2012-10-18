@@ -8,6 +8,7 @@ using Data = cabme.data;
 using cabme.webmvc.Models;
 using System.Threading.Tasks;
 using cabme.webmvc.Hubs;
+using cabme.webmvc.Common;
 
 namespace cabme.webmvc.Controllers
 {
@@ -98,7 +99,7 @@ namespace cabme.webmvc.Controllers
                 dataBooking.WaitingTime = 0;
                 dataBooking.TaxiId = booking.TaxiId;
                 dataBooking.LastModified = DateTime.Now;
-                dataBooking.Hash = "1";//Account.Hash.HashPassword(booking.PickupTime + booking.PhoneNumber);
+                dataBooking.Hash = Hash.HashPassword(booking.PickupTime + booking.PhoneNumber);
                 dataBooking.SuburbFromId = booking.SuburbFromId > 0 ? (int?)booking.SuburbFromId : null;
                 if (dataBooking.Id == 0)
                 {
@@ -136,7 +137,7 @@ namespace cabme.webmvc.Controllers
                                 mailBody = string.Format("Booking received.<br/><a href=\"{0}\">Click here to confirm</a>", url);
                             }
                             //Send confirm booking email
-                            /*Mail.SendMail(contactDetails.BookingEmail, "cabme@abrie.net", "Test booking email", mailBody);*/
+                            Mail.SendMail(contactDetails.BookingEmail, "cabme@abrie.net", "Test booking email", mailBody);
                             TaxiHub.SendTaxiPendingBooking(booking.SelectedTaxi.Id);
                             BookHub.SendClientMessage(booking.PhoneNumber, "Waiting for " + booking.SelectedTaxi.Name + " to confirm.");
                         }
