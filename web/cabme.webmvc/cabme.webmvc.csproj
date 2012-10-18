@@ -144,9 +144,11 @@
     <Compile Include="Common\Mail.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BookingController.cs" />
+    <Compile Include="Controllers\InvoiceController.cs" />
     <Compile Include="Controllers\MakeBookingController.cs" />
     <Compile Include="Controllers\SuburbController.cs" />
     <Compile Include="Controllers\TaxiController.cs" />
+    <Compile Include="Controllers\ViewBookingController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -284,6 +286,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Account\Register.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ViewBooking\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Invoice\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
