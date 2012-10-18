@@ -1,0 +1,17 @@
+﻿@model cabme.webmvc.Models.LoginModel
+
+@{
+    ViewBag.Title = "Your Account";
+}
+
+    <h1>@ViewBag.Title</h1>
+
+
+<p>
+    Logged in as <strong>@User.Identity.Name</strong>.
+</p>
+
+<ul data-role="listview" data-inset="true">
+    <li>@Html.ActionLink("Change password", "ChangePassword")</li>
+    <li>@Html.ActionLink("Log off", "LogOff")</li>
+</ul>

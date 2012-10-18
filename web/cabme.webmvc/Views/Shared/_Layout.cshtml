@@ -18,6 +18,51 @@
     <div class="loginDisplay">
         <nav id="topNav">
             <ul>
+                @if (!User.Identity.IsAuthenticated)
+                {
+                    <li>
+                        @Html.ActionLink("Log In", "Login", "Account", null, null)
+                    </li>
+                }
+                else
+                {
+                    if (User.IsInRole("Taxi"))
+                    {
+                    <li><a href="#" title="Actions">Actions</a>
+                        <ul>
+                            <li>@Html.ActionLink("View", "Index", "ViewBooking", null, null)</li>
+                            <li>@Html.ActionLink("Invoices", "Index", "Invoices", null, null)</li>
+                            <li class="last">@Html.ActionLink("Log Out", "Index", "Account", null, null)</li>
+                        </ul>
+                    </li>
+                    }
+                    else
+                    {
+                        if (User.IsInRole("Admin"))
+                        {
+                    <li><a href="#" title="Actions">Actions</a>
+                        <ul>
+                            <li>@Html.ActionLink("Book", "Index", "MakeBooking", null, null)</li>
+                            <li>@Html.ActionLink("View", "Index", "ViewBooking", null, null)</li>
+                            <li>@Html.ActionLink("Review", "Index", "ReviewBooking", null, null)</li>
+                            <li>@Html.ActionLink("Admin", "Index", "AdminBooking", null, null)</li>
+                            <li class="last">@Html.ActionLink("Log Out", "Index", "Account", null, null)</li>
+                        </ul>
+                    </li>
+                        }
+                        else
+                        {
+                    <li><a href="#" title="Actions">Actions</a>
+                        <ul>
+                            <li>@Html.ActionLink("Book", "Index", "MakeBooking", null, null)</li>
+                            <li>@Html.ActionLink("View", "Index", "ViewBooking", null, null)</li>
+                            <li>@Html.ActionLink("Review", "Index", "ReviewBooking", null, null)</li>
+                            <li class="last">@Html.ActionLink("Log Out", "Index", "Account", null, null)</li>
+                        </ul>
+                    </li>
+                        }
+                    }
+                }
             </ul>
         </nav>
     </div>
