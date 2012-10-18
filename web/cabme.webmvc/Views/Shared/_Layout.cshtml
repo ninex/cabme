@@ -2,15 +2,54 @@
 <html>
 <head>
     <meta charset="utf-8" />
+    <meta name="google-site-verification" content="XmgKMnIuLUT7ENVxWqfJ9gFn2woG11Cxy5WAS0k_C7w" />
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+    <link rel="shortcut icon" href="/images/logo.png">
+    <!--[if IE]>  
+            <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>  
+        <![endif]-->
+    <!--[if lt IE 8]>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
+    <![endif]-->
 </head>
-<body>
-    @RenderBody()
-
+<body class="no-js">
+    <div class="loginDisplay">
+        <nav id="topNav">
+            <ul>
+            </ul>
+        </nav>
+    </div>
+    <div class="page">
+        <div class="header">
+            <a href="/">
+                <img runat="server" src="~/images/logo.png" alt="cabme logo" /></a>
+            <h1>
+                cabme
+            </h1>
+        </div>
+        <div class="main">
+            @RenderBody()
+        </div>
+    </div>
+    <div class="footer">
+        <a class="contact" href="mailto:cabmeinfo@abrie.net">Contact Us</a>
+    </div>
     @Scripts.Render("~/bundles/jquery")
     @RenderSection("scripts", required: false)
+    <script type="text/javascript">
+        if (document.location.hostname.search("cabme.co.za") !== -1) {
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-32635806-1']);
+            _gaq.push(['_trackPageview']);
+
+            (function () {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+        }
+    </script>
 </body>
 </html>

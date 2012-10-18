@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace cabme.webmvc.Controllers
 {
-    public class HomeController : Controller
+    public class MakeBookingController : Controller
     {
         public ActionResult Index()
         {
