@@ -28,9 +28,8 @@ namespace cabme.webmvc.Controllers
         }
 
         // POST api/confirmation
-        public Booking Post([FromBody]Booking booking)
+        public Booking Post(Booking booking)
         {
-            
             /*if (booking == null || booking.NumberOfPeople <= 0 || string.IsNullOrEmpty(booking.AddrFrom) || //string.IsNullOrEmpty(booking.AddrTo) ||
                 booking.TaxiId <= 0 || string.IsNullOrEmpty(booking.PhoneNumber))
             {
