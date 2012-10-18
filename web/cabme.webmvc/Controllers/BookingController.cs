@@ -30,12 +30,13 @@ namespace cabme.webmvc.Controllers
         // POST api/confirmation
         public Booking Post([FromBody]Booking booking)
         {
-            if (booking == null || booking.NumberOfPeople <= 0 || string.IsNullOrEmpty(booking.AddrFrom) || //string.IsNullOrEmpty(booking.AddrTo) ||
+            
+            /*if (booking == null || booking.NumberOfPeople <= 0 || string.IsNullOrEmpty(booking.AddrFrom) || //string.IsNullOrEmpty(booking.AddrTo) ||
                 booking.TaxiId <= 0 || string.IsNullOrEmpty(booking.PhoneNumber))
             {
-                /*WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.BadRequest;
-                return null;*/
-            }
+                WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.BadRequest;
+                return null;
+            }*/
             //BookHub.SendClientMessage(booking.PhoneNumber, "Booking has been received by server.");
             using (Data.contentDataContext context = new Data.contentDataContext())
             {
@@ -150,7 +151,7 @@ namespace cabme.webmvc.Controllers
                     else
                     {
                         //TODO: Problem that has to be addressed
-                        //Elmah.ErrorLog.GetDefault(null).Log(new Elmah.Error(new Exception("No contact details found for taxi:" + booking.TaxiId)));
+                        Elmah.ErrorLog.GetDefault(null).Log(new Elmah.Error(new Exception("No contact details found for taxi:" + booking.TaxiId)));
                     }
                 });
                 try
@@ -159,7 +160,7 @@ namespace cabme.webmvc.Controllers
                 }
                 catch (AggregateException aggEx)
                 {
-                    //Elmah.ErrorLog.GetDefault(null).Log(new Elmah.Error(aggEx));
+                    Elmah.ErrorLog.GetDefault(null).Log(new Elmah.Error(aggEx));
                 }
             }
             return booking;
