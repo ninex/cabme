@@ -30,12 +30,10 @@ namespace cabme.webmvc.Controllers
         // POST api/confirmation
         public Booking Post(Booking booking)
         {
-            /*if (booking == null || booking.NumberOfPeople <= 0 || string.IsNullOrEmpty(booking.AddrFrom) || //string.IsNullOrEmpty(booking.AddrTo) ||
-                booking.TaxiId <= 0 || string.IsNullOrEmpty(booking.PhoneNumber))
+            if (booking == null)
             {
-                WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.BadRequest;
-                return null;
-            }*/
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
             //BookHub.SendClientMessage(booking.PhoneNumber, "Booking has been received by server.");
             using (Data.contentDataContext context = new Data.contentDataContext())
             {
@@ -54,8 +52,7 @@ namespace cabme.webmvc.Controllers
                     dataBooking = context.Bookings.Where(p => p.Id == booking.Id).SingleOrDefault();
                     if (dataBooking == null || dataBooking.Confirmed)
                     {
-                        /*WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.BadRequest;
-                        return null;*/
+                        throw new HttpResponseException(HttpStatusCode.BadRequest);
                     }
                 }
                 if (booking.SelectedTaxi == null)
@@ -67,7 +64,7 @@ namespace cabme.webmvc.Controllers
                     booking.EstimatedPrice = Taxi.GetPriceEstimate(booking.ComputedDistance, booking.SelectedTaxi.RatePerKm, booking.SelectedTaxi.MinRate, booking.SelectedTaxi.Units);
                 }
                 dataBooking.EstimatedPrice = booking.EstimatedPrice;
-                
+
                 if (booking.PickupTime.CompareTo(DateTime.MinValue) == 0)
                 {
                     booking.PickupTime = DateTime.Now.AddMinutes(1);
