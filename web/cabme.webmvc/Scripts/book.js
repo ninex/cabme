@@ -127,7 +127,7 @@ function BookingViewModel() {
 	self.suburbs = ko.observableArray();
 	self.booking = ko.observable(new Booking());
 	self.loadQuickTaxi = function () {
-		$.getJSON('/service/cabmeservice.svc/taxis', function (json) {
+		$.getJSON('/api/taxi', function (json) {
 			$.each(json, function (index, taxi) {
 				self.taxis.push(new Taxi(taxi.Id, taxi.Name, ''));
 			});
@@ -147,7 +147,7 @@ function BookingViewModel() {
 			}
 		}
 		if (refresh) {
-			var url = '/service/cabmeservice.svc/suburbs?city=' + city;
+			var url = '/api/suburb/?city=' + city;
 			$.getJSON(url, function (json) {
 				self.parseSuburbs(self.booking().city(), json);
 			});
@@ -219,7 +219,7 @@ function BookingViewModel() {
 	        $.ajax({
 	            type: "POST",
 	            contentType: 'application/json',
-	            url: '/service/cabmeservice.svc/booking',
+	            url: '/api/booking',
 	            data: JSON.stringify(data),
 	            success: function (msg) {
 	                if (msg) {
@@ -300,7 +300,7 @@ function BookingViewModel() {
 	    $.ajax({
 	        type: "POST",
 	        contentType: 'application/json',
-	        url: '/service/cabmeservice.svc/booking',
+	        url: '/api/booking',
 	        data: JSON.stringify(data),
 	        success: function (msg) {
 	            if (msg) {
@@ -314,11 +314,19 @@ function BookingViewModel() {
 	    });
 	};
 	self.accept = function () {
+        var data = {
+	        "Accepted": true,
+            "Id" : self.booking().id(),
+	        "PhoneNumber": self.booking().phoneNumber(),
+	        "NumberOfPeople": 1,
+	        "AddrFrom": self.booking().pickup(),
+	        "TaxiId": self.booking().quickTaxi().id
+	    };
 	    $.ajax({
-	        type: "POST",
+	        type: "PUT",
 	        contentType: 'application/json',
-	        url: '/service/cabmeservice.svc/acceptbooking?id=' + self.booking().id(),
-	        data: '',
+	        url: '/api/booking/' + self.booking().id(),
+	        data: JSON.stringify(data),
 	        success: function (msg) {
 	            self.booking().accepted(true);
 	        },
@@ -329,11 +337,19 @@ function BookingViewModel() {
 	    });
 	};
 	self.cancel = function () {
+	    var data = {
+	        "Cancelled": true,
+            "Id" : self.booking().id(),
+	        "PhoneNumber": self.booking().phoneNumber(),
+	        "NumberOfPeople": 1,
+	        "AddrFrom": self.booking().pickup(),
+	        "TaxiId": self.booking().quickTaxi().id
+	    };
 	    $.ajax({
-	        type: "POST",
+	        type: "PUT",
 	        contentType: 'application/json',
-	        url: '/service/cabmeservice.svc/cancelbooking?id=' + self.booking().id(),
-	        data: '',
+	        url: '/api/booking/' + self.booking().id(),
+	        data: JSON.stringify(data),
 	        success: function (msg) {
 	            self.booking().accepted(false);
 	            self.booking().confirmed(false);
@@ -374,7 +390,7 @@ function BookingViewModel() {
 	        $.ajax({
 	            type: "POST",
 	            contentType: 'application/json',
-	            url: '/service/cabmeservice.svc/booking',
+	            url: '/api/booking',
 	            data: JSON.stringify(data),
 	            success: function (msg) {
 	                if (msg) {
@@ -414,7 +430,7 @@ function BookingViewModel() {
 				self.booking().displayDistance(distance);
 				self.booking().computedDistance(element.distance.value);
 
-				$.getJSON('/service/cabmeservice.svc/taxis?distance=' + self.booking().computedDistance(), function (json) {
+				$.getJSON('/api/taxi/?distance=' + self.booking().computedDistance(), function (json) {
 					self.taxis.removeAll();
 					$.each(json, function (index, taxi) {
 						self.taxis.push(new Taxi(taxi.Id, taxi.Name, taxi.PriceEstimate));

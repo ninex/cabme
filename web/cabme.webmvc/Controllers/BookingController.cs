@@ -26,7 +26,7 @@ namespace cabme.webmvc.Controllers
         // GET api/confirmation/5
         public string Get(int id)
         {
-            return "value";
+            return "Please provide the hash";
         }
 
         // POST api/confirmation
@@ -165,16 +165,62 @@ namespace cabme.webmvc.Controllers
         }
 
         // PUT api/confirmation/5
-        public void Put(int id, [FromBody]string value)
+        public Booking Put(int id, [FromBody]Booking booking)
         {
+
+            if (booking.Cancelled)
+            {
+                using (Data.contentDataContext context = new Data.contentDataContext())
+                {
+                    var dbBooking = context.Bookings.Where(p => p.Id == id).SingleOrDefault();
+                    if (dbBooking != null)
+                    {
+                        dbBooking.Accepted = false;
+                        dbBooking.Confirmed = false;
+                        dbBooking.Active = false;
+                        context.SubmitChanges();
+                    }
+                    booking = AllQueryableBookings(context).Where(p => p.Id == id).SingleOrDefault();
+
+                    if (booking != null)
+                    {
+                        if (!string.IsNullOrEmpty(booking.PhoneNumber))
+                        {
+                            BookHub.CancelBooking(booking.PhoneNumber);
+                        }
+                        TaxiHub.SendTaxiBookingCancelled(booking.SelectedTaxi.Id, id);
+                    }
+
+                    return booking;
+                }
+            }
+            else
+            {
+                if (booking.Accepted)
+                {
+                    using (Data.contentDataContext context = new Data.contentDataContext())
+                    {
+                        var dbBooking = context.Bookings.Where(p => p.Id == id).SingleOrDefault();
+                        if (dbBooking != null)
+                        {
+                            dbBooking.Accepted = true;
+                            context.SubmitChanges();
+                        }
+                        booking = AllQueryableBookings(context).Where(p => p.Id == id).SingleOrDefault();
+                        TaxiHub.SendTaxiBookingAccepted(booking.SelectedTaxi.Id, id);
+                        return booking;
+                    }
+                }
+            }
+            return null;
         }
 
         // DELETE api/confirmation/5
         public void Delete(int id)
         {
         }
-        /*
-        public static IEnumerable<Booking> GetAllBookingsByNumber(string userName, bool? active, bool? confirmed, bool? open)
+        
+        public IEnumerable<Booking> GetAllBookingsByNumber(string userName, bool? active, bool? confirmed, bool? open)
         {
             using (Data.contentDataContext context = new Data.contentDataContext())
             {
@@ -187,23 +233,23 @@ namespace cabme.webmvc.Controllers
                     {
                         if (confirmed.HasValue && confirmed.Value)
                         {
-                            return new Bookings(AllQueryableBookings(context).Where(p => p.PhoneNumber == number && p.Active == active && p.Confirmed).OrderBy(p => p.LastModified).ToList());
+                            return AllQueryableBookings(context).Where(p => p.PhoneNumber == number && p.Active == active && p.Confirmed).OrderBy(p => p.LastModified).ToList();
                         }
                         else
                         {
                             if (open.HasValue && open.Value)
                             {
-                                return new Bookings(AllQueryableBookings(context).Where(p => p.PhoneNumber == number && p.Active == active && !p.Confirmed && p.dPickupTime.AddMinutes(30) > DateTime.Now).OrderBy(p => p.LastModified).ToList());
+                                return AllQueryableBookings(context).Where(p => p.PhoneNumber == number && p.Active == active && !p.Confirmed && p.PickupTime.AddMinutes(30) > DateTime.Now).OrderBy(p => p.LastModified).ToList();
                             }
                             else
                             {
-                                return new Bookings(AllQueryableBookings(context).Where(p => p.PhoneNumber == number && p.Active == active && !p.Confirmed && p.dPickupTime.AddMinutes(30) < DateTime.Now).OrderBy(p => p.LastModified).ToList());
+                                return AllQueryableBookings(context).Where(p => p.PhoneNumber == number && p.Active == active && !p.Confirmed && p.PickupTime.AddMinutes(30) < DateTime.Now).OrderBy(p => p.LastModified).ToList();
                             }
                         }
                     }
                     else
                     {
-                        return new Bookings(AllQueryableBookings(context).Where(p => p.PhoneNumber == number).ToList());
+                        return AllQueryableBookings(context).Where(p => p.PhoneNumber == number).ToList();
                     }
                 }
                 else
@@ -213,7 +259,7 @@ namespace cabme.webmvc.Controllers
             }
         }
 
-        public static IEnumerable<Booking> GetAllTaxiBookingsForUser(string userName, bool? confirmed, bool open, int afterId)
+        public IEnumerable<Booking> GetAllTaxiBookingsForUser(string userName, bool taxi, bool? confirmed, bool open, int afterId)
         {
             using (Data.contentDataContext context = new Data.contentDataContext())
             {
@@ -227,17 +273,17 @@ namespace cabme.webmvc.Controllers
                     {
                         if (confirmed.Value)
                         {
-                            return new Bookings(AllQueryableBookings(context).Where(p => p.TaxiId == id && p.Active && p.Confirmed && p.Id > afterId).OrderBy(p => p.LastModified).ToList());
+                            return AllQueryableBookings(context).Where(p => p.TaxiId == id && p.Active && p.Confirmed && p.Id > afterId).OrderBy(p => p.LastModified).ToList();
                         }
                         else
                         {
                             if (open)
                             {
-                                return new Bookings(AllQueryableBookings(context).Where(p => p.TaxiId == id && p.Active && !p.Confirmed && p.Id > afterId && p.dPickupTime.AddMinutes(30) > DateTime.Now).OrderBy(p => p.LastModified).ToList());
+                                return AllQueryableBookings(context).Where(p => p.TaxiId == id && p.Active && !p.Confirmed && p.Id > afterId && p.PickupTime.AddMinutes(30) > DateTime.Now).OrderBy(p => p.LastModified).ToList();
                             }
                             else
                             {
-                                return new Bookings(AllQueryableBookings(context).Where(p => p.TaxiId == id && p.Active && !p.Confirmed && p.Id > afterId && p.dPickupTime.AddMinutes(30) < DateTime.Now).OrderBy(p => p.LastModified).ToList());
+                                return AllQueryableBookings(context).Where(p => p.TaxiId == id && p.Active && !p.Confirmed && p.Id > afterId && p.PickupTime.AddMinutes(30) < DateTime.Now).OrderBy(p => p.LastModified).ToList();
                             }
                         }
                     }
@@ -245,11 +291,11 @@ namespace cabme.webmvc.Controllers
                     {
                         if (open)
                         {
-                            return new Bookings(AllQueryableBookings(context).Where(p => p.TaxiId == id && p.Active && p.Id > afterId && p.dPickupTime.AddMinutes(30) > DateTime.Now).OrderBy(p => p.LastModified).ToList());
+                            return AllQueryableBookings(context).Where(p => p.TaxiId == id && p.Active && p.Id > afterId && p.PickupTime.AddMinutes(30) > DateTime.Now).OrderBy(p => p.LastModified).ToList();
                         }
                         else
                         {
-                            return new Bookings(AllQueryableBookings(context).Where(p => p.TaxiId == id && p.Active && p.Id > afterId && p.dPickupTime.AddMinutes(30) < DateTime.Now).OrderBy(p => p.LastModified).ToList());
+                            return AllQueryableBookings(context).Where(p => p.TaxiId == id && p.Active && p.Id > afterId && p.PickupTime.AddMinutes(30) < DateTime.Now).OrderBy(p => p.LastModified).ToList();
                         }
                     }
                 }
@@ -260,7 +306,7 @@ namespace cabme.webmvc.Controllers
             }
         }
 
-        public static IEnumerable<Booking> GetAllActiveBookingsForUser(string userName)
+        public IEnumerable<Booking> GetAllActiveBookingsForUser(string userName)
         {
             using (Data.contentDataContext context = new Data.contentDataContext())
             {
@@ -276,10 +322,10 @@ namespace cabme.webmvc.Controllers
                     return null;
                 }
             }
-        }*/
+        }
 
         //// GET api/confirmation/?hash=
-        public static Booking GetBookingByHash(string hash)
+        public Booking GetBookingByHash(string hash)
         {
             using (Data.contentDataContext context = new Data.contentDataContext())
             {
@@ -288,57 +334,29 @@ namespace cabme.webmvc.Controllers
             }
         }
 
-        public static Booking Confirm(string hash, string referenceCode, int waitingTime)
+        public Booking Confirm(string hash, string referenceCode, int waitingTime)
         {
             using (Data.contentDataContext context = new Data.contentDataContext())
             {
-                var booking = AllQueryableBookings(context).Where(p => p.Hash == hash && !p.Confirmed && p.PickupTime.AddMinutes(30) > DateTime.Now).SingleOrDefault();
-                if (booking != null)
-                {
-                    var dbBooking = context.Bookings.Where(p => p.Id == booking.Id).SingleOrDefault();
-                    booking.Confirmed = true;
-                    booking.ReferenceCode = referenceCode;
-                    booking.WaitingTime = waitingTime;
-                    dbBooking.Confirmed = true;
-                    dbBooking.ReferenceCode = referenceCode;
-                    dbBooking.WaitingTime = waitingTime;
-                    context.SubmitChanges();
-                }
-                return booking;
+                    var booking = AllQueryableBookings(context).Where(p => p.Hash == hash && !p.Confirmed && p.PickupTime.AddMinutes(30) > DateTime.Now).SingleOrDefault();
+                    if (booking != null)
+                    {
+                        var dbBooking = context.Bookings.Where(p => p.Id == booking.Id).SingleOrDefault();
+                        booking.Confirmed = true;
+                        booking.ReferenceCode = referenceCode;
+                        booking.WaitingTime = waitingTime;
+                        dbBooking.Confirmed = true;
+                        dbBooking.ReferenceCode = referenceCode;
+                        dbBooking.WaitingTime = waitingTime;
+                        context.SubmitChanges();
+                        if (!string.IsNullOrEmpty(booking.PhoneNumber))
+                        {
+                            BookHub.ConfirmBooking(booking.PhoneNumber, waitingTime);
+                        }
+                    }
+                    return booking;
             }
         }
-        /*
-        public static Booking AcceptBooking(int id)
-        {
-            using (Data.contentDataContext context = new Data.contentDataContext())
-            {
-                var dbBooking = context.Bookings.Where(p => p.Id == id).SingleOrDefault();
-                if (dbBooking != null)
-                {
-                    dbBooking.Accepted = true;
-                    context.SubmitChanges();
-                }
-                var booking = AllQueryableBookings(context).Where(p => p.Id == id).SingleOrDefault();
-                return booking;
-            }
-        }
-
-        public static Booking CancelBooking(int id)
-        {
-            using (Data.contentDataContext context = new Data.contentDataContext())
-            {
-                var dbBooking = context.Bookings.Where(p => p.Id == id).SingleOrDefault();
-                if (dbBooking != null)
-                {
-                    dbBooking.Accepted = false;
-                    dbBooking.Confirmed = false;
-                    dbBooking.Active = false;
-                    context.SubmitChanges();
-                }
-                var booking = AllQueryableBookings(context).Where(p => p.Id == id).SingleOrDefault();
-                return booking;
-            }
-        }*/
 
         private static IQueryable<Booking> AllQueryableBookings(Data.contentDataContext context)
         {

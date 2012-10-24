@@ -40,6 +40,8 @@ namespace cabme.webmvc.Models
 
         public bool Active { get; set; }
 
+        public bool Cancelled { get; set; }
+
         public bool Confirmed { get; set; }
 
         public bool Accepted { get; set; }

@@ -32,9 +32,9 @@ function BookingViewModel() {
             if (self.openBookings().length > 0) {
                 params += '&after=' + self.openBookings()[0].id;
             }
-            url = '/service/cabmeservice.svc/taxibookings?' + params;
+            url = '/api/booking/?taxi=true&' + params;
         } else {
-            url = '/service/cabmeservice.svc/userbookings?user=' + userID + '&confirmed=false&open=true';
+            url = '/api/booking/?user=' + userID + '&confirmed=false&open=true';
         }
         $.getJSON(url, function (json) {
             $.each(json, function (index, booking) {
@@ -54,9 +54,9 @@ function BookingViewModel() {
     };
     self.loadCompletedData = function () {
         if (taxiId) {
-            url = '/service/cabmeservice.svc/taxibookings?name=' + taxiId + '&confirmed=true';
+            url = '/api/booking/?name=' + taxiId + '&confirmed=true&taxi=true';
         } else {
-            url = '/service/cabmeservice.svc/userbookings?user=' + userID + '&confirmed=true';
+            url = '/api/booking/?user=' + userID + '&confirmed=true';
         }
         $.getJSON(url, function (json) {
             $.each(json, function (index, booking) {
@@ -70,9 +70,9 @@ function BookingViewModel() {
     };
     self.loadMissedData = function () {
         if (taxiId) {
-            url = '/service/cabmeservice.svc/taxibookings?name=' + taxiId + '&confirmed=false&open=false';
+            url = '/api/booking/?name=' + taxiId + '&confirmed=false&open=false&taxi=true';
         } else {
-            url = '/service/cabmeservice.svc/userbookings?user=' + userID + '&confirmed=false&open=false';
+            url = '/api/booking/user=' + userID + '&confirmed=false&open=false';
         }
         $.getJSON(url, function (json) {
             $.each(json, function (index, booking) {
@@ -85,17 +85,11 @@ function BookingViewModel() {
         });
     };
     self.confirm = function (booking) {
-        var data = {
-            "Arrival": booking.arrival(),
-            "RefCode": booking.refCode(),
-            "PhoneNumber": booking.phoneNumber,
-            "Hash": booking.hash
-        };
         $.ajax({
-            type: "POST",
+            type: "GET",
             contentType: 'application/json',
-            url: '/service/cabmeservice.svc/confirmbooking',
-            data: JSON.stringify(data),
+            url: '/api/booking?hash=' + booking.hash + '&referenceCode=' + booking.refCode() + '&waitingTime=' + booking.arrival(),
+            data: '',
             success: function (msg) {
                 booking.confirmed(true);
                 self.completedBookings.unshift(booking);
@@ -118,11 +112,19 @@ function BookingViewModel() {
         booking.accepted(true);
     };
     self.reject = function (booking) {
+        var data = {
+            "Cancelled": true,
+            "Id": booking.id,
+            "PhoneNumber": booking.phoneNumber,
+            "NumberOfPeople": booking.numberOfPeople,
+            "AddrFrom": booking.addrFrom,
+            "TaxiId": 1
+        };
         $.ajax({
-            type: "POST",
+            type: "PUT",
             contentType: 'application/json',
-            url: '/service/cabmeservice.svc/cancelbooking?id=' + booking.id,
-            data: '',
+            url: '/api/booking/' + booking.id,
+            data: JSON.stringify(data),
             success: function (msg) {
                 self.openBookings.remove(booking);
             },
