@@ -3,27 +3,103 @@
     font-weight: normal;
 }
 
-/* styles for validation helpers */
-.field-validation-error {
-    color: #e80c4d;
-    font-weight: bold;
+body
+{
 }
-
-.field-validation-valid {
-    display: none;
+.page
+{
+	width: 100%;
+	min-width: 100%;
+	background-color: #fff;
+	margin: 0px auto 0px auto;
+	border: 1px solid #000;
+	border-radius: 15px;
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
 }
-
-input[type="text"].input-validation-error,
-input[type="password"].input-validation-error {
-    border: solid 1px #e80c4d;
+.main
+{
+	padding: 0px;
+	margin: 0px 8px 8px 8px;
 }
-
-.validation-summary-errors {
-    color: #e80c4d;
-    font-weight: bold;
-    font-size: 1.1em;
+h2
+{
+	font-size: 2.0em;
+	margin: 0px;
 }
-
-.validation-summary-valid {
-    display: none;
+h3
+{
+	font-size: 1.5em;
+	margin: 0px;
+}
+.button
+{
+	margin: 5px auto;
+	max-width: 270px;
+	height: 60px;
+}
+.table
+{
+	margin: 0px;
+	padding: 15px;
+	display: table;
+}
+#book
+{
+	font-size: 1.3em;
+}
+#book input, select
+{
+	font-size: 1.0em;
+	color: #555;
+	width: 100%;
+	margin-bottom: 5px;
+	box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box; 
+}
+#book img
+{
+	max-height: 24px;
+	max-width: 24px;
+	margin: -5px auto;
+}
+#book .cell
+{
+	width: 24px;
+}
+#book .lastcell
+{
+	max-width: 80%;
+}
+.status
+{
+	font-size: 0.8em;
+	font-weight: normal;
+}
+.clickMe
+{
+	cursor: pointer;
+	text-decoration: underline;
+}
+.noImg
+{
+	margin-left: 32px;
+}
+@media screen and (max-width:300px)
+{
+	#book
+	{
+		font-size: 0.8em;
+	}
+	#book img
+	{
+		max-height: 18px;
+		max-width: 18px;
+		margin: -5px auto;
+	}
+	.noImg
+	{
+		margin-left: 4px;
+	}
 }

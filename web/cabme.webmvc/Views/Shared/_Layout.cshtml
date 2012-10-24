@@ -14,7 +14,7 @@
         <script src="http://cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
     <![endif]-->
 </head>
-<body class="no-js">@Html.Partial("_ViewSwitcher")
+<body class="no-js">
     <div class="loginDisplay">
         <nav id="topNav">
             <ul>
@@ -79,6 +79,7 @@
         </div>
     </div>
     <div class="footer">
+    @Html.Partial("_ViewSwitcher")
         <a class="contact" href="mailto:cabmeinfo@abrie.net">Contact Us</a>
     </div>
     @Scripts.Render("~/bundles/jquery")
