@@ -17,7 +17,7 @@ function Booking(id, phoneNumber, numberOfPeople, pickupTime, suburb, addrFrom, 
     self.accepted = ko.observable(accepted);
     self.hash = hash;
     self.refCode = ko.observable('');
-    self.arrival = ko.observable('');
+    self.arrival = ko.observable(1);
     self.isTaxi = taxiId && taxiId != null;
 }
 function BookingViewModel() {
@@ -28,13 +28,13 @@ function BookingViewModel() {
     self.missedBookings = ko.observableArray();
     self.loadData = function () {
         if (taxiId) {
-            var params = 'name=' + taxiId + '&open=true';
+            var params = 'userName=' + taxiId + '&open=true';
             if (self.openBookings().length > 0) {
                 params += '&after=' + self.openBookings()[0].id;
             }
-            url = '/api/booking/?taxi=true&' + params;
+            url = '/api/booking/?' + params;
         } else {
-            url = '/api/booking/?user=' + userID + '&confirmed=false&open=true';
+            url = '/api/booking/?userName=' + userID + '&confirmed=false&open=true';
         }
         $.getJSON(url, function (json) {
             $.each(json, function (index, booking) {
@@ -54,9 +54,9 @@ function BookingViewModel() {
     };
     self.loadCompletedData = function () {
         if (taxiId) {
-            url = '/api/booking/?name=' + taxiId + '&confirmed=true&taxi=true';
+            url = '/api/booking/?userName=' + taxiId + '&confirmed=true';
         } else {
-            url = '/api/booking/?user=' + userID + '&confirmed=true';
+            url = '/api/booking/?userName=' + userID + '&confirmed=true';
         }
         $.getJSON(url, function (json) {
             $.each(json, function (index, booking) {
@@ -70,9 +70,9 @@ function BookingViewModel() {
     };
     self.loadMissedData = function () {
         if (taxiId) {
-            url = '/api/booking/?name=' + taxiId + '&confirmed=false&open=false&taxi=true';
+            url = '/api/booking/?userName=' + taxiId + '&confirmed=false&open=false&taxi=true';
         } else {
-            url = '/api/booking/user=' + userID + '&confirmed=false&open=false';
+            url = '/api/booking/userName=' + userID + '&confirmed=false&open=false';
         }
         $.getJSON(url, function (json) {
             $.each(json, function (index, booking) {
@@ -85,10 +85,14 @@ function BookingViewModel() {
         });
     };
     self.confirm = function (booking) {
+        var params = 'waitingTime=' + booking.arrival();
+        if (booking.refCode().length > 0) {
+            params += '&referenceCode=' + booking.refCode();
+        }
         $.ajax({
             type: "GET",
             contentType: 'application/json',
-            url: '/api/booking?hash=' + booking.hash + '&referenceCode=' + booking.refCode() + '&waitingTime=' + booking.arrival(),
+            url: '/api/booking/' + booking.hash + '/?' + params,
             data: '',
             success: function (msg) {
                 booking.confirmed(true);
