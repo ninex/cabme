@@ -1,42 +1,48 @@
-﻿@model cabme.webmvc.Models.LoginModel
-
+﻿@model cabme.webmvc.Models.RegisterModel
 @{
-    ViewBag.Title = "Log in";
+    ViewBag.Title = "Register";
 }
-
-    <h1>@ViewBag.Title</h1>
-
-<p>
-    Please enter your user name and password. @Html.ActionLink("Register", "Register") if you don't have an account.
-</p>
-
-@using (Html.BeginForm()) {
+<h1>@ViewBag.Title</h1>
+@using (Html.BeginForm())
+{
+    <p>
+        Use the form below to create a new account.
+    </p>
+    <p>
+    Passwords must be at least @Membership.MinRequiredPasswordLength characters long.
+    </p>
     @Html.ValidationSummary()
-
-    <ul data-role="listview" data-inset="true">
-        <li data-role="list-divider">Details</li>
-
-        <li data-role="fieldcontain">
-            @Html.LabelFor(m => m.UserName)
-            @Html.TextBoxFor(m => m.UserName)            
-        </li>
-
-        <li data-role="fieldcontain">
-            @Html.LabelFor(m => m.Password)
-            @Html.PasswordFor(m => m.Password)            
-        </li>
-
-        <li data-role="fieldcontain">
-            @Html.LabelFor(m => m.RememberMe)
-            @Html.CheckBoxFor(m => m.RememberMe)
-        </li>
-
-        <li data-role="fieldcontain">
-            <input type="submit" value="Log in" />
-        </li>
-    </ul>
+    <div class="accountInfo">
+        <fieldset class="register">
+            <legend>Account Information</legend>
+            <p>
+                @Html.LabelFor(m => m.UserName)
+                @Html.TextBoxFor(m => m.UserName)
+            </p>
+            <p>
+                @Html.LabelFor(m => m.PhoneNumber)
+                @Html.TextBoxFor(m => m.PhoneNumber)
+            </p>
+            <p>
+                @Html.LabelFor(m => m.Email)
+                @Html.TextBoxFor(m => m.Email)
+            </p>
+            <p>
+                @Html.LabelFor(m => m.Password)
+                @Html.PasswordFor(m => m.Password)
+            </p>
+            <p>
+                @Html.LabelFor(m => m.ConfirmPassword)
+                @Html.PasswordFor(m => m.ConfirmPassword)
+            </p>
+            <p>
+            </p>
+        </fieldset>
+        <p class="submitButton">
+            <input type="submit" value="Register" />
+        </p>
+    </div>
 }
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

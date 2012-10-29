@@ -1,42 +1,36 @@
 ﻿@model cabme.webmvc.Models.LoginModel
-
 @{
     ViewBag.Title = "Log in";
 }
-
-    <h1>@ViewBag.Title</h1>
-
+<h1>@ViewBag.Title</h1>
 <p>
-    Please enter your user name and password. @Html.ActionLink("Register", "Register") if you don't have an account.
+    Please enter your user name and password. @Html.ActionLink("Register", "Register")
+    if you don't have an account.
 </p>
-
-@using (Html.BeginForm()) {
+@using (Html.BeginForm())
+{
     @Html.ValidationSummary()
-
-    <ul data-role="listview" data-inset="true">
-        <li data-role="list-divider">Details</li>
-
-        <li data-role="fieldcontain">
-            @Html.LabelFor(m => m.UserName)
-            @Html.TextBoxFor(m => m.UserName)            
-        </li>
-
-        <li data-role="fieldcontain">
-            @Html.LabelFor(m => m.Password)
-            @Html.PasswordFor(m => m.Password)            
-        </li>
-
-        <li data-role="fieldcontain">
-            @Html.LabelFor(m => m.RememberMe)
-            @Html.CheckBoxFor(m => m.RememberMe)
-        </li>
-
-        <li data-role="fieldcontain">
+    <div class="accountInfo">
+        <fieldset class="login">
+            <legend>Account Information</legend>
+            <p>
+                @Html.LabelFor(m => m.UserName)
+                @Html.TextBoxFor(m => m.UserName)
+            </p>
+            <p>
+                @Html.LabelFor(m => m.Password)
+                @Html.PasswordFor(m => m.Password)
+            </p>
+            <p>
+            </p>
+        </fieldset>
+        @Html.CheckBoxFor(m => m.RememberMe)
+        @Html.LabelFor(m => m.RememberMe)
+        <p class="submitButton">
             <input type="submit" value="Log in" />
-        </li>
-    </ul>
+        </p>
+    </div>    
 }
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

@@ -94,6 +94,22 @@ namespace cabme.webmvc.Controllers
 
                 if (createStatus == MembershipCreateStatus.Success)
                 {
+                    using (cabme.data.contentDataContext context = new data.contentDataContext())
+                    {
+                        try
+                        {
+                            var user = context.Users.Where(p => p.Name == model.UserName).SingleOrDefault();
+                            if (user != null)
+                            {
+                                user.PhoneNumber = model.PhoneNumber;
+                                context.SubmitChanges();
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Elmah.ErrorLog.GetDefault(null).Log(new Elmah.Error(ex));
+                        }
+                    }
                     FormsAuthentication.SetAuthCookie(model.UserName, createPersistentCookie: false);
                     return RedirectToAction("Index", "MakeBooking");
                 }

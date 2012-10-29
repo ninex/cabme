@@ -97,6 +97,11 @@ namespace cabme.web.Account
             {
                 try
                 {
+                    if (context.Users.Where(p => p.Name == username).Count() > 0)
+                    {
+                        status = MembershipCreateStatus.DuplicateUserName;
+                        return null;
+                    }
                     Data.User user = new Data.User()
                     {
                         Name = username,
