@@ -5,7 +5,7 @@
     <h2>
         Book taxi</h2>
     <div id="loading" class="loading">
-        <img src="images/loader.gif" alt="loading" />
+        <img src="/images/loader.gif" alt="loading" />
     </div>
     <div id="step1" style="display: none">
         <p id="btnMakeFull" class="clickMe" data-bind="click: function(data, event) { booking().full(!booking().full()); }">
@@ -13,7 +13,7 @@
         <div style="width: 100%;" class="table">
             <div class="row">
                 <div class="cell">
-                    <img src="images/city.png" alt="City" />
+                    <img src="/images/city.png" alt="City" />
                 </div>
                 <div class="lastcell">
                     <select id="city" data-bind="value: booking().city">
@@ -24,7 +24,7 @@
             </div>
             <div class="row">
                 <div class="cell">
-                    <img src="images/phone.png" alt="Phone Number" />
+                    <img src="/images/phone.png" alt="Phone Number" />
                 </div>
                 <div class="lastcell">
                     <input type="tel" id="txtPhone" placeholder="Phone number" data-bind="value: booking().phoneNumber" />
@@ -32,7 +32,7 @@
             </div>
             <div class="row" full style="display: none">
                 <div class="cell">
-                    <img src="images/calendar.png" alt="Pickup date" />
+                    <img src="/images/calendar.png" alt="Pickup date" />
                 </div>
                 <div class="lastcell">
                     <input id="pickupDate" type="date" placeholder="Pickup date" data-bind="value: booking().pickupDate" />
@@ -47,7 +47,7 @@
             </div>
             <div class="row" full style="display: none">
                 <div class="cell">
-                    <img src="images/people.png" alt="Number of people" />
+                    <img src="/images/people.png" alt="Number of people" />
                 </div>
                 <div class="lastcell">
                     <input type="number" id="number" placeholder="Number of people" data-bind="value: booking().numberOfPeople" />
@@ -55,7 +55,7 @@
             </div>
             <div class="row">
                 <div class="cell">
-                    <img src="images/pickup.png" alt="Pickup From" />
+                    <img src="/images/pickup.png" alt="Pickup From" />
                 </div>
                 <div class="lastcell">
                     <input type="text" id="from" placeholder="Pickup from" data-bind="value: booking().addrFrom" />
@@ -71,7 +71,7 @@
             </div>
             <div class="row" full style="display: none">
                 <div class="cell">
-                    <img src="images/drop.png" alt="Drop Off" />
+                    <img src="/images/drop.png" alt="Drop Off" />
                 </div>
                 <div class="lastcell">
                     <input type="text" id="to" placeholder="Drop off" data-bind="value: booking().addrTo" />
@@ -87,7 +87,7 @@
             </div>
             <div class="row" id="lblQuickTaxi">
                 <div class="cell">
-                    <img src="images/logo.png" alt="Taxi" />
+                    <img src="/images/logo.png" alt="Taxi" />
                 </div>
                 <div class="lastcell">
                     <select id="ddlQuickTaxi" data-bind="options: taxis, optionsText: 'name',value: booking().quickTaxi">
@@ -114,7 +114,7 @@
                 </div>
                 <div class="row">
                     <div class="cell">
-                        <img src="images/logo.png" alt="Taxi" /></div>
+                        <img src="/images/logo.png" alt="Taxi" /></div>
                     <div class="lastCell">
                         <select id="ddlTaxi" data-bind="options: taxis, optionsText: 'display',value: booking().taxi">
                         </select>
@@ -165,7 +165,7 @@
         <div style="width: 100%;" class="table">
             <div class="row">
                 <div class="cell">
-                    <img src="images/logo.png" alt="Taxi" />
+                    <img src="/images/logo.png" alt="Taxi" />
                 </div>
                 <div class="lastcell">
                     <select id="ddlSwitchTaxi" data-bind="options: taxis, optionsText: 'name',value: booking().quickTaxi">
