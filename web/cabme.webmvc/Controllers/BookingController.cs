@@ -110,11 +110,8 @@ namespace cabme.webmvc.Controllers
                 booking.Id = dataBooking.Id;
 
                 BookHub.SendClientMessage(booking.PhoneNumber, "Booking is being sent to " + booking.SelectedTaxi.Name + ".");
-#if DEBUG
+
                 string url = "http://www.cabme.co.za/confirm.aspx?hash=" + dataBooking.Hash;
-#else
-                string url = "http://" + OperationContext.Current.RequestContext.RequestMessage.Headers.To.Host + "/confirm.aspx?hash=" + dataBooking.Hash;
-#endif
 
                 //Load contact details for taxi
                 var contactDetails = context.ContactDetails.Where(p => p.TaxiId == booking.TaxiId).SingleOrDefault();
