@@ -72,7 +72,7 @@ function BookingViewModel() {
         if (taxiId) {
             url = '/api/booking/?userName=' + taxiId + '&confirmed=false&open=false&taxi=true';
         } else {
-            url = '/api/booking/userName=' + userID + '&confirmed=false&open=false';
+            url = '/api/booking/?userName=' + userID + '&confirmed=false&open=false';
         }
         $.getJSON(url, function (json) {
             $.each(json, function (index, booking) {

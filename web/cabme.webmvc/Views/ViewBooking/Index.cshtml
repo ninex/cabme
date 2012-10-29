@@ -257,13 +257,13 @@
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/knockout/2.1.0/knockout-min.js"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/viewbooking.js")"></script>
     <script type="text/javascript">
+        var taxiId;
         var userID = $('#userName').val();
     </script>
     @if (User.IsInRole("Taxi"))
     {
         <script type="text/javascript">
             var taxiHub;
-            var taxiId;
             taxiId = userID;
             $(document).ready(function () {
                 taxiHub = $.connection.taxiHub;
