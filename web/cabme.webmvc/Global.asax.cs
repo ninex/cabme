@@ -6,6 +6,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using System.Web.WebPages;
 
 namespace cabme.webmvc
 {
@@ -24,6 +25,8 @@ namespace cabme.webmvc
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles); 
             BundleMobileConfig.RegisterBundles(BundleTable.Bundles);
+
+            DisplayModeProvider.Instance.Modes.Insert(0, new cabme.webmvc.Common.MobileDisplayMode());
         }
     }
 }
