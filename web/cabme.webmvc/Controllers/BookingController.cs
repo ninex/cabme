@@ -157,6 +157,7 @@ namespace cabme.webmvc.Controllers
         }
 
         // PUT api/booking/5
+        [HttpPut]
         public Booking Put(int id, [FromBody]Booking booking)
         {
 
