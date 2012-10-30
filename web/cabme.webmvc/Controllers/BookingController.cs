@@ -23,12 +23,6 @@ namespace cabme.webmvc.Controllers
             }
         }
 
-        // GET api/booking/5
-        /*public string Get(int id)
-        {
-            return "Please provide the hash";
-        }*/
-
         // POST api/booking
         public Booking Post(Booking booking)
         {
