@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using cabme.webmvc.Hubs;
+using cabme.webmvc.Common;
 
 namespace cabme.webmvc.Controllers
 {
@@ -15,6 +17,5 @@ namespace cabme.webmvc.Controllers
         {
             return View();
         }
-
     }
 }
