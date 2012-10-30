@@ -14,7 +14,7 @@ namespace cabme.webmvc.Controllers
 {
     public class BookingController : ApiController
     {
-        // GET api/confirmation
+        // GET api/booking
         public IEnumerable<Booking> Get()
         {
             using (Data.contentDataContext context = new Data.contentDataContext())
@@ -23,13 +23,13 @@ namespace cabme.webmvc.Controllers
             }
         }
 
-        // GET api/confirmation/5
+        // GET api/booking/5
         /*public string Get(int id)
         {
             return "Please provide the hash";
         }*/
 
-        // POST api/confirmation
+        // POST api/booking
         public Booking Post(Booking booking)
         {
             if (booking == null)
@@ -161,7 +161,7 @@ namespace cabme.webmvc.Controllers
             return booking;
         }
 
-        // PUT api/confirmation/5
+        // PUT api/booking/5
         public Booking Put(int id, [FromBody]Booking booking)
         {
 
@@ -211,12 +211,7 @@ namespace cabme.webmvc.Controllers
             }
             return null;
         }
-
-        // DELETE api/confirmation/5
-        public void Delete(int id)
-        {
-        }
-
+        // Get /api/booking/?userName={userName}&active={active}&confirmed={confirmed}&open={open}&afterId={afterId}
         public IEnumerable<Booking> GetAllBookingsByNumber(string userName, bool? active = true, bool? confirmed = null, bool? open = null, int? afterId = 0)
         {
             using (Data.contentDataContext context = new Data.contentDataContext())
@@ -299,7 +294,7 @@ namespace cabme.webmvc.Controllers
             }
         }
 
-        //// GET api/confirmation/?hash=        
+        //// GET api/booking/{hash}/?referenceCode={referenceCode}&waitingTime={waitingTime}
         public Booking Get(string id, string referenceCode = null, int waitingTime = -1)
         {
             string hash = id;
