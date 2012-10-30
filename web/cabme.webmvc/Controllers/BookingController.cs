@@ -207,6 +207,13 @@ namespace cabme.webmvc.Controllers
             }
             return null;
         }
+
+        //DELETE
+        public void Delete(string id)
+        {
+
+        }
+
         // Get /api/booking/?userName={userName}&active={active}&confirmed={confirmed}&open={open}&afterId={afterId}
         [Authorize]
         public IEnumerable<Booking> GetAllBookingsByNumber(string userName, bool? active = true, bool? confirmed = null, bool? open = null, int? afterId = 0)
