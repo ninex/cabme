@@ -15,6 +15,7 @@ namespace cabme.webmvc.Controllers
     public class BookingController : ApiController
     {
         // GET api/booking
+        [Authorize]
         public IEnumerable<Booking> Get()
         {
             using (Data.contentDataContext context = new Data.contentDataContext())
@@ -206,6 +207,7 @@ namespace cabme.webmvc.Controllers
             return null;
         }
         // Get /api/booking/?userName={userName}&active={active}&confirmed={confirmed}&open={open}&afterId={afterId}
+        [Authorize]
         public IEnumerable<Booking> GetAllBookingsByNumber(string userName, bool? active = true, bool? confirmed = null, bool? open = null, int? afterId = 0)
         {
             using (Data.contentDataContext context = new Data.contentDataContext())
@@ -289,6 +291,7 @@ namespace cabme.webmvc.Controllers
         }
 
         //// GET api/booking/{hash}/?referenceCode={referenceCode}&waitingTime={waitingTime}
+        [Authorize]
         public Booking Get(string id, string referenceCode = null, int waitingTime = -1)
         {
             string hash = id;
