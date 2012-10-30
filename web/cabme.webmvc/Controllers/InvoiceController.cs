@@ -10,7 +10,7 @@ namespace cabme.webmvc.Controllers
     {
         //
         // GET: /Invoice/
-
+        [Authorize]
         public ActionResult Index()
         {
             return View();
