@@ -88,14 +88,8 @@ function Booking() {
 			if (!isMapsLoaded) {
 				loadMapScript();
 			}
-			$('[full]').show();
-			$('#lblQuickTaxi').hide();
-			$('#btnBookMin').hide();
 			$('#btnMakeFull').html('Switch to quick booking.');
 		} else {
-			$('[full]').hide();
-			$('#lblQuickTaxi').show();
-			$('#btnBookMin').show();
 			$('#btnMakeFull').html('Switch to detailed booking.');
 		}
 	});

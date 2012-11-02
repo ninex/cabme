@@ -30,7 +30,7 @@
                     <input type="tel" id="txtPhone" placeholder="Phone number" data-bind="value: booking().phoneNumber" />
                 </div>
             </div>
-            <div class="row" full style="display: none">
+            <div class="row" style="display: none" data-bind="visible: booking().full()" >
                 <div class="cell">
                     <img src="/images/calendar.png" alt="Pickup date" />
                 </div>
@@ -38,14 +38,14 @@
                     <input id="pickupDate" type="date" placeholder="Pickup date" data-bind="value: booking().pickupDate" />
                 </div>
             </div>
-            <div class="row" full style="display: none">
+            <div class="row" style="display: none" data-bind="visible: booking().full()" >
                 <div class="cell">
                 </div>
                 <div class="lastcell">
                     <input id="pickupTime" type="time" placeholder="Pickup time" data-bind="value: booking().pickupTime" />
                 </div>
             </div>
-            <div class="row" full style="display: none">
+            <div class="row" style="display: none" data-bind="visible: booking().full()" >
                 <div class="cell">
                     <img src="/images/people.png" alt="Number of people" />
                 </div>
@@ -69,7 +69,7 @@
                     </select>
                 </div>
             </div>
-            <div class="row" full style="display: none">
+            <div class="row" style="display: none" data-bind="visible: booking().full()" >
                 <div class="cell">
                     <img src="/images/drop.png" alt="Drop Off" />
                 </div>
@@ -77,7 +77,7 @@
                     <input type="text" id="to" placeholder="Drop off" data-bind="value: booking().addrTo" />
                 </div>
             </div>
-            <div class="row" full style="display: none">
+            <div class="row" style="display: none" data-bind="visible: booking().full()" >
                 <div class="cell">
                 </div>
                 <div class="lastcell">
@@ -85,7 +85,7 @@
                     </select>
                 </div>
             </div>
-            <div class="row" id="lblQuickTaxi">
+            <div class="row" id="lblQuickTaxi" data-bind="visible: !booking().full()" >
                 <div class="cell">
                     <img src="/images/logo.png" alt="Taxi" />
                 </div>
@@ -96,8 +96,8 @@
             </div>
         </div>
         <div style="margin: 10px auto; width: 100%; text-align: center;">
-            <input type="button" id="btnBookMin" value="Book" data-bind="click: step1Min" class="button" />
-            <input full style="display: none" type="button" id="btnConfirm" value="Next" data-bind="click: step1"
+            <input type="button" id="btnBookMin" value="Book" class="button" data-bind="click: step1Min, visible: !booking().full()" />
+            <input style="display: none" type="button" id="btnConfirm" value="Next" data-bind="click: step1, visible: booking().full()"
                 class="button" />
         </div>
     </div>
