@@ -4,7 +4,7 @@ $(document).ready(function () {
     model = new BookingViewModel();
     ko.applyBindings(model);
 });
-function Booking(id, phoneNumber, numberOfPeople, pickupTime, suburb, addrFrom, addrTo, confirmed, accepted, hash, taxiId) {
+function Booking(id, phoneNumber, numberOfPeople, pickupTime, suburb, addrFrom, addrTo, userAccepted, taxiAccepted, userCancelled, taxiCancelled, hash, taxiId) {
     var self = this;
     self.id = id;
     self.phoneNumber = phoneNumber;
@@ -13,8 +13,10 @@ function Booking(id, phoneNumber, numberOfPeople, pickupTime, suburb, addrFrom, 
     self.suburb = suburb;
     self.addrFrom = addrFrom;
     self.addrTo = addrTo;
-    self.confirmed = ko.observable(confirmed);
-    self.accepted = ko.observable(accepted);
+    self.userAccepted = ko.observable(userAccepted);
+    self.taxiAccepted = ko.observable(taxiAccepted);
+    self.userCancelled = ko.observable(userCancelled);
+    self.taxiCancelled = ko.observable(taxiCancelled);
     self.hash = hash;
     self.refCode = ko.observable('');
     self.arrival = ko.observable(1);
@@ -28,13 +30,13 @@ function BookingViewModel() {
     self.missedBookings = ko.observableArray();
     self.loadData = function () {
         if (taxiId) {
-            var params = 'userName=' + taxiId + '&open=true';
+            var params = 'userName=' + taxiId + '&active=true&open=true&taxiAccepted=false&taxiCancelled=false&userCancelled=false';
             if (self.openBookings().length > 0) {
                 params += '&after=' + self.openBookings()[0].id;
             }
             url = '/api/booking/?' + params;
         } else {
-            url = '/api/booking/?userName=' + userID + '&confirmed=false&open=true';
+            url = '/api/booking/?userName=' + userID + '&active=true&open=true&taxiAccepted=false&taxiCancelled=false&userCancelled=false';
         }
         $.getJSON(url, function (json) {
             $.each(json, function (index, booking) {
@@ -42,9 +44,9 @@ function BookingViewModel() {
                 if (booking.SuburbFrom && booking.SuburbFrom != null) {
                     suburbName = booking.SuburbFrom.Name;
                 }
-                var newBooking = new Booking(booking.Id, booking.PhoneNumber, booking.NumberOfPeople, booking.PickupTime, suburbName, booking.AddrFrom, booking.AddrTo, booking.Confirmed, booking.Accepted, booking.Hash, taxiId);
+                var newBooking = new Booking(booking.Id, booking.PhoneNumber, booking.NumberOfPeople, booking.PickupTime, suburbName, booking.AddrFrom, booking.AddrTo, booking.UserAccepted, booking.TaxiAccepted, booking.UserCancelled, booking.TaxiCancelled, booking.Hash, taxiId);
                 self.openBookings.unshift(newBooking);
-                if (newBooking.confirmed()) {
+                if (newBooking.taxiAccepted()) {
                     setTimeout(function () {
                         self.openBookings.remove(newBooking);
                     }, 300000);
@@ -54,9 +56,9 @@ function BookingViewModel() {
     };
     self.loadCompletedData = function () {
         if (taxiId) {
-            url = '/api/booking/?userName=' + taxiId + '&confirmed=true';
+            url = '/api/booking/?userName=' + taxiId + '&active=true&taxiAccepted=true&userAccepted=true&taxiCancelled=false&userCancelled=false';
         } else {
-            url = '/api/booking/?userName=' + userID + '&confirmed=true';
+            url = '/api/booking/?userName=' + userID + '&active=true&taxiAccepted=true&userAccepted=true&taxiCancelled=false&userCancelled=false';
         }
         $.getJSON(url, function (json) {
             $.each(json, function (index, booking) {
@@ -70,9 +72,9 @@ function BookingViewModel() {
     };
     self.loadMissedData = function () {
         if (taxiId) {
-            url = '/api/booking/?userName=' + taxiId + '&confirmed=false&open=false&taxi=true';
+            url = '/api/booking/?userName=' + taxiId + '&taxiAccepted=false&userAccepted=false&taxiCancelled=false&userCancelled=false';
         } else {
-            url = '/api/booking/?userName=' + userID + '&confirmed=false&open=false';
+            url = '/api/booking/?userName=' + userID + '&taxiAccepted=false&userAccepted=false&taxiCancelled=false&userCancelled=false';
         }
         $.getJSON(url, function (json) {
             $.each(json, function (index, booking) {
@@ -95,7 +97,7 @@ function BookingViewModel() {
             url: '/api/booking/' + booking.hash + '/?' + params,
             data: '',
             success: function (msg) {
-                booking.confirmed(true);
+                booking.taxiAccepted(true);
                 self.completedBookings.unshift(booking);
                 setTimeout(function () {
                     self.openBookings.remove(booking);
@@ -113,11 +115,11 @@ function BookingViewModel() {
         var booking = ko.utils.arrayFirst(self.openBookings(), function (booking) {
             return booking.id === id;
         });
-        booking.accepted(true);
+        booking.userAccepted(true);
     };
     self.reject = function (booking) {
         var data = {
-            "Cancelled": true,
+            "TaxiCancelled": true,
             "Id": booking.id,
             "PhoneNumber": booking.phoneNumber,
             "NumberOfPeople": booking.numberOfPeople,
@@ -130,6 +132,7 @@ function BookingViewModel() {
             url: '/api/booking/' + booking.id,
             data: JSON.stringify(data),
             success: function (msg) {
+                booking.taxiCancelled(true);
                 self.openBookings.remove(booking);
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -142,8 +145,7 @@ function BookingViewModel() {
         var booking = ko.utils.arrayFirst(self.openBookings(), function (booking) {
             return booking.id === id;
         });
-        booking.accepted(false);
-        booking.confirmed(false);
+        booking.userCancelled(true);
         self.openBookings.remove(booking);
     }
     self.review = function (booking) {

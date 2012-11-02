@@ -134,14 +134,14 @@
     <div id="step3" style="display: none; width: 100%;" class="table">
         <h3>
             Booking status</h3>
-        <div id="msgStatus" class="status" data-bind="visible: !booking().accepted() && !booking().switchTaxi()">
+        <div id="msgStatus" class="status" data-bind="visible: !booking().userAccepted() && !booking().switchTaxi()">
             <p class="status">
                 Booking sent to server.</p>
         </div>
-        <div data-bind="visible: !booking().confirmed() && !booking().switchTaxi()">
+        <div data-bind="visible: !booking().userAccepted() && !booking().taxiAccepted() && !booking().switchTaxi()">
             <input type="button" id="btnCancel" value="Cancel" class="button" data-bind="click: cancel" />
         </div>
-        <div data-bind="visible: booking().confirmed() && !booking().accepted() && !booking().switchTaxi()">
+        <div data-bind="visible: booking().taxiAccepted() && !booking().userAccepted() && !booking().switchTaxi()">
             Booking confirmed. Taxi can arrive in
             <label data-bind="text: booking().waitingTime">
             </label>
@@ -153,7 +153,7 @@
                 <input type="button" id="btnDismiss" value="Cancel" class="button" data-bind="click: cancel" />
             </div>
         </div>
-        <div data-bind="visible: booking().accepted() && !booking().switchTaxi()">
+        <div data-bind="visible: booking().userAccepted() && !booking().switchTaxi()">
             Booking accepted. Taxi expected at
             <label data-bind="text: booking().expectedArrival">
             </label>

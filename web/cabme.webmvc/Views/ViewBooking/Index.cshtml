@@ -21,13 +21,13 @@
                     You have new bookings awaiting confirmation. Refresh to view.</p>
             </div>
             <div data-bind="foreach: {data: openBookings, afterAdd: showNewBooking, beforeRemove: removeBooking}">
-                <div class="table" style="width: 80%;" data-bind="fadeVisible: confirmed, fadeVisible: accepted">
+                <div class="table" style="width: 80%;" data-bind="fadeVisible: userAccepted, fadeVisible: taxiAccepted">
                     <div class="row">
                         <div class="cell">
                             <b>Phone Number: </b>
                         </div>
                         <div class="cell lastCell">
-                            <div data-bind="text: phoneNumber, visible: confirmed() == true || isTaxi == false || typeof isTaxi == 'undefined'">
+                            <div data-bind="text: phoneNumber, visible: taxiAccepted() == true || isTaxi == false || typeof isTaxi == 'undefined'">
                             </div>
                         </div>
                     </div>
@@ -63,7 +63,7 @@
                             <b>From: </b>
                         </div>
                         <div class="cell lastCell">
-                            <div data-bind="text: addrFrom, visible: confirmed() == true || isTaxi == false || typeof isTaxi == 'undefined'">
+                            <div data-bind="text: addrFrom, visible: taxiAccepted() == true || isTaxi == false || typeof isTaxi == 'undefined'">
                             </div>
                         </div>
                     </div>
@@ -72,11 +72,11 @@
                             <b>To: </b>
                         </div>
                         <div class="cell lastCell">
-                            <div data-bind="text: addrTo, visible: confirmed() == true || isTaxi == false || typeof isTaxi == 'undefined'">
+                            <div data-bind="text: addrTo, visible: taxiAccepted() == true || isTaxi == false || typeof isTaxi == 'undefined'">
                             </div>
                         </div>
                     </div>
-                    <div class="row" data-bind="visible: confirmed() == false && isTaxi == true">
+                    <div class="row" data-bind="visible: taxiAccepted() == false && isTaxi == true">
                         <div class="cell">
                             <b>Driver Code: </b>
                         </div>
@@ -84,7 +84,7 @@
                             <input type="text" maxlength="8" style="width: 40px;" data-bind="value: refCode" />
                         </div>
                     </div>
-                    <div class="row" data-bind="visible: confirmed() == false && isTaxi == true">
+                    <div class="row" data-bind="visible: taxiAccepted() == false && isTaxi == true">
                         <div class="cell">
                             <b>Minutes to arrival: </b>
                         </div>
@@ -92,7 +92,7 @@
                             <input type="text" maxlength="2" style="width: 40px;" data-bind="value: arrival" />
                         </div>
                     </div>
-                    <div class="row" data-bind="visible: !accepted() && confirmed() && isTaxi">
+                    <div class="row" data-bind="visible: !userAccepted() && taxiAccepted() && isTaxi">
                         <div class="cell">
                         </div>
                         <div class="cell lastCell">
@@ -100,11 +100,11 @@
                                 Waiting for client to accept</div>
                         </div>
                     </div>
-                    <div class="row" data-bind="visible: accepted() == false && isTaxi == true">
+                    <div class="row" data-bind="visible: !taxiAccepted() && isTaxi">
                         <div class="cell">
                         </div>
                         <div class="cell lastCell">
-                            <input type="button" class="button" value="Confirm" data-bind="click: $parent.confirm, visible: !confirmed()" />
+                            <input type="button" class="button" value="Confirm" data-bind="click: $parent.confirm, visible: !taxiAccepted()" />
                             <input type="button" class="button" value="Reject" data-bind="click: $parent.reject" />
                         </div>
                     </div>

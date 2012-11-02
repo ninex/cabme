@@ -14,15 +14,14 @@ $(document).ready(function () {
     };
     bookHub.confirmBooking = function (time) {
         if (time && time > 0) {
-            model.booking().confirmed(true);
+            model.booking().taxiAccepted(true);
             model.booking().waitingTime(time);
         } else {
             $('#msgStatus').append('<p class="status">Booking has been confirmed</p>');
         }
     };
     bookHub.cancelBooking = function () {
-        model.booking().accepted(false);
-        model.booking().confirmed(false);
+        model.booking().taxiCancelled(true);
         model.booking().switchTaxi(true);
         $('#step3').hide();
     }
@@ -56,8 +55,10 @@ function Booking() {
 	self.addrTo = ko.observable('');
 	self.computedDistance = ko.observable('');
 	self.displayDistance = ko.observable('');
-	self.confirmed = ko.observable(false);
-	self.accepted = ko.observable(false);
+	self.taxiAccepted = ko.observable(false);
+	self.userAccepted = ko.observable(false);
+	self.taxiCancelled = ko.observable(false);
+	self.userCancelled = ko.observable(false);
 	self.switchTaxi = ko.observable(false);
 	self.quickTaxi = ko.observable();
 	self.taxi = ko.observable();
@@ -207,7 +208,10 @@ function BookingViewModel() {
 	        "AddrFrom": self.booking().pickup(),
 	        "ComputedDistance": 0,
 	        "Active": true,
-	        "Confirmed": false,
+	        "TaxiAccepted": self.booking().taxiAccepted(),
+	        "UserAccepted": self.booking().userAccepted(),
+	        "TaxiCancelled": self.booking().taxiCancelled(),
+	        "UserCancelled": self.booking().userCancelled(),
 	        "TaxiId": self.booking().quickTaxi().id,
 	        "SuburbFromId": suburbFrom != null ? suburbFrom.id : 0
 	    };
@@ -289,7 +293,10 @@ function BookingViewModel() {
 	        "AddrTo": self.booking().drop(),
 	        "ComputedDistance": self.booking().computedDistance(),
 	        "Active": true,
-	        "Confirmed": false,
+	        "TaxiAccepted": self.booking().taxiAccepted(),
+	        "UserAccepted": self.booking().userAccepted(),
+	        "TaxiCancelled": self.booking().taxiCancelled(),
+	        "UserCancelled": self.booking().userCancelled(),
 	        "TaxiId": self.booking().taxi().id,
 	        "SuburbFromId": suburbFrom != null ? suburbFrom.id : 0
 	    };
@@ -315,7 +322,8 @@ function BookingViewModel() {
 	};
 	self.accept = function () {
         var data = {
-	        "Accepted": true,
+            "UserAccepted": true,
+            "TaxiAccepted": self.booking().taxiAccepted(),
             "Id" : self.booking().id(),
 	        "PhoneNumber": self.booking().phoneNumber(),
 	        "NumberOfPeople": 1,
@@ -328,7 +336,7 @@ function BookingViewModel() {
 	        url: '/api/booking/' + self.booking().id(),
 	        data: JSON.stringify(data),
 	        success: function (msg) {
-	            self.booking().accepted(true);
+	            self.booking().userAccepted(true);
 	        },
 	        error: function (jqXHR, textStatus, errorThrown) {
 	            console.log(errorThrown);
@@ -338,7 +346,7 @@ function BookingViewModel() {
 	};
 	self.cancel = function () {
 	    var data = {
-	        "Cancelled": true,
+	        "UserCancelled": true,
             "Id" : self.booking().id(),
 	        "PhoneNumber": self.booking().phoneNumber(),
 	        "NumberOfPeople": 1,
@@ -351,8 +359,7 @@ function BookingViewModel() {
 	        url: '/api/booking/' + self.booking().id(),
 	        data: JSON.stringify(data),
 	        success: function (msg) {
-	            self.booking().accepted(false);
-	            self.booking().confirmed(false);
+	            self.booking().userCancelled(true);
 	            self.booking().switchTaxi(true);
 	            $('#step3').hide();
 	        },
@@ -370,15 +377,22 @@ function BookingViewModel() {
 	    var suburbFrom = ko.utils.arrayFirst(self.suburbs(), function (suburb) {
 	        return suburb.fullAddress === self.booking().suburbFrom();
 	    });
+	    self.booking().taxiAccepted(false);
+	    self.booking().userAccepted(false);
+	    self.booking().taxiCancelled(false);
+	    self.booking().userCancelled(false);
 
 	    var data = {
-            "Id" : self.booking().id(),
+	        "Id": self.booking().id(),
 	        "PhoneNumber": self.booking().phoneNumber(),
 	        "NumberOfPeople": 1,
 	        "AddrFrom": self.booking().pickup(),
 	        "ComputedDistance": 0,
 	        "Active": true,
-	        "Confirmed": false,
+	        "TaxiAccepted": self.booking().taxiAccepted(),
+	        "UserAccepted": self.booking().userAccepted(),
+	        "TaxiCancelled": self.booking().taxiCancelled(),
+	        "UserCancelled": self.booking().userCancelled(),
 	        "TaxiId": self.booking().quickTaxi().id,
 	        "SuburbFromId": suburbFrom != null ? suburbFrom.id : 0
 	    };
@@ -408,10 +422,12 @@ function BookingViewModel() {
 	    $('#loading').show();
 	    $('#step3').hide();
 	    self.booking().id(0);
-	    self.booking().confirmed(false);
-	    self.booking().accepted(false);
+	    self.booking().taxiAccepted(false);
+	    self.booking().userAccepted(false);
+	    self.booking().taxiCancelled(false);
+	    self.booking().userCancelled(false);
 	    self.booking().switchTaxi(false);
-	    self.booking().full = (false);
+	    self.booking().full(false);
 	    $('#msgStatus').html('');
 	    $('#step1').slideDown();
 	    $('#loading').hide();
