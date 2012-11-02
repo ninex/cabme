@@ -85,7 +85,7 @@
         <elementListCompartment Id="9efcbf3d-9a54-4180-bd19-e576ecf21c6f" absoluteBounds="0.89000000000000012, 7.335, 1.9700000000000002, 1.9801025390625" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(5.71875 : 3.48240397135417); (5.71875 : 7.50322366145834); (2.875 : 7.50322366145834)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(5.71875 : 3.48240397135417); (5.71875 : 7.50322366145834); (2.875 : 7.50322366145834)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/contentDataContext/Taxi/Taxi_Review" />
       <nodes>
         <classShapeMoniker Id="78aa0b06-4db1-485e-87b1-718ba81e6eb2" />
@@ -99,16 +99,16 @@
         <classShapeMoniker Id="6fa91715-270e-422a-afd8-2997cdcada0e" />
       </nodes>
     </associationConnector>
-    <classShape Id="f47b80e8-aa3d-4db1-8352-69d42ae2a6b9" absoluteBounds="1.5, 1.125, 2, 5.2323225911458326">
+    <classShape Id="bd265af8-315e-4442-91b2-e830f81178b0" absoluteBounds="0.625, 0.5, 2, 5.6169254557291657">
       <DataClassMoniker Name="/contentDataContext/Booking" />
       <nestedChildShapes>
-        <elementListCompartment Id="5fe07f3d-093d-42e3-8dfc-4b5db0ccc85a" absoluteBounds="1.5150000000000001, 1.585, 1.9700000000000002, 4.672322591145833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="46e9937b-7b43-4a23-8ca3-326e599b7fb8" absoluteBounds="0.64, 0.96, 1.9700000000000002, 5.0569254557291661" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(2.1875 : 6.35732259114583); (2.1875 : 6.875)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(1.75 : 6.11692545572917); (1.75 : 6.875)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/contentDataContext/Booking/Booking_Review" />
       <nodes>
-        <classShapeMoniker Id="f47b80e8-aa3d-4db1-8352-69d42ae2a6b9" />
+        <classShapeMoniker Id="bd265af8-315e-4442-91b2-e830f81178b0" />
         <classShapeMoniker Id="6fa91715-270e-422a-afd8-2997cdcada0e" />
       </nodes>
     </associationConnector>

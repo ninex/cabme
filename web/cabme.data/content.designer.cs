@@ -1694,9 +1694,13 @@ namespace cabme.data
 		
 		private bool _Active;
 		
-		private bool _Confirmed;
+		private bool _TaxiCancelled;
 		
-		private bool _Accepted;
+		private bool _UserCancelled;
+		
+		private bool _TaxiAccepted;
+		
+		private bool _UserAccepted;
 		
 		private System.Nullable<int> _TaxiId;
 		
@@ -1746,10 +1750,14 @@ namespace cabme.data
     partial void OnWaitingTimeChanged();
     partial void OnActiveChanging(bool value);
     partial void OnActiveChanged();
-    partial void OnConfirmedChanging(bool value);
-    partial void OnConfirmedChanged();
-    partial void OnAcceptedChanging(bool value);
-    partial void OnAcceptedChanged();
+    partial void OnTaxiCancelledChanging(bool value);
+    partial void OnTaxiCancelledChanged();
+    partial void OnUserCancelledChanging(bool value);
+    partial void OnUserCancelledChanged();
+    partial void OnTaxiAcceptedChanging(bool value);
+    partial void OnTaxiAcceptedChanged();
+    partial void OnUserAcceptedChanging(bool value);
+    partial void OnUserAcceptedChanged();
     partial void OnTaxiIdChanging(System.Nullable<int> value);
     partial void OnTaxiIdChanged();
     partial void OnLastModifiedChanging(System.DateTime value);
@@ -2070,42 +2078,82 @@ namespace cabme.data
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Confirmed", DbType="Bit NOT NULL")]
-		public bool Confirmed
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TaxiCancelled", DbType="Bit NOT NULL")]
+		public bool TaxiCancelled
 		{
 			get
 			{
-				return this._Confirmed;
+				return this._TaxiCancelled;
 			}
 			set
 			{
-				if ((this._Confirmed != value))
+				if ((this._TaxiCancelled != value))
 				{
-					this.OnConfirmedChanging(value);
+					this.OnTaxiCancelledChanging(value);
 					this.SendPropertyChanging();
-					this._Confirmed = value;
-					this.SendPropertyChanged("Confirmed");
-					this.OnConfirmedChanged();
+					this._TaxiCancelled = value;
+					this.SendPropertyChanged("TaxiCancelled");
+					this.OnTaxiCancelledChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Accepted", DbType="Bit NOT NULL")]
-		public bool Accepted
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserCancelled", DbType="Bit NOT NULL")]
+		public bool UserCancelled
 		{
 			get
 			{
-				return this._Accepted;
+				return this._UserCancelled;
 			}
 			set
 			{
-				if ((this._Accepted != value))
+				if ((this._UserCancelled != value))
 				{
-					this.OnAcceptedChanging(value);
+					this.OnUserCancelledChanging(value);
 					this.SendPropertyChanging();
-					this._Accepted = value;
-					this.SendPropertyChanged("Accepted");
-					this.OnAcceptedChanged();
+					this._UserCancelled = value;
+					this.SendPropertyChanged("UserCancelled");
+					this.OnUserCancelledChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TaxiAccepted", DbType="Bit NOT NULL")]
+		public bool TaxiAccepted
+		{
+			get
+			{
+				return this._TaxiAccepted;
+			}
+			set
+			{
+				if ((this._TaxiAccepted != value))
+				{
+					this.OnTaxiAcceptedChanging(value);
+					this.SendPropertyChanging();
+					this._TaxiAccepted = value;
+					this.SendPropertyChanged("TaxiAccepted");
+					this.OnTaxiAcceptedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserAccepted", DbType="Bit NOT NULL")]
+		public bool UserAccepted
+		{
+			get
+			{
+				return this._UserAccepted;
+			}
+			set
+			{
+				if ((this._UserAccepted != value))
+				{
+					this.OnUserAcceptedChanging(value);
+					this.SendPropertyChanging();
+					this._UserAccepted = value;
+					this.SendPropertyChanged("UserAccepted");
+					this.OnUserAcceptedChanged();
 				}
 			}
 		}
