@@ -9,10 +9,12 @@
 </div>
 <article class="tabs">
     <h3 id="htab1">
-        Open</h3>
+        Waiting</h3>
     <h3 id="htab2">
-        Confirmed</h3>
+        In progress</h3>
     <h3 id="htab3">
+        Completed</h3>
+    <h3 id="htab4">
         Missed</h3>
     <div id="tab1" style="display: none">
         <div style="height: 100%">
@@ -113,11 +115,11 @@
         </div>
         <div data-bind="visible: openBookings().length <= 0">
             <p>
-                No active bookings</p>
+                &nbsp; No bookings</p>
         </div>
     </div>
     <div id="tab2" style="display: none">
-        <div data-bind="foreach: {data: completedBookings}">
+        <div data-bind="foreach: {data: acceptedBookings, afterAdd: showNewBooking}">
             <div class="table" style="width: 80%;">
                 <div class="row">
                     <div class="cell">
@@ -173,22 +175,120 @@
                         </div>
                     </div>
                 </div>
-                <div class="row" data-bind="visible: isTaxi == false">
+                <div class="row">
+                    <div class="cell">
+                        <b>Driver Code: </b>
+                    </div>
+                    <div class="cell lastCell">
+                        <div data-bind="text: refCode">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="cell">
+                        <b>Expected Pickup:</b>
+                    </div>
+                    <div class="cell lastCell">
+                        <div data-bind="text: expectedArrival()">
+                        </div>
+                    </div>
+                </div>
+                @*<div class="row" data-bind="visible: isTaxi == false">
                     <div class="cell">
                     </div>
                     <div class="cell lastCell">
                         <input type="button" class="button" value="Review" data-bind="click: $parent.review" />
                     </div>
+                </div>*@
+            </div>
+        </div>
+        <div data-bind="visible: acceptedBookings().length <= 0">
+            <p>
+                &nbsp; No bookings</p>
+        </div>
+    </div>
+    <div id="tab3" style="display: none">
+        <div data-bind="foreach: {data: completedBookings, afterAdd: showNewBooking}">
+            <div class="table" style="width: 80%;">
+                <div class="row">
+                    <div class="cell">
+                        <b>Phone Number: </b>
+                    </div>
+                    <div class="cell lastCell">
+                        <div data-bind="text: phoneNumber">
+                        </div>
+                    </div>
                 </div>
+                <div class="row">
+                    <div class="cell">
+                        <b>People: </b>
+                    </div>
+                    <div class="cell lastCell">
+                        <div data-bind="text: numberOfPeople">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="cell">
+                        <b>Pickup Time: </b>
+                    </div>
+                    <div class="cell lastCell">
+                        <div data-bind="text: pickupTime">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="cell">
+                        <b>Suburb: </b>
+                    </div>
+                    <div class="cell lastCell">
+                        <div data-bind="text: suburb">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="cell">
+                        <b>From: </b>
+                    </div>
+                    <div class="cell lastCell">
+                        <div data-bind="text: addrFrom">
+                        </div>
+                    </div>
+                </div>
+                <div class="row" data-bind="visible: typeof addrTo != 'undefined' && addrTo != '' && addrTo != null">
+                    <div class="cell">
+                        <b>To: </b>
+                    </div>
+                    <div class="cell lastCell">
+                        <div data-bind="text: addrTo">
+                        </div>
+                    </div>
+                </div>                
+                <div class="row">
+                    <div class="cell">
+                        <b>Driver Code: </b>
+                    </div>
+                    <div class="cell lastCell">
+                        <div data-bind="text: refCode">
+                        </div>
+                    </div>
+                </div>
+                @*<div class="row" data-bind="visible: isTaxi == false">
+                    <div class="cell">
+                    </div>
+                    <div class="cell lastCell">
+                        <input type="button" class="button" value="Review" data-bind="click: $parent.review" />
+                    </div>
+                </div>*@
             </div>
         </div>
         <div data-bind="visible: completedBookings().length <= 0">
             <p>
-                No bookings</p>
+                &nbsp; No bookings</p>
         </div>
     </div>
-    <div id="tab3" style="display: none">
-        <div data-bind="foreach: {data: missedBookings}">
+    <div id="tab4" style="display: none">
+        <div data-bind="foreach: {data: missedBookings, afterAdd: showNewBooking}">
             <div class="table" style="width: 80%;">
                 <div class="row">
                     <div class="cell">
@@ -248,7 +348,7 @@
         </div>
         <div data-bind="visible: missedBookings().length <= 0">
             <p>
-                No missed bookings</p>
+                &nbsp; No missed bookings</p>
         </div>
     </div>
 </article>

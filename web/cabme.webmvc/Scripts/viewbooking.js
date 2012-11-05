@@ -21,22 +21,38 @@ function Booking(id, phoneNumber, numberOfPeople, pickupTime, suburb, addrFrom, 
     self.refCode = ko.observable('');
     self.arrival = ko.observable(1);
     self.isTaxi = taxiId && taxiId != null;
+    self.expectedArrival = ko.computed(function () {
+        var now = new Date(self.pickupTime);
+        now.setMinutes(now.getMinutes() + self.arrival());
+        return now.getUTCHours().padLeft(2, '0') + ':' + now.getMinutes().padLeft(2, '0');
+    }, self);
 }
 function BookingViewModel() {
     var self = this;
     var url;
     self.openBookings = ko.observableArray();
+    self.acceptedBookings = ko.observableArray();
     self.completedBookings = ko.observableArray();
     self.missedBookings = ko.observableArray();
     self.loadData = function () {
+        self.openBookings.removeAll();
+        self.acceptedBookings.removeAll();
+        self.completedBookings.removeAll();
+        self.missedBookings.removeAll();
+        self.loadOpenData();
+        self.loadAcceptedData();
+        self.loadCompletedData();
+        self.loadMissedData();
+    };
+    self.loadOpenData = function () {
         if (taxiId) {
-            var params = 'userName=' + taxiId + '&active=true&open=true&taxiAccepted=false&taxiCancelled=false&userCancelled=false';
+            var params = 'userName=' + taxiId + '&active=true&open=true&userAccepted=false&taxiCancelled=false&userCancelled=false';
             if (self.openBookings().length > 0) {
                 params += '&after=' + self.openBookings()[0].id;
             }
             url = '/api/booking/?' + params;
         } else {
-            url = '/api/booking/?userName=' + userID + '&active=true&open=true&taxiAccepted=false&taxiCancelled=false&userCancelled=false';
+            url = '/api/booking/?userName=' + userID + '&active=true&open=true&userAccepted=false&taxiCancelled=false&userCancelled=false';
         }
         $.getJSON(url, function (json) {
             $.each(json, function (index, booking) {
@@ -54,11 +70,27 @@ function BookingViewModel() {
             });
         });
     };
+    self.loadAcceptedData = function () {
+        if (taxiId) {
+            url = '/api/booking/?userName=' + taxiId + '&active=true&open=true&taxiAccepted=true&userAccepted=true&taxiCancelled=false&userCancelled=false';
+        } else {
+            url = '/api/booking/?userName=' + userID + '&active=true&open=true&taxiAccepted=true&userAccepted=true&taxiCancelled=false&userCancelled=false';
+        }
+        $.getJSON(url, function (json) {
+            $.each(json, function (index, booking) {
+                var suburbName = "N/A";
+                if (booking.SuburbFrom && booking.SuburbFrom != null) {
+                    suburbName = booking.SuburbFrom.Name;
+                }
+                self.acceptedBookings.unshift(new Booking(booking.Id, booking.PhoneNumber, booking.NumberOfPeople, booking.PickupTime, suburbName, booking.AddrFrom, booking.AddrTo, booking.Confirmed, booking.Accepted, booking.Hash, taxiId));
+            });
+        });
+    };
     self.loadCompletedData = function () {
         if (taxiId) {
-            url = '/api/booking/?userName=' + taxiId + '&active=true&taxiAccepted=true&userAccepted=true&taxiCancelled=false&userCancelled=false';
+            url = '/api/booking/?userName=' + taxiId + '&active=true&open=false&taxiAccepted=true&userAccepted=true&taxiCancelled=false&userCancelled=false';
         } else {
-            url = '/api/booking/?userName=' + userID + '&active=true&taxiAccepted=true&userAccepted=true&taxiCancelled=false&userCancelled=false';
+            url = '/api/booking/?userName=' + userID + '&active=true&open=false&taxiAccepted=true&userAccepted=true&taxiCancelled=false&userCancelled=false';
         }
         $.getJSON(url, function (json) {
             $.each(json, function (index, booking) {
@@ -72,9 +104,9 @@ function BookingViewModel() {
     };
     self.loadMissedData = function () {
         if (taxiId) {
-            url = '/api/booking/?userName=' + taxiId + '&taxiAccepted=false&userAccepted=false&taxiCancelled=false&userCancelled=false';
+            url = '/api/booking/?userName=' + taxiId + '&active=true&open=false&taxiAccepted=false&taxiCancelled=false&userCancelled=false';
         } else {
-            url = '/api/booking/?userName=' + userID + '&taxiAccepted=false&userAccepted=false&taxiCancelled=false&userCancelled=false';
+            url = '/api/booking/?userName=' + userID + '&active=true&open=false&taxiAccepted=false&taxiCancelled=false&userCancelled=false';
         }
         $.getJSON(url, function (json) {
             $.each(json, function (index, booking) {
@@ -154,8 +186,6 @@ function BookingViewModel() {
     self.showNewBooking = function (elem) { $(elem).hide().fadeIn('slow'); };
     self.removeBooking = function (elem) { $(elem).fadeOut(); };
     self.loadData();
-    self.loadCompletedData();
-    self.loadMissedData();
 }
 function acceptedBooking(id) {
     model.acceptedBooking(id);
@@ -191,12 +221,14 @@ function setupTabs() {
     $('#tab1').show();
     $('#tab2').hide();
     $('#tab3').hide();
+    $('#tab4').hide();
     $('#htab1').addClass('current');
 
     $('#htab1').click(function () {
         $('h3').removeClass('current');
         $('#tab2').hide();
         $('#tab3').hide();
+        $('#tab4').hide();
         $('#tab1').fadeIn();
         $('#htab1').addClass('current');
     });
@@ -204,6 +236,7 @@ function setupTabs() {
         $('h3').removeClass('current');
         $('#tab1').hide();
         $('#tab3').hide();
+        $('#tab4').hide();
         $('#tab2').fadeIn();
         $('#htab2').addClass('current');
     });
@@ -211,7 +244,29 @@ function setupTabs() {
         $('h3').removeClass('current');
         $('#tab1').hide();
         $('#tab2').hide();
+        $('#tab4').hide();
         $('#tab3').fadeIn();
         $('#htab3').addClass('current');
     });
+    $('#htab4').click(function () {
+        $('h3').removeClass('current');
+        $('#tab1').hide();
+        $('#tab2').hide();
+        $('#tab3').hide();
+        $('#tab4').fadeIn();
+        $('#htab4').addClass('current');
+    });
 }
+
+Number.prototype.padLeft = function (width, char) {
+    if (!char) {
+        char = " ";
+    }
+
+    if (("" + this).length >= width) {
+        return "" + this;
+    }
+    else {
+        return arguments.callee.call(char + this, width, char);
+    }
+};

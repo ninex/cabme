@@ -397,6 +397,10 @@ article h3:nth-child(3)
 {
 	left: 254px;
 }
+article h3:nth-child(4)
+{
+	left: 376px;
+}
 .tabs h3.current
 {
 	background-color: #ffd800;
