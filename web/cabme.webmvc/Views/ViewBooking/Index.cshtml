@@ -16,6 +16,8 @@
         Completed</h3>
     <h3 id="htab4">
         Missed</h3>
+    <h3 id="htab5">
+        Cancelled</h3>
     <div id="tab1" style="display: none">
         <div style="height: 100%">
             <div id="pendingBookings" style="display: none">
@@ -351,10 +353,65 @@
                 &nbsp; No missed bookings</p>
         </div>
     </div>
+    <div id="tab5" style="display: none">
+        <div data-bind="foreach: {data: cancelledBookings, afterAdd: showNewBooking}">
+            <div class="table" style="width: 80%;">
+                <div class="row">
+                    <div class="cell">
+                        <b>People: </b>
+                    </div>
+                    <div class="cell lastCell">
+                        <div data-bind="text: numberOfPeople">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="cell">
+                        <b>Pickup Time: </b>
+                    </div>
+                    <div class="cell lastCell">
+                        <div data-bind="text: pickupTime">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="cell">
+                        <b>Suburb: </b>
+                    </div>
+                    <div class="cell lastCell">
+                        <div data-bind="text: suburb">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="cell">
+                        <b>From: </b>
+                    </div>
+                    <div class="cell lastCell">
+                        <div data-bind="text: addrFrom">
+                        </div>
+                    </div>
+                </div>
+                <div class="row" data-bind="visible: typeof addrTo != 'undefined' && addrTo != '' && addrTo != null">
+                    <div class="cell">
+                        <b>To: </b>
+                    </div>
+                    <div class="cell lastCell">
+                        <div data-bind="text: addrTo">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div data-bind="visible: cancelledBookings().length <= 0">
+            <p>
+                &nbsp; No cancelled bookings</p>
+        </div>
+    </div>
 </article>
 <input type="hidden" id="userName" value="@User.Identity.Name" />
 @section scripts {
-    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/knockout/2.1.0/knockout-min.js"></script>
+    @Scripts.Render("~/bundles/knockout")
     <script type="text/javascript" src="@Url.Content("~/Scripts/viewbooking.js")"></script>
     <script type="text/javascript">
         var taxiId;

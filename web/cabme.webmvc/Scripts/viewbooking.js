@@ -34,15 +34,18 @@ function BookingViewModel() {
     self.acceptedBookings = ko.observableArray();
     self.completedBookings = ko.observableArray();
     self.missedBookings = ko.observableArray();
+    self.cancelledBookings = ko.observableArray();
     self.loadData = function () {
         self.openBookings.removeAll();
         self.acceptedBookings.removeAll();
         self.completedBookings.removeAll();
         self.missedBookings.removeAll();
+        self.cancelledBookings.removeAll();
         self.loadOpenData();
         self.loadAcceptedData();
         self.loadCompletedData();
         self.loadMissedData();
+        self.loadCancelledData();
     };
     self.loadOpenData = function () {
         if (taxiId) {
@@ -115,6 +118,37 @@ function BookingViewModel() {
                     suburbName = booking.SuburbFrom.Name;
                 }
                 self.missedBookings.unshift(new Booking(booking.Id, booking.PhoneNumber, booking.NumberOfPeople, booking.PickupTime, suburbName, booking.AddrFrom, booking.AddrTo, booking.Confirmed, booking.Accepted, booking.Hash, taxiId));
+            });
+        });
+    };
+    self.loadCancelledData = function () {
+        if (taxiId) {
+            url = '/api/booking/?userName=' + taxiId + '&taxiCancelled=true&userCancelled=false';
+        } else {
+            url = '/api/booking/?userName=' + userID + '&taxiCancelled=true&userCancelled=false';
+        }
+        $.getJSON(url, function (json) {
+            $.each(json, function (index, booking) {
+                var suburbName = "N/A";
+                if (booking.SuburbFrom && booking.SuburbFrom != null) {
+                    suburbName = booking.SuburbFrom.Name;
+                }
+                self.cancelledBookings.unshift(new Booking(booking.Id, booking.PhoneNumber, booking.NumberOfPeople, booking.PickupTime, suburbName, booking.AddrFrom, booking.AddrTo, booking.Confirmed, booking.Accepted, booking.Hash, taxiId));
+            });
+        });
+
+        if (taxiId) {
+            url = '/api/booking/?userName=' + taxiId + '&taxiCancelled=false&userCancelled=true';
+        } else {
+            url = '/api/booking/?userName=' + userID + '&taxiCancelled=false&userCancelled=true';
+        }
+        $.getJSON(url, function (json) {
+            $.each(json, function (index, booking) {
+                var suburbName = "N/A";
+                if (booking.SuburbFrom && booking.SuburbFrom != null) {
+                    suburbName = booking.SuburbFrom.Name;
+                }
+                self.cancelledBookings.unshift(new Booking(booking.Id, booking.PhoneNumber, booking.NumberOfPeople, booking.PickupTime, suburbName, booking.AddrFrom, booking.AddrTo, booking.Confirmed, booking.Accepted, booking.Hash, taxiId));
             });
         });
     };
@@ -222,6 +256,7 @@ function setupTabs() {
     $('#tab2').hide();
     $('#tab3').hide();
     $('#tab4').hide();
+    $('#tab5').hide();
     $('#htab1').addClass('current');
 
     $('#htab1').click(function () {
@@ -229,6 +264,7 @@ function setupTabs() {
         $('#tab2').hide();
         $('#tab3').hide();
         $('#tab4').hide();
+        $('#tab5').hide();
         $('#tab1').fadeIn();
         $('#htab1').addClass('current');
     });
@@ -237,6 +273,7 @@ function setupTabs() {
         $('#tab1').hide();
         $('#tab3').hide();
         $('#tab4').hide();
+        $('#tab5').hide();
         $('#tab2').fadeIn();
         $('#htab2').addClass('current');
     });
@@ -245,6 +282,7 @@ function setupTabs() {
         $('#tab1').hide();
         $('#tab2').hide();
         $('#tab4').hide();
+        $('#tab5').hide();
         $('#tab3').fadeIn();
         $('#htab3').addClass('current');
     });
@@ -253,8 +291,18 @@ function setupTabs() {
         $('#tab1').hide();
         $('#tab2').hide();
         $('#tab3').hide();
+        $('#tab5').hide();
         $('#tab4').fadeIn();
         $('#htab4').addClass('current');
+    });
+    $('#htab5').click(function () {
+        $('h3').removeClass('current');
+        $('#tab1').hide();
+        $('#tab2').hide();
+        $('#tab3').hide();
+        $('#tab4').hide();
+        $('#tab5').fadeIn();
+        $('#htab5').addClass('current');
     });
 }
 

@@ -230,7 +230,7 @@ namespace cabme.webmvc.Controllers
 
         // Get /api/booking/?userName={userName}&active={active}&open={open}&taxiAccepted={taxiAccepted}&userAccepted={userAccepted}&taxiCancelled={taxiCancelled}&userCancelled={userCancelled}&afterId={afterId}
         [Authorize]
-        public IEnumerable<Booking> GetAllBookingsByNumber(string userName, bool? active = true, bool? open = null, bool? taxiAccepted = null, bool? userAccepted = null, bool? taxiCancelled = null, bool? userCancelled = null, int? afterId = 0)
+        public IEnumerable<Booking> GetAllBookingsByNumber(string userName, bool? active = null, bool? open = null, bool? taxiAccepted = null, bool? userAccepted = null, bool? taxiCancelled = null, bool? userCancelled = null, int? afterId = 0)
         {
             using (Data.contentDataContext context = new Data.contentDataContext())
             {
