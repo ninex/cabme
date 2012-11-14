@@ -9,7 +9,8 @@ namespace cabme.webmvc.Hubs
     [HubName("taxiHub")]
     public class TaxiHub : Hub
     {
-        public static Dictionary<int, Dictionary<string, string>> Connections = new Dictionary<int, Dictionary<string, string>>();
+        private const string groupPreface = "#taxi";
+        //public static Dictionary<int, Dictionary<string, string>> Connections = new Dictionary<int, Dictionary<string, string>>();
 
         public void Announce(string userName)
         {
@@ -20,11 +21,7 @@ namespace cabme.webmvc.Hubs
                     int taxiId = (new cabme.webmvc.Controllers.TaxiController()).GetTaxiIdForUser(userName);
                     if (taxiId > 0)
                     {
-                        if (!Connections.ContainsKey(taxiId) || Connections[taxiId] == null)
-                        {
-                            Connections[taxiId] = new Dictionary<string, string>();
-                        }
-                        Connections[taxiId][userName] = Context.ConnectionId;
+                        Groups.Add(Context.ConnectionId, groupPreface + taxiId);
                     }
                 }
             }
@@ -38,20 +35,7 @@ namespace cabme.webmvc.Hubs
             try
             {
                 var hubContext = SignalR.GlobalHost.ConnectionManager.GetHubContext<TaxiHub>();
-                if (Connections.ContainsKey(taxiId))
-                {
-                    Dictionary<string, string> users = Connections[taxiId];
-                    if (users != null)
-                    {
-                        foreach (string id in users.Values)
-                        {
-                            if (!string.IsNullOrEmpty(id))
-                            {
-                                hubContext.Clients[id].pendingBooking();
-                            }
-                        }
-                    }
-                }
+                hubContext.Clients[groupPreface + taxiId].pendingBooking();
             }
             catch (Exception ex)
             {
@@ -64,20 +48,8 @@ namespace cabme.webmvc.Hubs
             try
             {
                 var hubContext = SignalR.GlobalHost.ConnectionManager.GetHubContext<TaxiHub>();
-                if (Connections.ContainsKey(taxiId))
-                {
-                    Dictionary<string, string> users = Connections[taxiId];
-                    if (users != null)
-                    {
-                        foreach (string id in users.Values)
-                        {
-                            if (!string.IsNullOrEmpty(id))
-                            {
-                                hubContext.Clients[id].acceptedBooking(bookingId);
-                            }
-                        }
-                    }
-                }
+
+                hubContext.Clients[groupPreface + taxiId].acceptedBooking(bookingId);
             }
             catch (Exception ex)
             {
@@ -89,20 +61,7 @@ namespace cabme.webmvc.Hubs
             try
             {
                 var hubContext = SignalR.GlobalHost.ConnectionManager.GetHubContext<TaxiHub>();
-                if (Connections.ContainsKey(taxiId))
-                {
-                    Dictionary<string, string> users = Connections[taxiId];
-                    if (users != null)
-                    {
-                        foreach (string id in users.Values)
-                        {
-                            if (!string.IsNullOrEmpty(id))
-                            {
-                                hubContext.Clients[id].cancelBooking(bookingId);
-                            }
-                        }
-                    }
-                }
+                hubContext.Clients[groupPreface + taxiId].cancelBooking(bookingId);
             }
             catch (Exception ex)
             {
