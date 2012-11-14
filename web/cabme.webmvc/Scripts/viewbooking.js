@@ -177,11 +177,15 @@ function BookingViewModel() {
     self.independent = function (booking) {
         alert('Send independent logic');
     };
-    self.acceptedBooking = function (id) {
+    self.acceptedBooking = function (id, userAccepted) {
         var booking = ko.utils.arrayFirst(self.openBookings(), function (booking) {
             return booking.id === id;
         });
-        booking.userAccepted(true);
+        if (userAccepted) {
+            booking.userAccepted(true);
+        } else {
+            booking.taxiAccepted(true);
+        }
     };
     self.reject = function (booking) {
         var data = {
@@ -207,11 +211,15 @@ function BookingViewModel() {
             }
         });
     };
-    self.cancelBooking = function (id) {
+    self.cancelBooking = function (id, userCancelled) {
         var booking = ko.utils.arrayFirst(self.openBookings(), function (booking) {
             return booking.id === id;
         });
-        booking.userCancelled(true);
+        if (userCancelled) {
+            booking.userCancelled(true);
+        } else {
+            booking.taxiCancelled(true);
+        }
         self.openBookings.remove(booking);
     }
     self.review = function (booking) {
@@ -221,11 +229,11 @@ function BookingViewModel() {
     self.removeBooking = function (elem) { $(elem).fadeOut(); };
     self.loadData();
 }
-function acceptedBooking(id) {
-    model.acceptedBooking(id);
+function acceptedBooking(id, userAccepted) {
+    model.acceptedBooking(id, userAccepted);
 }
-function cancelBooking(id) {
-    model.cancelBooking(id);
+function cancelBooking(id, userCancelled) {
+    model.cancelBooking(id, userCancelled);
 }
 function btnRefresh() {
     $('#pendingBookings').slideUp();

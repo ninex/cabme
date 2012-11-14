@@ -183,13 +183,17 @@ namespace cabme.webmvc.Controllers
 
                     if (booking != null)
                     {
-                        if (booking.TaxiCancelled && !string.IsNullOrEmpty(booking.PhoneNumber))
+                        if (booking.TaxiCancelled)
                         {
-                            BookHub.CancelBooking(booking.PhoneNumber);
+                            if (!string.IsNullOrEmpty(booking.PhoneNumber))
+                            {
+                                BookHub.CancelBooking(booking.PhoneNumber);
+                            }
+                            TaxiHub.SendTaxiBookingCancelled(booking.SelectedTaxi.Id, id);
                         }
                         if (booking.UserCancelled)
                         {
-                            TaxiHub.SendTaxiBookingCancelled(booking.SelectedTaxi.Id, id);
+                            TaxiHub.SendUserBookingCancelled(booking.SelectedTaxi.Id, id);
                         }
                     }
 
@@ -212,6 +216,10 @@ namespace cabme.webmvc.Controllers
                         }
                         booking = AllQueryableBookings(context).Where(p => p.Id == id).SingleOrDefault();
                         if (booking.UserAccepted)
+                        {
+                            TaxiHub.SendUserBookingAccepted(booking.SelectedTaxi.Id, id);
+                        }
+                        if (booking.TaxiAccepted)
                         {
                             TaxiHub.SendTaxiBookingAccepted(booking.SelectedTaxi.Id, id);
                         }
@@ -331,6 +339,7 @@ namespace cabme.webmvc.Controllers
                         {
                             BookHub.ConfirmBooking(booking.PhoneNumber, waitingTime);
                         }
+                        TaxiHub.SendTaxiBookingAccepted(booking.SelectedTaxi.Id, booking.Id);
                     }
                     return booking;
                 }

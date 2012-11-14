@@ -43,13 +43,36 @@ namespace cabme.webmvc.Hubs
             }
         }
 
+        public static void SendUserBookingAccepted(int taxiId, int bookingId)
+        {
+            try
+            {
+                var hubContext = SignalR.GlobalHost.ConnectionManager.GetHubContext<TaxiHub>();
+                hubContext.Clients[groupPreface + taxiId].acceptedBooking(bookingId, true);
+            }
+            catch (Exception ex)
+            {
+                Elmah.ErrorLog.GetDefault(null).Log(new Elmah.Error(ex));
+            }
+        }
         public static void SendTaxiBookingAccepted(int taxiId, int bookingId)
         {
             try
             {
                 var hubContext = SignalR.GlobalHost.ConnectionManager.GetHubContext<TaxiHub>();
-
-                hubContext.Clients[groupPreface + taxiId].acceptedBooking(bookingId);
+                hubContext.Clients[groupPreface + taxiId].acceptedBooking(bookingId, false);
+            }
+            catch (Exception ex)
+            {
+                Elmah.ErrorLog.GetDefault(null).Log(new Elmah.Error(ex));
+            }
+        }
+        public static void SendUserBookingCancelled(int taxiId, int bookingId)
+        {
+            try
+            {
+                var hubContext = SignalR.GlobalHost.ConnectionManager.GetHubContext<TaxiHub>();
+                hubContext.Clients[groupPreface + taxiId].cancelBooking(bookingId, true);
             }
             catch (Exception ex)
             {
@@ -61,7 +84,7 @@ namespace cabme.webmvc.Hubs
             try
             {
                 var hubContext = SignalR.GlobalHost.ConnectionManager.GetHubContext<TaxiHub>();
-                hubContext.Clients[groupPreface + taxiId].cancelBooking(bookingId);
+                hubContext.Clients[groupPreface + taxiId].cancelBooking(bookingId, false);
             }
             catch (Exception ex)
             {

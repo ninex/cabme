@@ -427,11 +427,11 @@
                 taxiHub.pendingBooking = function () {
                     $('#pendingBookings').slideDown();
                 };
-                taxiHub.acceptedBooking = function (id) {
-                    acceptedBooking(id);
+                taxiHub.acceptedBooking = function (id, userAccepted) {
+                    acceptedBooking(id, userAccepted);
                 };
-                taxiHub.cancelBooking = function (id) {
-                    cancelBooking(id);
+                taxiHub.cancelBooking = function (id, userCancelled) {
+                    cancelBooking(id, userCancelled);
                 };
                 window.hubReady.done(function () {
                     taxiHub.announce(taxiId);
