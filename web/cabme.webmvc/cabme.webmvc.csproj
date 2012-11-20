@@ -278,6 +278,7 @@
     <Content Include="Scripts\knockout-2.1.0.js" />
     <Content Include="Scripts\knockout-2.2.0.debug.js" />
     <Content Include="Scripts\knockout-2.2.0.js" />
+    <Content Include="Scripts\makebooking.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
     <Content Include="Scripts\viewbooking.js" />
     <Content Include="sitemap.xml" />
