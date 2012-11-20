@@ -47,7 +47,7 @@ function placeMarker() {
                 pickupMarker,
                 'dragend',
                 function (event) {
-                    recalcRoute();
+                    recalculateRoute();
                 }
             );
         } else {
@@ -62,15 +62,15 @@ function placeMarker() {
                     dropMarker,
                     'dragend',
                     function (event) {
-                        recalcRoute();
+                        recalculateRoute();
                     }
                 );
-                recalcRoute();
+                recalculateRoute();
             }
         }
     }
 }
-function recalcRoute() {
+function recalculateRoute() {
     if (pickupMarker && dropMarker) {
         var request = {
             origin: pickupMarker.getPosition(),
