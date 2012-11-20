@@ -7,10 +7,60 @@
 <p>
     Disclaimer: This is a beta form and doesn't book a taxi.
 </p>
-<p>
-Click on the map to select your pickup and drop off spots.
-</p>
-<div id="map_canvas" style="width: 100%; height: 400px"></div>
+<div style="width: 100%;" class="table" id="book">
+    <div class="row">
+        <div class="cell">
+            <img src="/images/phone.png" alt="Phone Number" />
+        </div>
+        <div class="lastcell">
+            <input type="tel" id="txtPhone" placeholder="Phone number" data-bind="value: booking().phoneNumber" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="cell">
+            <img src="/images/calendar.png" alt="Pickup date" />
+        </div>
+        <div class="lastcell">
+            <input id="pickupDate" type="date" placeholder="Pickup date" data-bind="value: booking().pickupDate" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="cell">
+        </div>
+        <div class="lastcell">
+            <input id="pickupTime" type="time" placeholder="Pickup time" data-bind="value: booking().pickupTime" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="cell">
+            <img src="/images/people.png" alt="Number of people" />
+        </div>
+        <div class="lastcell">
+            <input type="number" id="number" placeholder="Number of people" data-bind="value: booking().numberOfPeople" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="cell">
+            <img src="/images/logo.png" alt="Taxi" />
+        </div>
+        <div class="lastcell">
+            <select id="ddlTaxi" data-bind="options: taxis, optionsText: 'name',value: booking().taxi">
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="cell">
+        </div>
+        <div class="lastcell">
+            Click on the map to select your pickup and drop off spots.
+        </div>
+    </div>
+</div>
+<div id="map_canvas" style="width: 100%; height: 400px;">
+</div>
+<div style="margin: 10px auto; width: 100%; text-align: center;">
+    <input type="button" id="btnBook" value="Book" class="button" data-bind="click: book" />
+</div>
 @section scripts {
     @Scripts.Render("~/bundles/knockout")
     <script type="text/javascript" src="@Url.Content("~/Scripts/makebooking.js")"></script>

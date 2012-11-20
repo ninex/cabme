@@ -138,7 +138,34 @@ fieldset label.inline
 {
 	display: inline;
 }
-
+#book
+{
+	font-size: 1.3em;
+}
+#book input, select
+{
+	font-size: 1.0em;
+	color: #555;
+	width: 100%;
+	margin-bottom: 5px;
+	box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box; 
+}
+#book img
+{
+	max-height: 24px;
+	max-width: 24px;
+	margin: -5px auto;
+}
+#book .cell
+{
+	width: 24px;
+}
+#book .lastcell
+{
+	max-width: 80%;
+}
 
 /* MISC  
 ----------------------------------------------------------*/
