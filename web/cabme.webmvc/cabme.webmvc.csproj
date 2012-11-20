@@ -250,6 +250,8 @@
     <Content Include="Images\drop.png" />
     <Content Include="Images\loader.gif" />
     <Content Include="Images\logo.png" />
+    <Content Include="Images\map_drop.png" />
+    <Content Include="Images\map_pickup.png" />
     <Content Include="Images\people.png" />
     <Content Include="Images\phone.png" />
     <Content Include="Images\pickup.png" />
