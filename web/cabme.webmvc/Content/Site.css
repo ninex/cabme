@@ -138,11 +138,21 @@ fieldset label.inline
 {
 	display: inline;
 }
-#book
+.book
 {
 	font-size: 1.3em;
 }
-#book input, select
+.book input
+{
+	font-size: 1.0em;
+	color: #555;
+	width: 140px;
+	margin-bottom: 5px;
+	box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box; 
+}
+.book select
 {
 	font-size: 1.0em;
 	color: #555;
@@ -152,19 +162,20 @@ fieldset label.inline
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box; 
 }
-#book img
+.book img
 {
 	max-height: 24px;
 	max-width: 24px;
 	margin: -5px auto;
 }
-#book .cell
+.book .ImageCell
 {
 	width: 24px;
 }
-#book .lastcell
+.book .cell
 {
-	max-width: 80%;
+	padding-left: 5px;
+	display:table-cell;
 }
 
 /* MISC  

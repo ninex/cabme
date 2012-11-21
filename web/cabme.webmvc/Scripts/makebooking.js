@@ -11,7 +11,7 @@ function Booking() {
     var from = '', phoneNumber = '';
     if (supports_html5_storage()) {
         from = localStorage["from"];
-        phoneNumber = localStorage["phone"];        
+        phoneNumber = localStorage["phone"];
     }
     var now = new Date();
     var today = now.getFullYear() + '-' + (now.getMonth() + 1).padLeft(2, '0') + '-' + now.getDate().padLeft(2, '0');
@@ -22,7 +22,10 @@ function Booking() {
     self.numberOfPeople = ko.observable(1);
     self.pickupDate = ko.observable(today);
     self.pickupTime = ko.observable(time);
+    self.addrFrom = ko.observable('');
+    self.addrTo = ko.observable('');
     self.computedDistance = ko.observable('');
+    self.displayDistance = ko.observable('');
     self.taxiAccepted = ko.observable(false);
     self.userAccepted = ko.observable(false);
     self.taxiCancelled = ko.observable(false);
@@ -89,12 +92,12 @@ function BookingViewModel() {
                     icon: 'Images/map_pickup.png'
                 });
                 google.maps.event.addListener(
-                self.pickupMarker,
-                'dragend',
-                function (event) {
-                    self.recalculateRoute();
-                }
-            );
+				self.pickupMarker,
+				'dragend',
+				function (event) {
+				    self.recalculateRoute();
+				}
+			);
             } else {
                 if (!self.dropMarker) {
                     self.dropMarker = new google.maps.Marker({
@@ -104,12 +107,12 @@ function BookingViewModel() {
                         icon: 'Images/map_drop.png'
                     });
                     google.maps.event.addListener(
-                    self.dropMarker,
-                    'dragend',
-                    function (event) {
-                        self.recalculateRoute();
-                    }
-                );
+					self.dropMarker,
+					'dragend',
+					function (event) {
+					    self.recalculateRoute();
+					}
+				);
                     self.recalculateRoute();
                 }
             }
@@ -135,7 +138,36 @@ function BookingViewModel() {
                     });
                 }
             });
+            distanceService.getDistanceMatrix(
+			  {
+			      origins: [self.pickupMarker.getPosition()],
+			      destinations: [self.dropMarker.getPosition()],
+			      travelMode: google.maps.TravelMode.DRIVING,
+			      avoidHighways: false,
+			      avoidTolls: false
+			  }, self.distanceResults);
         }
+    };
+    self.distanceResults = function (response, status) {
+        if (status == google.maps.DistanceMatrixStatus.OK) {
+            self.booking().addrFrom(response.originAddresses);
+            self.booking().addrTo(response.destinationAddresses);
+
+            var element = response.rows[0].elements[0];
+            if (element.status != 'ZERO_RESULTS') {
+                var distance = element.distance.text;
+                var duration = element.duration.text;
+                self.booking().displayDistance(distance);
+                self.booking().computedDistance(element.distance.value);
+
+                $.getJSON('/api/taxi/?distance=' + self.booking().computedDistance(), function (json) {
+                    self.taxis.removeAll();
+                    $.each(json, function (index, taxi) {
+                        self.taxis.push(new Taxi(taxi.Id, taxi.Name, taxi.PriceEstimate));
+                    });
+                });
+            }
+        } 
     };
     self.book = function () {
     };
@@ -159,6 +191,7 @@ function loadMapScript() {
 }
 function APILoaded() {
     directionsService = new google.maps.DirectionsService();
+    distanceService = new google.maps.DistanceMatrixService();
     model.loadMap();
 }
 
