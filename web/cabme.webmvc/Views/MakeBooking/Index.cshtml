@@ -7,52 +7,82 @@
 <p>
     Disclaimer: This is a beta form and doesn't book a taxi.
 </p>
-<div class="book" style="display: table">
-    <div class="row">
-        <div class="ImageCell">
-            <img src="/images/phone.png" alt="Phone Number" />
-        </div>
-        <div class="cell">
-            <input type="tel" id="txtPhone" placeholder="Phone number" data-bind="value: booking().phoneNumber" />
-        </div>
-        <div class="ImageCell">
-            <img src="/images/people.png" alt="Number of people" />
-        </div>
-        <div class="cell">
-            <input type="number" id="number" placeholder="Number of people" data-bind="value: booking().numberOfPeople" />
-        </div>
-        <div class="ImageCell">
-            <img src="/images/calendar.png" alt="Pickup date" />
-        </div>
-        <div class="cell">
-            <input id="pickupDate" type="date" placeholder="Pickup date" data-bind="value: booking().pickupDate" />
-        </div>
-        <div class="cell">
-            <input id="pickupTime" type="time" placeholder="Pickup time" data-bind="value: booking().pickupTime" />
-        </div>
-    </div>
-</div>
-<p>
-    Click on the map to select your pickup and drop off location.</p>
-<div id="map_canvas" style="width: 100%; height: 400px;">
-</div>
-<br />
-<div class="book">
-    <div style="display: table">
+<div data-bind="slide: step1()">
+    <div class="book" style="display: table">
         <div class="row">
             <div class="ImageCell">
-                <img src="/images/logo.png" alt="Taxi" />
-            </div>
-            <div class="cell" style="width: 324px;">
-                <select id="ddlTaxi" data-bind="options: taxis, optionsText: 'display',value: booking().taxi">
-                </select>
+                <img src="/images/phone.png" alt="Phone Number" />
             </div>
             <div class="cell">
-                <div style="margin: 10px auto; width: 100%; text-align: center;">
-                    <input type="button" id="btnBook" value="Book" class="button" data-bind="click: book" />
+                <input type="tel" id="txtPhone" placeholder="Phone number" data-bind="value: booking().phoneNumber" />
+            </div>
+            <div class="ImageCell">
+                <img src="/images/people.png" alt="Number of people" />
+            </div>
+            <div class="cell">
+                <input type="number" id="number" placeholder="Number of people" data-bind="value: booking().numberOfPeople" />
+            </div>
+            <div class="ImageCell">
+                <img src="/images/calendar.png" alt="Pickup date" />
+            </div>
+            <div class="cell">
+                <input id="pickupDate" type="date" placeholder="Pickup date" data-bind="value: booking().pickupDate" />
+            </div>
+            <div class="cell">
+                <input id="pickupTime" type="time" placeholder="Pickup time" data-bind="value: booking().pickupTime" />
+            </div>
+        </div>
+    </div>
+    <p>
+        Click on the map to select your pickup and drop off location.</p>
+    <div id="map_canvas" style="width: 100%; height: 400px;">
+    </div>
+    <br />
+    <div class="book">
+        <div style="display: table">
+            <div class="row">
+                <div class="ImageCell">
+                    <img src="/images/logo.png" alt="Taxi" />
+                </div>
+                <div class="cell" style="width: 324px;">
+                    <select id="ddlTaxi" data-bind="options: taxis, optionsText: 'display',value: booking().taxi">
+                    </select>
+                </div>
+                <div class="cell">
+                    <div style="margin: 10px auto; width: 100%; text-align: center;">
+                        <input type="button" id="btnBook" value="Book" class="button" data-bind="click: book" />
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
+</div>
+<div style="display: none" data-bind="slide: step2()">
+    <h3>
+        Booking status</h3>
+    <div id="msgStatus" data-bind="visible: !booking().userAccepted() && !booking().switchTaxi()">
+        <p >
+            Booking sent to server.</p>
+    </div>
+    <div data-bind="visible: !booking().userAccepted() && !booking().taxiAccepted() && !booking().switchTaxi()">
+        <input type="button" id="btnCancel" value="Cancel" class="button" data-bind="click: cancel" />
+    </div>
+    <div data-bind="visible: booking().taxiAccepted() && !booking().userAccepted() && !booking().switchTaxi()">
+        Booking confirmed. Taxi can arrive in
+        <label data-bind="text: booking().waitingTime">
+        </label>
+        minutes at
+        <label data-bind="text: booking().expectedArrival">
+        </label>
+        <div>
+            <input type="button" id="btnAccept" value="Accept" class="button" data-bind="click: accept" />
+            <input type="button" id="btnDismiss" value="Cancel" class="button" data-bind="click: cancel" />
+        </div>
+    </div>
+    <div data-bind="visible: booking().userAccepted() && !booking().switchTaxi()">
+        Booking accepted. Taxi expected at
+        <label data-bind="text: booking().expectedArrival">
+        </label>
     </div>
 </div>
 @section scripts {

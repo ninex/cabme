@@ -1,6 +1,24 @@
-﻿var model;
+﻿var model, bookHub;
 
 $(document).ready(function () {
+    bookHub = $.connection.bookHub;
+    bookHub.showMessage = function (message) {
+        $('#msgStatus').append('<p>' + message + '</p>');
+    };
+    bookHub.confirmBooking = function (time) {
+        if (time && time > 0) {
+            model.booking().taxiAccepted(true);
+            model.booking().waitingTime(time);
+        } else {
+            $('#msgStatus').append('<p>Booking has been confirmed</p>');
+        }
+    };
+    bookHub.cancelBooking = function () {
+        model.booking().taxiCancelled(true);
+        model.booking().switchTaxi(true);
+        model.step2(false);
+        model.step1(true);
+    }
     model = new BookingViewModel();
     ko.applyBindings(model);
 });
@@ -57,6 +75,8 @@ function BookingViewModel() {
     var map, pickupMarker, dropMarker, route;
     self.booking = ko.observable(new Booking());
     self.taxis = ko.observableArray();
+    self.step1 = ko.observable(true);
+    self.step2 = ko.observable(false);
     self.loadQuickTaxi = function () {
         $.getJSON('/api/taxi', function (json) {
             $.each(json, function (index, taxi) {
@@ -150,8 +170,8 @@ function BookingViewModel() {
     };
     self.distanceResults = function (response, status) {
         if (status == google.maps.DistanceMatrixStatus.OK) {
-            self.booking().addrFrom(response.originAddresses);
-            self.booking().addrTo(response.destinationAddresses);
+            self.booking().addrFrom(response.originAddresses[0]);
+            self.booking().addrTo(response.destinationAddresses[0]);
 
             var element = response.rows[0].elements[0];
             if (element.status != 'ZERO_RESULTS') {
@@ -167,9 +187,112 @@ function BookingViewModel() {
                     });
                 });
             }
-        } 
+        }
     };
     self.book = function () {
+        var msg = "";
+        var regNum = /^[0-9]+$/;
+        if (!regNum.test(self.booking().phoneNumber())) {
+            msg += 'Invalid phone number.<br/>';
+            return;
+        }
+        if (self.booking().addrFrom().length <= 0 && self.booking().addrTo().length <= 0) {
+            msg += "Please select a pickup and drop location.<br/>";
+        }
+        if (msg.length > 0) {
+            popup('Error', msg);
+            return;
+        }
+        if (supports_html5_storage()) {
+            localStorage["phone"] = self.booking().phoneNumber();
+        }
+        var data = {
+            "PhoneNumber": self.booking().phoneNumber(),
+            "NumberOfPeople": self.booking().numberOfPeople(),
+            "PickupTime": self.booking().pickupDate() + ' ' + self.booking().pickupTime() + ':00',
+            "AddrFrom": self.booking().addrFrom(),
+            "AddrTo": self.booking().addrTo(),
+            "ComputedDistance": self.booking().computedDistance(),
+            "Active": true,
+            "TaxiAccepted": self.booking().taxiAccepted(),
+            "UserAccepted": self.booking().userAccepted(),
+            "TaxiCancelled": self.booking().taxiCancelled(),
+            "UserCancelled": self.booking().userCancelled(),
+            "TaxiId": self.booking().taxi().id/*,
+            "latitudeFrom": (int)(self.pickupMarker.getPosition().lat() * 1E6),
+            "longitudeFrom": (int)(self.pickupMarker.getPosition().lng() * 1E6),
+            "latitudeTo": (int)(self.dropMarker.getPosition().lat() * 1E6),
+            "longitudeTo": (int)(self.dropMarker.getPosition().lng() * 1E6),*/
+        };
+        bookHub.announce(self.booking().phoneNumber()).done(function () {
+            $.ajax({
+                type: "POST",
+                contentType: 'application/json',
+                url: '/api/booking',
+                data: JSON.stringify(data),
+                success: function (msg) {
+                    if (msg) {
+                        self.booking().id(msg.Id);
+                        self.step1(false);
+                        self.step2(true);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                    popup('Server error', 'The booking can not be created due to a server problem.');
+                }
+            });
+        });
+    };
+    self.accept = function () {
+        var data = {
+            "UserAccepted": true,
+            "TaxiAccepted": self.booking().taxiAccepted(),
+            "Id": self.booking().id(),
+            "PhoneNumber": self.booking().phoneNumber(),
+            "NumberOfPeople": self.booking().numberOfPeople(),
+            "AddrFrom": self.booking().addrFrom(),
+            "TaxiId": self.booking().taxi().id
+        };
+        $.ajax({
+            type: "PUT",
+            contentType: 'application/json',
+            url: '/api/booking/' + self.booking().id(),
+            data: JSON.stringify(data),
+            success: function (msg) {
+                self.booking().userAccepted(true);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(errorThrown);
+                popup('Server error', 'The booking has not been accepted due to a server problem.');
+            }
+        });
+    };
+    self.cancel = function () {
+        var data = {
+            "UserCancelled": true,
+            "Id": self.booking().id(),
+            "PhoneNumber": self.booking().phoneNumber(),
+            "NumberOfPeople": self.booking().numberOfPeople(),
+            "AddrFrom": self.booking().addrFrom(),
+            "TaxiId": self.booking().taxi().id
+        };
+        $.ajax({
+            type: "PUT",
+            contentType: 'application/json',
+            url: '/api/booking/' + self.booking().id(),
+            data: JSON.stringify(data),
+            success: function (msg) {
+                self.booking().userCancelled(true);
+                self.booking().switchTaxi(true);
+                self.step2(false);
+                self.step1(true);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(errorThrown);
+                popup('Server error', 'The booking has not been cancelled due to a server problem.');
+            }
+        });
     };
     self.geoAllowed = function (position) {
         var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
@@ -194,7 +317,21 @@ function APILoaded() {
     distanceService = new google.maps.DistanceMatrixService();
     model.loadMap();
 }
-
+function popup(header, msg) {
+    $('<div id="pop" class="popContainer"><div class="pop"><h1>' + header + '</h1><p>' + msg + '</p><input type="button" class="button" value="OK" onclick="removePop();" /></div></div>').insertAfter('#loading');
+}
+function removePop() {
+    $('#pop').remove();
+}
+ko.bindingHandlers.slide = {
+    'update': function (element, valueAccessor) {
+        if (valueAccessor()) {
+            $(element).slideDown();
+        } else {
+            $(element).slideUp();
+        }
+    }
+};
 Number.prototype.padLeft = function (width, char) {
     if (!char) {
         char = " ";
