@@ -283,8 +283,6 @@ function BookingViewModel() {
             url: '/api/booking/' + self.booking().id(),
             data: JSON.stringify(data),
             success: function (msg) {
-                self.booking().userCancelled(true);
-                self.booking().switchTaxi(true);
                 self.step2(false);
                 self.step1(true);
             },
