@@ -16,7 +16,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{AE477E19
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cabme.webmvc", "cabme.webmvc\cabme.webmvc.csproj", "{E6E30808-8A03-4F1B-A6B8-429E940F5AB2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cabme.tests", "cabme.tests\cabme.tests.csproj", "{59277F2A-D83C-4C8A-94F1-FE6E68E774F6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{074B908E-96C3-4E80-877B-31858D61EA13}"
+	ProjectSection(SolutionItems) = preProject
+		cabme.vsmdi = cabme.vsmdi
+		Local.testsettings = Local.testsettings
+		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
+	EndProjectSection
+EndProject
 Global
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = cabme.vsmdi
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -30,6 +42,10 @@ Global
 		{E6E30808-8A03-4F1B-A6B8-429E940F5AB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E6E30808-8A03-4F1B-A6B8-429E940F5AB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E6E30808-8A03-4F1B-A6B8-429E940F5AB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59277F2A-D83C-4C8A-94F1-FE6E68E774F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59277F2A-D83C-4C8A-94F1-FE6E68E774F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59277F2A-D83C-4C8A-94F1-FE6E68E774F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59277F2A-D83C-4C8A-94F1-FE6E68E774F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
