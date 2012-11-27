@@ -65,8 +65,10 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BookingTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SuburbTest.cs" />
+    <Compile Include="TaxiTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\cabme.data\cabme.data.csproj">

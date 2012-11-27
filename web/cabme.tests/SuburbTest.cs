@@ -46,7 +46,7 @@ namespace cabme.tests
         }
 
         [TestMethod]
-        public void TestGet()
+        public void TestSuburbGet()
         {
             var actual = controller.Get();
             Assert.IsNotNull(actual);
@@ -54,7 +54,7 @@ namespace cabme.tests
         }
 
         [TestMethod]
-        public void TestGetAllByCity()
+        public void TestSuburbGetAllByCity()
         {
             var expected = new Web.Models.Suburb()
             {
@@ -84,7 +84,7 @@ namespace cabme.tests
         }
 
         [TestMethod]
-        public void TestIgnoreCase()
+        public void TestSuburbIgnoreCase()
         {
             var list = controller.GetAllByCity("CAPe TOwn");
             Assert.IsNotNull(list);
