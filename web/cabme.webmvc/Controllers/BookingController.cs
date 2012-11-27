@@ -349,58 +349,58 @@ namespace cabme.webmvc.Controllers
         private IQueryable<Booking> AllQueryableBookings()
         {
             return (from booking in bookingRepository.All()
-                   join taxi in taxiRepository.All() on booking.TaxiId equals taxi.Id into outer
-                   join suburb in suburbRepository.All() on booking.SuburbFromId equals suburb.Id into outerSuburb
-                   from taxi in outer.DefaultIfEmpty()
-                   from suburb in outerSuburb.DefaultIfEmpty()
-                   orderby booking.LastModified descending
-                   select new Booking
-                   {
-                       Id = booking.Id,
-                       Name = booking.Name,
-                       PhoneNumber = booking.PhoneNumber,
-                       NumberOfPeople = booking.NumberOfPeople,
-                       PickupTime = booking.PickupTime,
-                       AddrFrom = booking.AddrFrom,
-                       latitudeFrom = booking.LatitudeFrom.HasValue ? booking.LatitudeFrom.Value : 0,
-                       longitudeFrom = booking.LongitudeFrom.HasValue ? booking.LongitudeFrom.Value : 0,
-                       AddrTo = booking.AddrTo,
-                       latitudeTo = booking.LatitudeTo.HasValue ? booking.LatitudeTo.Value : 0,
-                       longitudeTo = booking.LongitudeTo.HasValue ? booking.LongitudeTo.Value : 0,
-                       ComputedDistance = booking.ComputedDistance,
-                       EstimatedPrice = booking.EstimatedPrice,
-                       Active = booking.Active,
-                       TaxiAccepted = booking.TaxiAccepted,
-                       TaxiCancelled = booking.TaxiCancelled,
-                       UserAccepted = booking.UserAccepted,
-                       UserCancelled = booking.UserCancelled,
-                       WaitingTime = booking.WaitingTime,
-                       TaxiId = booking.TaxiId.HasValue ? booking.TaxiId.Value : 0,
-                       LastModified = booking.LastModified,
-                       Created = booking.Created,
-                       Hash = booking.Hash,
-                       ReferenceCode = booking.ReferenceCode,
-                       SelectedTaxi = new Taxi
-                       {
-                           Id = taxi.Id,
-                           Name = taxi.Name,
-                           PhoneNumber = taxi.PhoneNumber,
-                           RatePerKm = taxi.RatePerKm,
-                           MinRate = taxi.MinRate,
-                           Units = taxi.Units,
-                           StartOfService = taxi.StartOfService,
-                           EndOfService = taxi.EndOfService,
-                           Is24HService = taxi.Is24HService,
-                           FleetSize = taxi.FleetSize
-                       },
-                       SuburbFromId = booking.SuburbFromId.HasValue ? booking.SuburbFromId.Value : 0,
-                       SuburbFrom = new Suburb
-                       {
-                           City = suburb.City,
-                           Name = suburb.Name,
-                           PostalCode = suburb.PostalCode
-                       }
-                   }).AsQueryable();
+                    join taxi in taxiRepository.All() on booking.TaxiId equals taxi.Id into outer
+                    join suburb in suburbRepository.All() on booking.SuburbFromId equals suburb.Id into outerSuburb
+                    from taxi in outer.DefaultIfEmpty()
+                    from suburb in outerSuburb.DefaultIfEmpty()
+                    orderby booking.LastModified descending
+                    select new Booking
+                    {
+                        Id = booking.Id,
+                        Name = booking.Name,
+                        PhoneNumber = booking.PhoneNumber,
+                        NumberOfPeople = booking.NumberOfPeople,
+                        PickupTime = booking.PickupTime,
+                        AddrFrom = booking.AddrFrom,
+                        latitudeFrom = booking.LatitudeFrom.HasValue ? booking.LatitudeFrom.Value : 0,
+                        longitudeFrom = booking.LongitudeFrom.HasValue ? booking.LongitudeFrom.Value : 0,
+                        AddrTo = booking.AddrTo,
+                        latitudeTo = booking.LatitudeTo.HasValue ? booking.LatitudeTo.Value : 0,
+                        longitudeTo = booking.LongitudeTo.HasValue ? booking.LongitudeTo.Value : 0,
+                        ComputedDistance = booking.ComputedDistance,
+                        EstimatedPrice = booking.EstimatedPrice,
+                        Active = booking.Active,
+                        TaxiAccepted = booking.TaxiAccepted,
+                        TaxiCancelled = booking.TaxiCancelled,
+                        UserAccepted = booking.UserAccepted,
+                        UserCancelled = booking.UserCancelled,
+                        WaitingTime = booking.WaitingTime,
+                        TaxiId = booking.TaxiId.HasValue ? booking.TaxiId.Value : 0,
+                        LastModified = booking.LastModified,
+                        Created = booking.Created,
+                        Hash = booking.Hash,
+                        ReferenceCode = booking.ReferenceCode,
+                        SelectedTaxi = new Taxi
+                        {
+                            Id = taxi.Id,
+                            Name = taxi.Name,
+                            PhoneNumber = taxi.PhoneNumber,
+                            RatePerKm = taxi.RatePerKm,
+                            MinRate = taxi.MinRate,
+                            Units = taxi.Units,
+                            StartOfService = taxi.StartOfService,
+                            EndOfService = taxi.EndOfService,
+                            Is24HService = taxi.Is24HService,
+                            FleetSize = taxi.FleetSize
+                        },
+                        SuburbFromId = booking.SuburbFromId.HasValue ? booking.SuburbFromId.Value : 0,
+                        SuburbFrom = suburb == null ? null : new Suburb
+                        {
+                            City = suburb.City,
+                            Name = suburb.Name,
+                            PostalCode = suburb.PostalCode
+                        }
+                    }).AsQueryable();
         }
     }
 }
