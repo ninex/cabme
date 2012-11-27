@@ -41,11 +41,15 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>content.dbml</DependentUpon>
     </Compile>
+    <Compile Include="Factories\DataContext.cs" />
+    <Compile Include="Interfaces\IDataContextFactory.cs" />
+    <Compile Include="Interfaces\IRepository.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\Repository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
