@@ -380,7 +380,7 @@ namespace cabme.webmvc.Controllers
                         Created = booking.Created,
                         Hash = booking.Hash,
                         ReferenceCode = booking.ReferenceCode,
-                        SelectedTaxi = new Taxi
+                        SelectedTaxi = taxi == null ? null : new Taxi
                         {
                             Id = taxi.Id,
                             Name = taxi.Name,
