@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Web;
 using System.Web.Security;
 using Data = cabme.data;
-using System.Collections.Specialized;
 
 namespace cabme.webmvc.Common
 {
@@ -22,6 +21,12 @@ namespace cabme.webmvc.Common
         private string mPasswordStrengthRegularExpression;
         private MembershipPasswordFormat mPasswordFormat = MembershipPasswordFormat.Hashed;
         private string mProviderName;
+        private Data.Interfaces.IRepository<Data.User> repository;
+
+        public CabmeMembershipProvider()
+        {
+            this.repository = new Data.Repositories.Repository<Data.User>();
+        }
 
         public override void Initialize(string name, NameValueCollection config)
         {
@@ -65,24 +70,21 @@ namespace cabme.webmvc.Common
 
         public override bool ChangePassword(string username, string oldPassword, string newPassword)
         {
-            using (Data.contentDataContext context = new Data.contentDataContext())
+            var user = repository.FindAll(p => p.Name == username).SingleOrDefault();
+            if (user == null)
             {
-                var user = context.Users.Where(p => p.Name == username).SingleOrDefault();
-                if (user == null)
+                return false;
+            }
+            else
+            {
+                bool valid = Hash.ValidatePassword(oldPassword, user.Password);
+                if (valid)
                 {
-                    return false;
+                    user.Password = Hash.HashPassword(newPassword);
+                    user.LastModified = DateTime.Now;
+                    repository.SaveAll();
                 }
-                else
-                {
-                    bool valid = Hash.ValidatePassword(oldPassword, user.Password);
-                    if (valid)
-                    {
-                        user.Password = Hash.HashPassword(newPassword);
-                        user.LastModified = DateTime.Now;
-                        context.SubmitChanges();
-                    }
-                    return valid;
-                }
+                return valid;
             }
         }
 
@@ -93,54 +95,47 @@ namespace cabme.webmvc.Common
 
         public override MembershipUser CreateUser(string username, string password, string email, string passwordQuestion, string passwordAnswer, bool isApproved, object providerUserKey, out MembershipCreateStatus status)
         {
-            using (Data.contentDataContext context = new Data.contentDataContext())
+            try
             {
-                try
+                if (repository.FindAll(p => p.Name == username).Count() > 0)
                 {
-                    if (context.Users.Where(p => p.Name == username).Count() > 0)
-                    {
-                        status = MembershipCreateStatus.DuplicateUserName;
-                        return null;
-                    }
-                    Data.User user = new Data.User()
-                    {
-                        Name = username,
-                        Created = DateTime.Now,
-                        LastModified = DateTime.Now,
-                        Email = email,
-                        Password = Hash.HashPassword(password)
-                    };
-                    //TODO: Checks before inserting
-                    context.Users.InsertOnSubmit(user);
-                    context.SubmitChanges();
-                    status = MembershipCreateStatus.Success;
-                    var cabUser = GetUser(user);
-                    HttpContext.Current.Cache.Add(cabUser.UserName, cabUser, null,
-                        System.Web.Caching.Cache.NoAbsoluteExpiration, FormsAuthentication.Timeout,
-                        System.Web.Caching.CacheItemPriority.Default, null);
-                    return cabUser;
+                    status = MembershipCreateStatus.DuplicateUserName;
+                    return null;
                 }
-                catch (Exception ex)
-                {
-                    Elmah.ErrorLog.GetDefault(null).Log(new Elmah.Error(ex));
-                    status = MembershipCreateStatus.ProviderError;
-                }
+                Data.User user = repository.CreateInstance();
+
+                user.Name = username;
+                user.Created = DateTime.Now;
+                user.LastModified = DateTime.Now;
+                user.Email = email;
+                user.Password = Hash.HashPassword(password);
+
+                //TODO: Checks before inserting
+                repository.SaveAll();
+                status = MembershipCreateStatus.Success;
+                var cabUser = GetUser(user);
+                HttpContext.Current.Cache.Add(cabUser.UserName, cabUser, null,
+                    System.Web.Caching.Cache.NoAbsoluteExpiration, FormsAuthentication.Timeout,
+                    System.Web.Caching.CacheItemPriority.Default, null);
+                return cabUser;
+            }
+            catch (Exception ex)
+            {
+                Elmah.ErrorLog.GetDefault(null).Log(new Elmah.Error(ex));
+                status = MembershipCreateStatus.ProviderError;
             }
             return null;
         }
 
         public override bool DeleteUser(string username, bool deleteAllRelatedData)
         {
-            using (Data.contentDataContext context = new Data.contentDataContext())
+            var user = repository.FindAll(p => p.Name == username).SingleOrDefault();
+            if (user != null)
             {
-                var user = context.Users.Where(p => p.Name == username).SingleOrDefault();
-                if (user != null)
-                {
-                    //Deletes the record. We may consider in the future to disable as per deleteAllRelatedData
-                    context.Users.DeleteOnSubmit(user);
-                    context.SubmitChanges();
-                    return true;
-                }
+                //Deletes the record. We may consider in the future to disable as per deleteAllRelatedData
+                repository.MarkForDeletion(user);
+                repository.SaveAll();
+                return true;
             }
             return false;
         }
@@ -252,27 +247,24 @@ namespace cabme.webmvc.Common
 
         public override bool ValidateUser(string username, string password)
         {
-            using (Data.contentDataContext context = new Data.contentDataContext())
+            var user = repository.FindAll(p => p.Name == username).SingleOrDefault();
+            if (user == null)
             {
-                var user = context.Users.Where(p => p.Name == username).SingleOrDefault();
-                if (user == null)
+                return false;
+            }
+            else
+            {
+                bool valid = Hash.ValidatePassword(password, user.Password);
+                if (valid)
                 {
-                    return false;
+                    user.LastAccess = DateTime.Now;
+                    repository.SaveAll();
                 }
-                else
-                {
-                    bool valid = Hash.ValidatePassword(password, user.Password);
-                    if (valid)
-                    {
-                        user.LastAccess = DateTime.Now;
-                        context.SubmitChanges();
-                    }
-                    var cabUser = GetUser(user);
-                    HttpContext.Current.Cache.Add(cabUser.UserName, cabUser, null,
-                        System.Web.Caching.Cache.NoAbsoluteExpiration, FormsAuthentication.Timeout,
-                        System.Web.Caching.CacheItemPriority.Default, null);
-                    return valid;
-                }
+                var cabUser = GetUser(user);
+                HttpContext.Current.Cache.Add(cabUser.UserName, cabUser, null,
+                    System.Web.Caching.Cache.NoAbsoluteExpiration, FormsAuthentication.Timeout,
+                    System.Web.Caching.CacheItemPriority.Default, null);
+                return valid;
             }
         }
 

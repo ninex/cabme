@@ -1,17 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using System.Web.Routing;
 using System.Web.Security;
 using cabme.webmvc.Models;
-using System;
+using Data = cabme.data;
 
 namespace cabme.webmvc.Controllers
 {
     [Authorize]
     public class AccountController : Controller
     {
+        private Data.Interfaces.IRepository<Data.User> repository;
+
+        //Default constructor initialises with a database context
+        public AccountController()
+            : this(new Data.Repositories.Repository<Data.User>()) { }
+
+        public AccountController(Data.Interfaces.IRepository<Data.User> repository)
+        {
+            this.repository = repository;
+        }
         //
         // GET: /Account/Index
 
@@ -94,21 +102,18 @@ namespace cabme.webmvc.Controllers
 
                 if (createStatus == MembershipCreateStatus.Success)
                 {
-                    using (cabme.data.contentDataContext context = new data.contentDataContext())
+                    try
                     {
-                        try
+                        var user = repository.FindAll(p => p.Name == model.UserName).SingleOrDefault();
+                        if (user != null)
                         {
-                            var user = context.Users.Where(p => p.Name == model.UserName).SingleOrDefault();
-                            if (user != null)
-                            {
-                                user.PhoneNumber = model.PhoneNumber;
-                                context.SubmitChanges();
-                            }
+                            user.PhoneNumber = model.PhoneNumber;
+                            repository.SaveAll();
                         }
-                        catch (Exception ex)
-                        {
-                            Elmah.ErrorLog.GetDefault(null).Log(new Elmah.Error(ex));
-                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Elmah.ErrorLog.GetDefault(null).Log(new Elmah.Error(ex));
                     }
                     FormsAuthentication.SetAuthCookie(model.UserName, createPersistentCookie: false);
                     return RedirectToAction("Index", "MakeBooking");

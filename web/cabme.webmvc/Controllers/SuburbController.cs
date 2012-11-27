@@ -11,19 +11,25 @@ namespace cabme.webmvc.Controllers
 {
     public class SuburbController : ApiController
     {
+        private Data.Interfaces.IRepository<Data.Suburb> repository;
+
+        //Default constructor initialises with a database context
+        public SuburbController() : this(new Data.Repositories.Repository<Data.Suburb>()) { }
+
+        public SuburbController(Data.Interfaces.IRepository<Data.Suburb> repository)
+        {
+            this.repository = repository;
+        }
         // GET api/suburb
         public IEnumerable<Suburb> Get()
         {
-            using (Data.contentDataContext context = new Data.contentDataContext())
+            return repository.All().Select(suburb => new Suburb
             {
-                return context.Suburbs.Select(suburb => new Suburb
-                {
-                    Id = suburb.Id,
-                    Name = suburb.Name,
-                    City = suburb.City,
-                    PostalCode = suburb.PostalCode
-                }).OrderBy(p => p.Name).ToList();
-            }
+                Id = suburb.Id,
+                Name = suburb.Name,
+                City = suburb.City,
+                PostalCode = suburb.PostalCode
+            }).OrderBy(p => p.Name).ToList();
         }
 
         // GET api/suburb/?city=
